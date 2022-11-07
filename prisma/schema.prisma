@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Appointment {
+  id         Int       @id @default(autoincrement())
+  patient_id Int
+  doctor_id  Int
+  reason     String?   @db.VarChar(255)
+  start_date DateTime  @db.Date
+  end_date   DateTime  @db.Date
+  notes      String?   @db.VarChar(255)
+  created_at DateTime? @default(now()) @db.DateTime(0)
+  updated_at DateTime  @default(now()) @db.Timestamp(0)
+  Patient    Patient   @relation(fields: [patient_id], references: [id], onUpdate: Restrict, map: "appointment_ibfk_1")
+  Doctor     Doctor    @relation(fields: [doctor_id], references: [id], onUpdate: Restrict, map: "appointment_ibfk_2")
+
+  @@index([doctor_id], map: "doctor_id")
+  @@index([patient_id], map: "patient_id")
+}
+
+model Contact {
+  id            Int       @id @default(autoincrement())
+  user_id       Int       @unique(map: "user_id")
+  address       String    @db.VarChar(255)
+  address_line2 String?   @db.VarChar(255)
+  city          String    @db.VarChar(255)
+  region        String    @db.VarChar(255)
+  country       String    @db.VarChar(255)
+  postal_code   String    @db.VarChar(255)
+  phone_number  String    @db.VarChar(255)
+  phone_ext     String?   @db.VarChar(255)
+  created_at    DateTime? @default(now()) @db.DateTime(0)
+  updated_at    DateTime  @default(now()) @db.Timestamp(0)
+  User          User      @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "contact_ibfk_1")
+}
+
+model Department {
+  id               Int       @id @default(autoincrement())
+  title            String    @db.VarChar(255)
+  appointment_time Int
+  created_at       DateTime? @default(now()) @db.DateTime(0)
+  updated_at       DateTime  @default(now()) @db.Timestamp(0)
+  Doctor           Doctor[]
+}
+
+model Doctor {
+  id            Int           @id @default(autoincrement())
+  user_id       Int           @unique(map: "user_id")
+  department_id Int
+  image_name    String?       @db.VarChar(255)
+  start_date    DateTime      @db.Date
+  end_date      DateTime?     @db.Date
+  created_at    DateTime?     @default(now()) @db.DateTime(0)
+  updated_at    DateTime      @default(now()) @db.Timestamp(0)
+  Department    Department    @relation(fields: [department_id], references: [id], onUpdate: Restrict, map: "doctor_ibfk_1")
+  User          User          @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "doctor_ibfk_2")
+  Appointment   Appointment[]
+
+  @@index([department_id], map: "department_id")
+}
+
+model Patient {
+  id          Int           @id @default(autoincrement())
+  user_id     Int           @unique(map: "user_id")
+  medical_id  String        @unique(map: "medical_id") @db.VarChar(255)
+  height      String?       @db.VarChar(255)
+  weight      String?       @db.VarChar(255)
+  created_at  DateTime?     @default(now()) @db.DateTime(0)
+  updated_at  DateTime      @default(now()) @db.Timestamp(0)
+  User        User          @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "patient_ibfk_1")
+  Appointment Appointment[]
+}
+
+model Role {
+  id         Int       @id @default(autoincrement())
+  title      String    @db.VarChar(255)
+  created_at DateTime? @default(now()) @db.DateTime(0)
+  updated_at DateTime  @default(now()) @db.Timestamp(0)
+  User       User[]
+}
+
+model User {
+  id         Int         @id @default(autoincrement())
+  first_name String      @db.VarChar(255)
+  last_name  String      @db.VarChar(255)
+  gender     User_gender
+  birth_date DateTime    @db.Date
+  email      String      @unique(map: "email") @db.VarChar(255)
+  username   String?     @unique(map: "username") @db.VarChar(255)
+  password   String      @db.VarChar(255)
+  role_id    Int?        @default(3)
+  language   String?     @default("en") @db.VarChar(255)
+  created_at DateTime?   @default(now()) @db.DateTime(0)
+  updated_at DateTime    @default(now()) @db.Timestamp(0)
+  Role       Role?       @relation(fields: [role_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "user_ibfk_1")
+  Contact    Contact?
+  Doctor     Doctor?
+  Patient    Patient?
+
+  @@index([role_id], map: "role_id")
+}
+
+enum User_gender {
+  F
+  M
+  O
+}

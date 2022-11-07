@@ -1,0 +1,24 @@
+{
+  "SUCCESS": {
+    "RESET_PASSWORD_LINK_SEND": "A temporary password reset link has been sent to {{email}}.",
+    "PASSWORD_RESET": "The password has been successfully reset!",
+    "ACCOUNT_CREATED": "The account has been successfully created!",
+    "PASSWORD_UPDATED": "The password has been successfully updated!",
+    "USER_DELETED": "The account has been successfully removed!"
+  },
+  "ERROR": {
+    "GENERAL": "An error has occurred. Please try again later.",
+    "INTERNAL_SERVER_ERROR": "Internal server error.",
+    "USER_NOT_FOUND": "The user doesn't exists.",
+    "INCORRECT_CREDENTIALS": "The email or the password is incorrect.",
+    "DUPLICATE_EMAIL": "The email address already exists.",
+    "DUPLICATE_USERNAME": "The username already exists.",
+    "DUPLICATE_MEDICAL_ID": "The medical ID belongs to another user.",
+    "PASSWORDS_DO_NOT_MATCH": "The passwords do not match.",
+    "UNAUTHORIZED": "The user is not authenticated.",
+    "NO_TOKEN_PROVIDED": "No token provided.",
+    "TOKEN_EXPIRED": "Your session has expired. Please login again.",
+    "INVALID_TOKEN": "Invalid token.",
+    "RESET_PASSWORD_TOKEN_EXPIRED": "The password reset link has expired."
+  }
+}

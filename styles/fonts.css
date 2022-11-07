@@ -1,0 +1,239 @@
+/******************************
+* Serif
+******************************/
+@font-face {
+  font-family: 'Bitter';
+  font-weight: 100;
+  src: url('/assets/fonts/Bitter/static/Bitter-Thin.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-style: italic;
+  font-weight: 100;
+  src: url('/assets/fonts/Bitter/static/Bitter-ThinItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-weight: 200;
+  src: url('/assets/fonts/Bitter/static/Bitter-ExtraLight.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-style: italic;
+  font-weight: 200;
+  src: url('/assets/fonts/Bitter/static/Bitter-ExtraLightItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-weight: 300;
+  src: url('/assets/fonts/Bitter/static/Bitter-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-style: italic;
+  font-weight: 300;
+  src: url('/assets/fonts/Bitter/static/Bitter-LightItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-weight: 400;
+  src: url('/assets/fonts/Bitter/static/Bitter-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-style: italic;
+  font-weight: 400;
+  src: url('/assets/fonts/Bitter/static/Bitter-Italic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-weight: 500;
+  src: url('/assets/fonts/Bitter/static/Bitter-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-style: italic;
+  font-weight: 500;
+  src: url('/assets/fonts/Bitter/static/Bitter-MediumItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-weight: 600;
+  src: url('/assets/fonts/Bitter/static/Bitter-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-style: italic;
+  font-weight: 600;
+  src: url('/assets/fonts/Bitter/static/Bitter-SemiBoldItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-weight: 700;
+  src: url('/assets/fonts/Bitter/static/Bitter-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-style: italic;
+  font-weight: 700;
+  src: url('/assets/fonts/Bitter/static/Bitter-BoldItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-weight: 800;
+  src: url('/assets/fonts/Bitter/static/Bitter-ExtraBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-style: italic;
+  font-weight: 800;
+  src: url('/assets/fonts/Bitter/static/Bitter-ExtraBoldItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-weight: 900;
+  src: url('/assets/fonts/Bitter/static/Bitter-Black.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bitter';
+  font-style: italic;
+  font-weight: 900;
+  src: url('/assets/fonts/Bitter/static/Bitter-BlackItalic.ttf') format('truetype');
+}
+
+/******************************
+* Sans-serif
+******************************/
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 100;
+  src: url('/assets/fonts/Poppins/Poppins-Thin.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 100;
+  src: url('/assets/fonts/Poppins/Poppins-ThinItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 200;
+  src: url('/assets/fonts/Poppins/Poppins-ExtraLight.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 200;
+  src: url('/assets/fonts/Poppins/Poppins-ExtraLightItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 300;
+  src: url('/assets/fonts/Poppins/Poppins-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 300;
+  src: url('/assets/fonts/Poppins/Poppins-LightItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 400;
+  src: url('/assets/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 400;
+  src: url('/assets/fonts/Poppins/Poppins-Italic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 500;
+  src: url('/assets/fonts/Poppins/Poppins-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 500;
+  src: url('/assets/fonts/Poppins/Poppins-MediumItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 600;
+  src: url('/assets/fonts/Poppins/Poppins-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 600;
+  src: url('/assets/fonts/Poppins/Poppins-SemiBoldItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 700;
+  src: url('/assets/fonts/Poppins/Poppins-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 700;
+  src: url('/assets/fonts/Poppins/Poppins-BoldItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 800;
+  src: url('/assets/fonts/Poppins/Poppins-ExtraBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 800;
+  src: url('/assets/fonts/Poppins/Poppins-ExtraBoldItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 900;
+  src: url('/assets/fonts/Poppins/Poppins-Black.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 900;
+  src: url('/assets/fonts/Poppins/Poppins-BlackItalic.ttf') format('truetype');
+}

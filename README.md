@@ -1,34 +1,105 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<a name="readme-top"></a>
 
-## Getting Started
+<div align="center">
+  <img src="public/assets/images/icons/logo.png" alt="Medical Booking App" width="200">
+  <br>
+  <h1>Medical Booking App</h1>
+</div>
 
-First, run the development server:
+<h4 align="center">A doctor appointment web application made with <a href="https://nextjs.org/" target="_blank">Next.js</a>, <a href="https://graphql.org/" target="_blank">GraphQL</a>, <a href="https://www.prisma.io/" target="_blank">Prisma</a> and <a href="https://tailwindcss.com/" target="_blank">TailwindCSS</a>.</h4>
+
+<p align="center">
+  <a href="https://www.paypal.me/ChelnyD">
+    <img src="https://img.shields.io/badge/$-donate-ff69b4.svg?maxAge=2592000&amp;style=flat">
+  </a>
+</p>
+
+<p align="center">
+  <a href="#how-to-use">How To Use</a> •
+  <a href="#credits">Credits</a> •
+  <a href="#license">License</a>
+</p>
+
+![screenshot](public/assets/images/github/home-page-tablet.png)
+
+## How To Use
+
+To clone and run this application, you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
 
 ```bash
-npm run dev
-# or
-yarn dev
+# Clone this repository
+$ git clone https://github.com/chelny/medical-booking-app
+
+# Go into the repository
+$ cd medical-booking-app
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+First, you must create the "MedicalBookingApp" database. You'll find the .sql file in the root directory of the project.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Then, setup Prisma:
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+```bash
+# Creating your Prisma schema file
+$ npx prisma init
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+As stated in the [Prisma documentation](https://www.prisma.io/docs/getting-started/setup-prisma/add-to-existing-project/relational-databases-typescript-postgres#set-up-prisma):
 
-## Learn More
+> This command does two things:
+>
+> - creates a new directory called prisma that contains a file called schema.prisma, which contains the Prisma schema with your database connection variable and schema models
+>
+> - creates the `.env` file in the root directory of the project, which is used for defining environment variables (such as your database connection)
 
-To learn more about Next.js, take a look at the following resources:
+Open the `.env` file and add the missing keys and their values:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+APP_URL=
+API_PATH=/api/graphql
 
-## Deploy on Vercel
+# Auth Tokens
+ACCESS_TOKEN_SECRET=
+REFRESH_TOKEN_SECRET=
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Email Service
+TRANSPORTER_SERVICE=
+TRANSPORTER_NAME="Medical Booking App"
+TRANSPORTER_AUTH_USER=
+TRANSPORTER_AUTH_PASS=
+RECIPIENT_EMAIL=
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+A sample of the `.env` file is available at `.env.example`.
+
+Now, that the `.env` file has been filled, go to the command line and execute the remaining scripts:
+
+```bash
+# Install dependencies
+$ yarn
+
+# Run the app
+$ yarn dev
+```
+
+<p align="end">(<a href="#readme-top">back to top</a>)</p>
+
+## Credits
+
+- Background images: [Unsplash: Beautiful Free Images & Pictures](https://unsplash.com/)
+- useForm hook: [fgerschau/react-custom-form-validation-example](https://github.com/fgerschau/react-custom-form-validation-example)
+- Multi-step form: [codeempirev/multi-part-form-react-nextjs](https://github.com/codeempirev/multi-part-form-react-nextjs)
+
+<p align="end">(<a href="#readme-top">back to top</a>)</p>
+
+## License
+
+MIT
+
+---
+
+> GitHub [@chelny](https://github.com/chelny) &nbsp;&middot;&nbsp;
+> LinkedIn [Chelny](https://linkedin.com/in/chelny)
+
+<p align="end">(<a href="#readme-top">back to top</a>)</p>
