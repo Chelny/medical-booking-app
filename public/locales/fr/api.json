@@ -1,0 +1,24 @@
+{
+  "SUCCESS": {
+    "RESET_PASSWORD_LINK_SEND": "Un lien temporaire pour la réinitialisation du mot de passe a été envoyé à {{email}}.",
+    "PASSWORD_RESET": "Le mot de passe a été réinitialisé avec succès !",
+    "ACCOUNT_CREATED": "Le compte a été créé avec succès !",
+    "PASSWORD_UPDATED": "Le mot de passe a été modifié avec succès !",
+    "USER_DELETED": "Le compte a été supprimé avec succès !"
+  },
+  "ERROR": {
+    "GENERAL": "Une erreur est survenue. Veuillez réessayer plus tard.",
+    "INTERNAL_SERVER_ERROR": "Erreur interne du serveur.",
+    "USER_NOT_FOUND": "L'utilisateur n'existe pas.",
+    "INCORRECT_CREDENTIALS": "Le courriel ou le mot de passe est incorrect.",
+    "DUPLICATE_EMAIL": "L'adresse courriel existe déjà.",
+    "DUPLICATE_USERNAME": "Le nom d'utilisateur existe déjà.",
+    "DUPLICATE_MEDICAL_ID": "Le numéro de carte médicale appartient à quelqu'un d'autre.",
+    "PASSWORDS_DO_NOT_MATCH": "Les mot de passes ne sont pas identiques.",
+    "UNAUTHORIZED": "L'utilisateur n'est pas authentifié.",
+    "NO_TOKEN_PROVIDED": "Aucun jeton fourni.",
+    "TOKEN_EXPIRED": "Votre session est expirée. Veuillez vous reconnecter.",
+    "INVALID_TOKEN": "Jeton invalide.",
+    "RESET_PASSWORD_TOKEN_EXPIRED": "Le lien de réinitialisation du mot de passe est expiré."
+  }
+}

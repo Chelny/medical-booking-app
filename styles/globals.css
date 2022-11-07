@@ -1,26 +1,52 @@
+@import './fonts.css';
+@import './typography.css';
+@import './form.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  @apply font-sans;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+html,
+body,
+body > div:first-child,
+div#__next,
+div#__next > div {
+  width: 100%;
+  height: 100%;
 }
 
-* {
-  box-sizing: border-box;
+body {
+  @apply bg-light-tint text-black;
+}
+
+[class*='bg-primary'],
+[class*='bg-dark'] {
+  @apply text-white;
+}
+
+[class*='bg-secondary'],
+[class*='bg-medium'],
+[class*='bg-light'] {
+  @apply text-black;
 }
 
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
+
   body {
-    color: white;
-    background: black;
+    @apply bg-dark text-white;
   }
 }
