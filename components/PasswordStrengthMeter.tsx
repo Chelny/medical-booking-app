@@ -1,16 +1,16 @@
-import React from 'react'
 import { useTranslation } from 'next-i18next'
+import { InputHTMLAttributes, useEffect, useState } from 'react'
 import zxcvbn from 'zxcvbn'
 
 type PasswordStrengthMeterProps = {
-  password: React.InputHTMLAttributes<HTMLInputElement>['value']
+  password: InputHTMLAttributes<HTMLInputElement>['value']
 }
 
 const PasswordStrengthMeter = ({ password }: PasswordStrengthMeterProps) => {
   const { t } = useTranslation()
-  const [meter, setMeter] = React.useState(0)
+  const [meter, setMeter] = useState(0)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (typeof password === 'string') setMeter(zxcvbn(password).score)
   }, [password])
 

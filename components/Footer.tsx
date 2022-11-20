@@ -1,26 +1,16 @@
-import { useRouter } from 'next/router'
+import { User } from '@prisma/client'
+import LanguageSelector from 'components/LanguageSelector'
+import Nav from 'components/Nav'
 
-const Footer = (): JSX.Element => {
-  const router = useRouter()
+type FooterProps = {
+  user?: User
+  isAuthRoute: boolean
+}
 
-  const handleLocaleChange = (event: IHTMLElementEvent) => {
-    const value = event.target.value
-
-    router.push(router.route, router.asPath, {
-      locale: value,
-    })
-  }
-
+const Footer = ({ user, isAuthRoute }: FooterProps): JSX.Element => {
   return (
-    <footer className="py-2 px-4 text-medium-shade text-xs text-center md:landscape:bg-primary-day dark:md:landscape:bg-dark-shade">
-      <select
-        className="py-1 text-dark shadow-none dark:text-light"
-        value={router.locale}
-        onChange={handleLocaleChange}
-      >
-        <option value="en">English</option>
-        <option value="fr">Français</option>
-      </select>
+    <footer className="bg-primary-day text-medium-shade text-xs text-center dark:bg-dark-shade">
+      {isAuthRoute ? <Nav user={user} isAuthRoute={isAuthRoute} /> : <LanguageSelector />}
     </footer>
   )
 }

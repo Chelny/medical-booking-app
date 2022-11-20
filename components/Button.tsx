@@ -1,3 +1,5 @@
+import { MouseEventHandler } from 'react'
+
 type ButtonType = 'button' | 'submit' | 'reset' | undefined
 
 type ButtonProps = {
@@ -5,7 +7,7 @@ type ButtonProps = {
   type?: ButtonType
   className?: string
   disabled?: boolean
-  onClick?: React.MouseEventHandler<HTMLButtonElement>
+  onClick?: MouseEventHandler<HTMLButtonElement>
 }
 
 const Button = ({ children, type, className, disabled, onClick }: ButtonProps): JSX.Element => {

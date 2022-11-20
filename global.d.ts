@@ -1,10 +1,8 @@
-import { YogaInitialContext } from 'graphql-yoga'
 import { Request, Response } from 'express'
+import { GraphQLError } from 'graphql'
+import { YogaInitialContext } from 'graphql-yoga'
 
 export declare global {
-  type ServerSideConfigProps = SSRConfig & { token: boolean }
-  type GQLResponse<T> = { data: T }
-
   interface IContext extends YogaInitialContext {
     req: Request
     res: Response
@@ -18,11 +16,9 @@ export declare global {
     locale: string
   }
 
-  interface IMixMap {
-    [key: string]: any
-  }
-
   interface IStringMap {
     [key: string]: string
   }
+
+  type GQLResponse<T> = { data: T | null; errors?: GraphQLError[] }
 }

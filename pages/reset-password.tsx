@@ -1,26 +1,25 @@
 import type { NextPage } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import DefaultLayout from 'components/DefaultLayout'
+import Button from 'components/Button'
 import FormElement from 'components/FormElement'
-import { GraphQLError } from 'graphql'
+import PageLayout from 'components/PageLayout'
+import PasswordStrengthMeter from 'components/PasswordStrengthMeter'
+import { Regex } from 'constants/regex'
+import { Routes } from 'constants/routes'
 import { useForm } from 'hooks/useForm'
 import { useRequest } from 'hooks/useRequest'
-import Button from 'components/Button'
-import { Regex } from 'constants/regex'
-import { useRouter } from 'next/router'
-import React from 'react'
-import PasswordStrengthMeter from 'components/PasswordStrengthMeter'
 import { getAuthCookie } from 'utils/auth-cookies'
-import { Routes } from 'constants/routes'
 
 type ResetPasswordResponse = GQLResponse<{ resetPassword: { message: string } }>
 
-const ResetPassword: NextPage = ({ token }: IMixMap) => {
-  const { t } = useTranslation()
+const ResetPassword: NextPage = () => {
   const router = useRouter()
-  const [loading, setLoading] = React.useState(true)
+  const { t } = useTranslation()
+  const [loading, setLoading] = useState(true)
 
   const { values, errors, handleChange, handleSubmit } = useForm({
     initialValues: {
@@ -43,32 +42,31 @@ const ResetPassword: NextPage = ({ token }: IMixMap) => {
       }
       return e
     },
-    onSubmit: () => {
-      useRequest<ResetPasswordResponse>(
+    onSubmit: async () => {
+      const { data, errors } = await useRequest<ResetPasswordResponse>(
         `{ resetPassword(password: "${values.newPassword}", token: "${router.query.token}") { message } }`
       )
-        .then((res: ResetPasswordResponse) => {
-          toast.success<String>(t(`SUCCESS.${res.data.resetPassword.message}`, { ns: 'api' }))
-          router.push(Routes.HOME)
-        })
-        .catch((err: GraphQLError) => {
-          // TODO: Test expired token: http://localhost:3000/reset-password?token=efc31ab7d18085c94c6645ecb4541f1a:e193146f44bf9794ec752e4848cef124fb3c6f487f12aeab02851e5c8ea0b64f63f55a91a71108df4368f2dcdd992cc5c2ba77793d78f668aa6aea88d99a67cbcd23058ced02e1664fa2c9259b4a2387
-          toast.error<String>(t(`ERROR.${err.extensions.code}`, { ns: 'api' }))
-        })
+
+      if (data) {
+        toast.success<string>(t(`SUCCESS.${data.resetPassword.message}`, { ns: 'api' }))
+        router.push(Routes.HOME)
+      }
+
+      // TODO: Test expired token: http://localhost:3000/reset-password?token=efc31ab7d18085c94c6645ecb4541f1a:e193146f44bf9794ec752e4848cef124fb3c6f487f12aeab02851e5c8ea0b64f63f55a91a71108df4368f2dcdd992cc5c2ba77793d78f668aa6aea88d99a67cbcd23058ced02e1664fa2c9259b4a2387
+      if (errors) toast.error<string>(t(`ERROR.${errors[0].extensions.code}`, { ns: 'api' }))
     },
   })
 
-  React.useEffect(() => {
-    if (token) router.push(Routes.DASHBOARD)
+  useEffect(() => {
     if (!router.isReady) return
     if (!router.query.token) router.push(Routes.HOME)
     setLoading(false)
-  }, [token, router.isReady])
+  }, [router])
 
-  if (loading) return <DefaultLayout>{t('LOADING')}</DefaultLayout>
+  if (loading) return <PageLayout>{t('LOADING')}</PageLayout>
 
   return (
-    <DefaultLayout>
+    <PageLayout>
       <>
         <h2>{t('RESET_PASSWORD', { ns: 'reset-password' })}</h2>
         <form data-testid="reset-password-form" noValidate onSubmit={handleSubmit}>
@@ -94,17 +92,26 @@ const ResetPassword: NextPage = ({ token }: IMixMap) => {
           <Button type="submit">{t('RESET_PASSWORD', { ns: 'reset-password' })}</Button>
         </form>
       </>
-    </DefaultLayout>
+    </PageLayout>
   )
 }
 
 export const getServerSideProps = async (context: IContext & ILocale) => {
   const token = getAuthCookie(context.req) || null
 
+  if (token) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: Routes.DASHBOARD,
+      },
+      props: {},
+    }
+  }
+
   return {
     props: {
       ...(await serverSideTranslations(context.locale, ['common', 'api', 'reset-password'])),
-      token,
     },
   }
 }

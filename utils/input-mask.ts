@@ -1,10 +1,10 @@
-import { FormEvent } from 'react'
+import { Dispatch, FormEvent, SetStateAction } from 'react'
 
 export const InputMaskUtil = {
   maskPhoneNumber: (
     event: FormEvent<HTMLInputElement>,
-    setPhoneNumber: React.Dispatch<string>,
-    handleChange: (event: React.FormEvent<HTMLElement>) => void
+    setPhoneNumber: Dispatch<string>,
+    handleChange: (event: FormEvent<HTMLElement>) => void
   ): void => {
     const { currentTarget } = event
     const value = currentTarget.value.replace(/\D+/g, '')
@@ -29,9 +29,9 @@ export const InputMaskUtil = {
   maskPostCode: (
     event: FormEvent<HTMLInputElement>,
     values: { [key: string]: any },
-    setPostCode: React.Dispatch<string>,
-    setPostCodeMaxLength: React.Dispatch<React.SetStateAction<number>>,
-    handleChange: (event: React.FormEvent<HTMLElement>) => void
+    setPostCode: Dispatch<string>,
+    setPostCodeMaxLength: Dispatch<SetStateAction<number>>,
+    handleChange: (event: FormEvent<HTMLElement>) => void
   ): void => {
     const { currentTarget } = event
     const value = currentTarget.value.replace(/[^A-Z0-9-]/gi, '').toUpperCase()
@@ -85,8 +85,8 @@ export const InputMaskUtil = {
   },
   maskMedicalId: (
     event: FormEvent<HTMLInputElement>,
-    setMaskMedicalId: React.Dispatch<string>,
-    handleChange: (event: React.FormEvent<HTMLElement>) => void
+    setMaskMedicalId: Dispatch<string>,
+    handleChange: (event: FormEvent<HTMLElement>) => void
   ): void => {
     const { currentTarget } = event
     const value = currentTarget.value.replace(/[^A-Z0-9]/gi, '').toUpperCase()

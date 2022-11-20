@@ -1,25 +1,11 @@
 import { Common } from 'constants/common'
 
-export const useRequest = async <T>(query: string, token?: string): Promise<T> => {
-  let headers = {}
-  headers = { 'Content-type': 'application/json' }
-
-  if (token) {
-    headers = {
-      ...headers,
-      Authorization: `Bearer ${token}`,
-    }
-  }
-
-  return fetch(Common.API_PATH, {
+export const useRequest = async <T>(query: string): Promise<T> => {
+  const res = await fetch(Common.API_URL, {
     method: 'POST',
-    headers,
+    headers: { 'Content-type': 'application/json' },
     body: JSON.stringify({ query }),
-  }).then(async (res: Response) => {
-    if (!res.ok) {
-      const body = await res.json()
-      throw body.errors[0]
-    }
-    return res.json()
   })
+
+  return res.json()
 }

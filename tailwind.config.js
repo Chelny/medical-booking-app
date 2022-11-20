@@ -9,25 +9,25 @@ module.exports = {
     },
     colors: {
       transparent: 'transparent',
-      black: '#222222',
-      white: '#DFDFDF',
+      black: '#292929',
+      white: '#E0E0E0',
       warning: '#C95C28',
       error: '#D61C4E',
       success: '#379237',
       'primary-day': {
-        tint: '#8858A6',
-        DEFAULT: '#5B4B8A',
-        shade: '#4C3575',
+        tint: '#DBC4DF',
+        DEFAULT: '#816797',
+        shade: '#5C527F',
       },
       'primary-night': {
-        tint: '#7B4B8A',
+        tint: '#7858A6',
         DEFAULT: '#4C3575',
-        shade: '#371B58',
+        shade: '#291D3D',
       },
       secondary: {
-        tint: '#FF8787',
-        DEFAULT: '#F96666',
-        shade: '#CC4141',
+        tint: '#D15555',
+        DEFAULT: '#CC4141',
+        shade: '#AC2E2E',
       },
       light: {
         tint: '#FBFBFB',
@@ -40,7 +40,7 @@ module.exports = {
         shade: '#5D6066',
       },
       dark: {
-        tint: '#393E46',
+        tint: '#22252a',
         DEFAULT: '#1B1C22',
         shade: '#151515',
       },
@@ -53,7 +53,7 @@ module.exports = {
     },
     extend: {
       backgroundImage: {
-        landing: 'linear-gradient(to top, #4C3575ba, #5B4B8Acc), url(/assets/images/backgrounds/landing.jpg)',
+        landing: 'linear-gradient(to top, #5C527Fba, #7858A6cc), url(/assets/images/backgrounds/landing.jpg)',
         dropdown: 'url(/assets/images/icons/chevron-down.svg)',
       },
       backgroundPosition: {
@@ -63,13 +63,14 @@ module.exports = {
         dropdown: '16px',
       },
       gridTemplateRows: {
-        'app-layout': '1fr auto',
-        main: 'minmax(max-content, calc(100vh/3.7)) auto',
-        'main-md': '100%',
+        'app-layout': 'minmax(max-content, calc(100vh/4.7)) 1fr auto',
+        'app-layout-md': '1fr auto',
+        main: 'minmax(max-content, calc(100vh/6.7)) auto',
+        'main-lg': '100%',
       },
       gridTemplateColumns: {
         'app-layout': '100%',
-        'main-md': 'minmax(max-content, calc(100vh/2.5)) auto',
+        'main-lg': 'minmax(max-content, calc(100vh/2.5)) auto',
       },
     },
   },

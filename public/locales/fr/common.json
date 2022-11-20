@@ -3,10 +3,18 @@
   "OPTIONAL": "Optionnel",
   "ROUTES": {
     "HOME": "Accueil",
+    "SIGN_UP": "Créer un compte",
     "FORGOT_PASSWORD": "Mot de passe oublié",
     "RESET_PASSWORD": "Réinitialisation du mot de passe",
-    "SIGN_UP": "Créer un compte",
-    "DASHBOARD": "Tableau de bord"
+    "DASHBOARD": "Tableau de bord",
+    "APPOINTMENTS": "Rendez-vous",
+    "APPOINTMENT_CREATE": "Prendre un rendez-vous",
+    "APPOINTMENT_UPDATE": "Modifier un rendez-vous",
+    "ACCOUNT": "Compte",
+    "PROFILE": "Profil",
+    "SETTINGS": "Paramètres",
+    "HELP": "Aide",
+    "LOGOUT": "Déconnexion"
   },
   "BUTTON": {
     "CANCEL": "Annuler",
@@ -184,5 +192,22 @@
         "WY": "Wyoming"
       }
     }
+  },
+  "DOCTOR_DEPARTMENT": {
+    "FAMILY_MEDICINE": "Docteur de famille",
+    "CARDIOLOGY": "Cardiologie",
+    "DERMATOLOGY": "Dermatologie",
+    "RADIOLOGY": "Radiologie",
+    "NEUROLOGY": "Neurologie",
+    "GYNECOLOGY": "Gynécologie",
+    "GASTROENTEROLOGY": "Gastroentérologie",
+    "OPHTHALMOLOGY": "Ophtalmologie",
+    "REHABILITATION": "Médecine Physique et Réadaptation",
+    "ONCOLOGY": "Oncologie",
+    "RESPIROLOGY": "Respirologie",
+    "UROLOGY": "Urologie",
+    "RHEUMATOLOGY": "Rhumatologie",
+    "PSYCHIATRY": "Psychiatrie",
+    "PLASTIC_SURGERY": "Chirurgie plastique"
   }
 }

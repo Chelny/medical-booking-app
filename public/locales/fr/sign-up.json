@@ -4,5 +4,6 @@
   "LOGIN_INFORMATION": "Informations de connexion",
   "CONTACT_INFORMATION": "Coordonnées",
   "MEDICAL_INFORMATION": "Informations médicales",
-  "SIGN_UP_BUTTON": "Terminer"
+  "SIGN_UP_BUTTON": "Terminer",
+  "INVALID_FIELDS_MESSAGE": "Les champs suivants sont invalides : {{fields}}."
 }

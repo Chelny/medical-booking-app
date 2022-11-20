@@ -7,7 +7,7 @@
   }
 
   h1 {
-    @apply text-2xl;
+    @apply text-2xl m-0;
   }
 
   h2 {
@@ -19,20 +19,24 @@
   }
 
   a {
-    @apply text-secondary-shade underline underline-offset-2;
+    @apply text-secondary underline underline-offset-2;
 
     &:hover {
-      @apply text-secondary;
+      @apply text-secondary-tint;
     }
 
     &:visited {
-      @apply text-secondary-shade;
+      @apply text-secondary;
     }
   }
 
   @media (prefers-color-scheme: dark) {
     a {
       @apply text-secondary-tint;
+
+      &:hover {
+        @apply text-secondary;
+      }
 
       &:visited {
         @apply text-secondary-tint;

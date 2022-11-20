@@ -1,29 +1,85 @@
-import { Contact, Doctor, Patient, User } from '@prisma/client'
+import { Appointment, Contact, Doctor, Patient, User } from '@prisma/client'
+import { compare, hash } from 'bcrypt'
 import { createSchema, createYoga } from 'graphql-yoga'
 import { omit } from 'lodash-es'
-import { compare, hash } from 'bcrypt'
+import { AuthResponse } from 'dtos/auth.response'
+import { SuccessResponse } from 'dtos/success.response'
+import { DoctorContact, PatientContact, UserContact } from 'dtos/user-contact.response'
 import { prisma } from 'pages/api/db'
-import { createTokens } from 'pages/api/tokens'
-import { Helpers } from 'pages/api/helpers'
 import { EmailService } from 'pages/api/email.service'
 import {
+  CustomApiBadRequest,
   CustomApiError,
+  CustomApiErrorDuplicateEmail,
+  CustomApiErrorDuplicateMedicalId,
+  CustomApiErrorDuplicateUsername,
   CustomApiErrorInvalidToken,
   CustomApiErrorUnauthorized,
   CustomApiErrorUserNotFound,
 } from 'pages/api/errors'
+import { Helpers } from 'pages/api/helpers'
+import { createTokens } from 'pages/api/tokens'
 import { getAuthCookie, removeAuthCookie, setAuthCookie } from 'utils/auth-cookies'
-import { AuthResponse } from 'dtos/auth.response'
-import { SuccessResponse } from 'dtos/success.response'
-import { UserContact, PatientContact } from 'dtos/user-contact.response'
 
-const typeDefs = /* GraphQL */ `
+const typeDefs = `
   scalar Timestamp
 
   type Query {
-    users: [User!]!
     login(email: String, username: String, password: String): AuthResponse!
     logout: SuccessResponse!
+    forgotPassword(email: String): SuccessResponse!
+    resetPassword(password: String, token: String): SuccessResponse!
+    getUsers: [User!]!
+    getUserById(id: Int): User!
+    updateUserPassword(email: String, password: String, newPassword: String): SuccessResponse!
+    deleteUser(id: Int): SuccessResponse!
+    createDoctor(
+      first_name: String
+      last_name: String
+      gender: String
+      birth_date: String
+      email: String
+      username: String
+      password: String
+      role_id: Int
+      language: String
+      address: String
+      address_line2: String
+      city: String
+      region: String
+      country: String
+      postal_code: String
+      phone_number: String
+      phone_ext: String
+      department_id: Int
+      image_name: String
+      start_date: Timestamp
+      end_date: Timestamp
+    ): SuccessResponse!
+    updateDoctor(
+      id: Int
+      first_name: String
+      last_name: String
+      gender: String
+      birth_date: String
+      email: String
+      username: String
+      password: String
+      language: String
+      address: String
+      address_line2: String
+      city: String
+      region: String
+      country: String
+      postal_code: String
+      phone_number: String
+      phone_ext: String
+      department_id: Int
+      image_name: String
+      start_date: Timestamp
+      end_date: Timestamp
+    ): User!
+    getAppointmentsByDoctorId(id: Int): [Appointment]
     createPatient(
       first_name: String
       last_name: String
@@ -46,9 +102,6 @@ const typeDefs = /* GraphQL */ `
       height: String
       weight: String
     ): AuthResponse!
-    forgotPassword(email: String): SuccessResponse!
-    resetPassword(password: String, token: String): SuccessResponse!
-    getUserById(id: Int): User!
     updatePatient(
       id: Int
       first_name: String
@@ -71,8 +124,7 @@ const typeDefs = /* GraphQL */ `
       height: String
       weight: String
     ): User!
-    updateUserPassword(email: String, password: String, newPassword: String): SuccessResponse!
-    deleteUser(id: Int): SuccessResponse!
+    getAppointmentsByPatientId(id: Int): [Appointment]
   }
 
   type User {
@@ -117,6 +169,16 @@ const typeDefs = /* GraphQL */ `
     end_date: Timestamp
     created_at: Timestamp!
     updated_at: Timestamp
+    User: User
+    Department: Department
+  }
+
+  type Department {
+    id: ID!
+    title: String!
+    appointment_time: Int!
+    created_at: Timestamp!
+    updated_at: Timestamp
   }
 
   type Patient {
@@ -127,6 +189,21 @@ const typeDefs = /* GraphQL */ `
     weight: String
     created_at: Timestamp!
     updated_at: Timestamp
+    User: User
+  }
+
+  type Appointment {
+    id: ID!
+    patient_id: Int!
+    doctor_id: Int!
+    reason: String
+    start_date: Timestamp!
+    end_date: Timestamp!
+    notes: String
+    created_at: Timestamp!
+    updated_at: Timestamp
+    Doctor: Doctor
+    Patient: Patient
   }
 
   type AuthResponse {
@@ -141,18 +218,6 @@ const typeDefs = /* GraphQL */ `
 
 const resolvers = {
   Query: {
-    users: async (parent: unknown, args: User, context: IContext): Promise<UserContact[]> => {
-      if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
-      return await prisma.user.findMany({ include: { Contact: true } })
-    },
-    getUserById: async (parent: unknown, args: User, context: IContext): Promise<Omit<User, 'password'>> => {
-      if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
-
-      const user = await prisma.user.findUnique({ where: { id: args.id } })
-      if (!user) throw CustomApiErrorUserNotFound()
-
-      return omit(user, 'password')
-    },
     login: async (parent: unknown, args: User, context: IContext): Promise<AuthResponse> => {
       // Check if the user exists
       const user = await prisma.user.findFirst({
@@ -172,7 +237,7 @@ const resolvers = {
       return { token }
     },
     logout: async (parent: unknown, args: User, context: IContext): Promise<SuccessResponse> => {
-      if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
+      // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
       removeAuthCookie(context.res)
       return { message: '' }
     },
@@ -206,7 +271,7 @@ const resolvers = {
       }
 
       const emailService = new EmailService(
-        process.env.RECIPIENT_EMAIL!, // TODO: Production: Use "user.email"
+        process.env.NODE_ENV === 'production' ? user.email : process.env.RECIPIENT_EMAIL!,
         emailMessage()[user.language!].RESET_PASSWORD.EMAIL.SUBJECT,
         emailMessage(user.first_name, link)[user.language!].RESET_PASSWORD.EMAIL.BODY
       )
@@ -240,23 +305,185 @@ const resolvers = {
 
       return { message: 'PASSWORD_RESET' }
     },
+    getUsers: async (parent: unknown, args: User, context: IContext): Promise<UserContact[]> => {
+      // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
+      return await prisma.user.findMany({ include: { Contact: true } })
+    },
+    getUserById: async (parent: unknown, args: User, context: IContext): Promise<Omit<User, 'password'>> => {
+      // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
+
+      const user = await prisma.user.findUnique({ where: { id: args.id } })
+      if (!user) throw CustomApiErrorUserNotFound()
+
+      return omit(user, 'password')
+    },
+    updateUserPassword: async (
+      parent: unknown,
+      args: User & { new_password: string },
+      context: IContext
+    ): Promise<SuccessResponse> => {
+      // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
+
+      const user = await prisma.user.findUnique({ where: { id: args.id } })
+      if (!user) throw CustomApiErrorUserNotFound()
+
+      if (!(await compare(args.password, user.password))) {
+        throw CustomApiError(400, 'Passwords do not match', 'PASSWORDS_DO_NOT_MATCH')
+      }
+
+      await prisma.user.update({
+        where: { email: args.email },
+        data: { password: await hash(args.new_password, 12) },
+      })
+
+      return { message: 'PASSWORD_UPDATED' }
+    },
+    deleteUser: async (parent: unknown, args: User, context: IContext): Promise<SuccessResponse> => {
+      // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
+
+      await prisma.user.delete({
+        where: { id: args.id },
+        include: {
+          Contact: true,
+        },
+      })
+
+      return { message: 'USER_DELETED' }
+    },
+    createDoctor: async (
+      parent: unknown,
+      args: User & Contact & Doctor,
+      context: IContext
+    ): Promise<SuccessResponse> => {
+      const findEmail = await prisma.user.findUnique({ where: { email: args.email } })
+      if (findEmail) throw CustomApiErrorDuplicateEmail()
+
+      if (args.username) {
+        const findUsername = await prisma.user.findUnique({ where: { username: args.username } })
+        if (findUsername) throw CustomApiErrorDuplicateUsername()
+      }
+
+      const user = await prisma.user.create({
+        data: {
+          first_name: args.first_name,
+          last_name: args.last_name,
+          gender: args.gender,
+          birth_date: args.birth_date,
+          email: args.email,
+          username: args.username,
+          password: await hash(args.password, 12),
+          role_id: args.role_id,
+          language: args.language,
+          Contact: {
+            create: {
+              address: args.address,
+              address_line2: args.address_line2,
+              city: args.city,
+              region: args.region,
+              country: args.country,
+              postal_code: args.postal_code,
+              phone_number: args.phone_number,
+              phone_ext: args.phone_ext,
+            },
+          },
+          Doctor: {
+            create: {
+              department_id: args.department_id,
+              image_name: args.image_name,
+              start_date: args.start_date,
+              end_date: args.end_date,
+            },
+          },
+        },
+      })
+      if (!user) throw CustomApiBadRequest()
+
+      return { message: 'ACCOUNT_CREATED' }
+    },
+    updateDoctor: async (parent: unknown, args: User & Contact & Doctor, context: IContext): Promise<DoctorContact> => {
+      // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
+
+      const user = await prisma.user.findUnique({
+        where: { id: args.id },
+        include: { Contact: true, Doctor: true },
+      })
+      if (!user) throw CustomApiErrorUserNotFound()
+
+      // Find if the email exists from another user
+      const findManyEmail = await prisma.user.findMany({
+        where: { NOT: { id: user.id }, email: args.email },
+      })
+      if (findManyEmail?.length > 0) throw CustomApiErrorDuplicateEmail()
+
+      // Find if the username exists from another user
+      if (args.username) {
+        const findManyUsername = await prisma.user.findMany({
+          where: { NOT: { id: user.id }, username: args.username },
+        })
+        if (findManyUsername?.length > 0) throw CustomApiErrorDuplicateUsername()
+      }
+
+      const doctor = await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          first_name: args.first_name,
+          last_name: args.last_name,
+          gender: args.gender,
+          birth_date: args.birth_date,
+          email: args.email,
+          username: args.username,
+          language: args.language,
+          Contact: {
+            update: {
+              address: args.address,
+              address_line2: args.address_line2,
+              city: args.city,
+              region: args.region,
+              country: args.country,
+              postal_code: args.postal_code,
+              phone_number: args.phone_number,
+              phone_ext: args.phone_ext,
+            },
+          },
+          Doctor: {
+            update: {
+              department_id: args.department_id,
+              image_name: args.image_name,
+              start_date: args.start_date,
+              end_date: args.end_date,
+            },
+          },
+        },
+        include: {
+          Contact: true,
+          Doctor: true,
+        },
+      })
+
+      return doctor
+    },
+    getAppointmentsByDoctorId: async (parent: unknown, args: User, context: IContext): Promise<Appointment[]> => {
+      // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
+      return await prisma.appointment.findMany({
+        where: { doctor_id: args.id },
+        include: { Patient: { include: { User: true } } },
+      })
+    },
     createPatient: async (
       parent: unknown,
       args: User & Contact & Patient,
       context: IContext
     ): Promise<AuthResponse> => {
       const findEmail = await prisma.user.findUnique({ where: { email: args.email } })
-      if (findEmail) throw CustomApiError(409, 'Email already exists.', 'DUPLICATE_EMAIL')
+      if (findEmail) throw CustomApiErrorDuplicateEmail()
 
       if (args.username) {
         const findUsername = await prisma.user.findUnique({ where: { username: args.username } })
-        if (findUsername) throw CustomApiError(409, 'Username already exists.', 'DUPLICATE_USERNAME')
+        if (findUsername) throw CustomApiErrorDuplicateUsername()
       }
 
       const findMedicalId = await prisma.patient.findUnique({ where: { medical_id: args.medical_id } })
-      if (findMedicalId) {
-        throw CustomApiError(409, 'The medical ID belongs to an existing user.', 'DUPLICATE_MEDICAL_ID')
-      }
+      if (findMedicalId) throw CustomApiErrorDuplicateMedicalId()
 
       const user = await prisma.user.create({
         data: {
@@ -290,7 +517,7 @@ const resolvers = {
           },
         },
       })
-      if (!user) throw CustomApiError(404, 'Bad request', 'GENERAL')
+      if (!user) throw CustomApiBadRequest()
 
       const token = createTokens.accessToken(user)
       setAuthCookie(context.res, token)
@@ -302,7 +529,7 @@ const resolvers = {
       args: User & Contact & Patient,
       context: IContext
     ): Promise<PatientContact> => {
-      if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
+      // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
 
       const user = await prisma.user.findUnique({
         where: { id: args.id },
@@ -310,21 +537,27 @@ const resolvers = {
       })
       if (!user) throw CustomApiErrorUserNotFound()
 
-      // TODO:
-      // const findEmail = await prisma.user.findUnique({ where: { NOT: { id: { equals: user.id } }, email: args.email } })
-      // if (findEmail) throw CustomApiError(409, 'Email already exists.', 'DUPLICATE_EMAIL')
+      // Find if the email exists from another user
+      const findManyEmail = await prisma.user.findMany({
+        where: { NOT: { id: user.id }, email: args.email },
+      })
+      if (findManyEmail?.length > 0) throw CustomApiErrorDuplicateEmail()
 
-      // if (args.username) {
-      //   const findUsername = await prisma.user.findUnique({ where: { username: args.username } })
-      //   if (findUsername) throw CustomApiError(409, 'Username already exists.', 'DUPLICATE_USERNAME')
-      // }
+      // Find if the username exists from another user
+      if (args.username) {
+        const findManyUsername = await prisma.user.findMany({
+          where: { NOT: { id: user.id }, username: args.username },
+        })
+        if (findManyUsername?.length > 0) throw CustomApiErrorDuplicateUsername()
+      }
 
-      // const findMedicalId = await prisma.patient.findUnique({ where: { medical_id: args.medical_id } })
-      // if (findMedicalId) {
-      //   throw CustomApiError(409, 'The medical ID belongs to an existing user.', 'DUPLICATE_MEDICAL_ID')
-      // }
+      // Find if the medical ID exists from another user
+      const findManyMedicalId = await prisma.patient.findMany({
+        where: { NOT: { user_id: user.id }, medical_id: args.medical_id },
+      })
+      if (findManyMedicalId?.length > 0) throw CustomApiErrorDuplicateMedicalId()
 
-      const updatedUser = await prisma.user.update({
+      const patient = await prisma.user.update({
         where: { id: user.id },
         data: {
           first_name: args.first_name,
@@ -360,40 +593,15 @@ const resolvers = {
         },
       })
 
-      return updatedUser
+      return patient
     },
-    updateUserPassword: async (
-      parent: unknown,
-      args: User & { new_password: string },
-      context: IContext
-    ): Promise<SuccessResponse> => {
-      if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
-
-      const user = await prisma.user.findUnique({ where: { email: args.email } })
-      if (!user) throw CustomApiErrorUserNotFound()
-
-      if (!(await compare(args.password, user.password))) {
-        throw CustomApiError(400, 'Passwords do not match', 'PASSWORDS_DO_NOT_MATCH')
-      }
-
-      await prisma.user.update({
-        where: { email: args.email },
-        data: { password: await hash(args.new_password, 12) },
+    getAppointmentsByPatientId: async (parent: unknown, args: User, context: IContext): Promise<Appointment[]> => {
+      // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
+      return await prisma.appointment.findMany({
+        where: { patient_id: args.id },
+        include: { Doctor: { include: { User: true, Department: true } } },
+        orderBy: { start_date: 'asc' },
       })
-
-      return { message: 'PASSWORD_UPDATED' }
-    },
-    deleteUser: async (parent: unknown, args: User, context: IContext): Promise<SuccessResponse> => {
-      if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
-
-      await prisma.user.delete({
-        where: { id: args.id },
-        include: {
-          Contact: true,
-        },
-      })
-
-      return { message: 'USER_DELETED' }
     },
   },
 }
@@ -412,6 +620,5 @@ export default createYoga<IContext>({
     origin: process.env.APP_URL,
     methods: ['POST'],
     credentials: true,
-    allowedHeaders: ['Authorization'],
   },
 })

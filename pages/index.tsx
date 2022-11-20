@@ -1,25 +1,22 @@
 import type { NextPage } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
-import { GraphQLError } from 'graphql'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-import FormElement from 'components/FormElement'
 import Button from 'components/Button'
+import FormElement from 'components/FormElement'
+import PageLayout from 'components/PageLayout'
+import { Routes } from 'constants/routes'
 import { useForm } from 'hooks/useForm'
-import DefaultLayout from 'components/DefaultLayout'
 import { useRequest } from 'hooks/useRequest'
 import { getAuthCookie } from 'utils/auth-cookies'
-import { useRouter } from 'next/router'
-import React from 'react'
-import Link from 'next/link'
-import { Routes } from 'constants/routes'
 
 type LoginResponse = GQLResponse<{ login: { token: string } }>
 
-const Home: NextPage = ({ token }: IMixMap) => {
-  const { t } = useTranslation()
+const Home: NextPage = () => {
   const router = useRouter()
-  const [loading, setLoading] = React.useState(true)
+  const { t } = useTranslation()
 
   const { values, errors, handleChange, handleSubmit } = useForm({
     initialValues: {
@@ -32,28 +29,18 @@ const Home: NextPage = ({ token }: IMixMap) => {
       if (!v.password) e.password = 'PASSWORD_REQUIRED'
       return e
     },
-    onSubmit: () => {
-      useRequest<LoginResponse>(
+    onSubmit: async () => {
+      const { data, errors } = await useRequest<LoginResponse>(
         `{ login(email: "${values.loginId}", username: "${values.loginId}", password: "${values.password}") { token } }`
       )
-        .then((res: LoginResponse) => {
-          router.push(Routes.DASHBOARD)
-        })
-        .catch((err: GraphQLError) => {
-          toast.error<String>(t(`ERROR.${err.extensions.code}`, { ns: 'api' }))
-        })
+
+      if (data) router.push(Routes.DASHBOARD)
+      if (errors) toast.error<string>(t(`ERROR.${errors[0].extensions.code}`, { ns: 'api' }))
     },
   })
 
-  React.useEffect(() => {
-    if (token) router.push(Routes.DASHBOARD)
-    setLoading(false)
-  }, [token])
-
-  if (loading) return <DefaultLayout>{t('LOADING')}</DefaultLayout>
-
   return (
-    <DefaultLayout>
+    <PageLayout>
       <>
         <h2>{t('LOGIN', { ns: 'home' })}</h2>
         <form noValidate onSubmit={handleSubmit}>
@@ -85,17 +72,26 @@ const Home: NextPage = ({ token }: IMixMap) => {
           </div>
         </form>
       </>
-    </DefaultLayout>
+    </PageLayout>
   )
 }
 
 export const getServerSideProps = async (context: IContext & ILocale) => {
   const token = getAuthCookie(context.req) || null
 
+  if (token) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: Routes.DASHBOARD,
+      },
+      props: {},
+    }
+  }
+
   return {
     props: {
       ...(await serverSideTranslations(context.locale, ['common', 'api', 'home'])),
-      token,
     },
   }
 }

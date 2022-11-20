@@ -1,0 +1,10 @@
+{
+  "WELCOME_MORNING": "Bonjour, {{name}}!",
+  "WELCOME_AFTERNOON": "Bon après-midi, {{name}}!",
+  "WELCOME_EVENING": "Bonsoir, {{name}}!",
+  "WELCOME_NIGHT": "Bienvenue, {{name}}!",
+  "APPOINTMENTS": "Rendez-vous du {{date}}",
+  "NO_APPOINTMENTS": "Aucun rendez-vous pour la date sélectionnée",
+  "APPOINTMENT_DETAILS": "Voir les détails",
+  "APPOINTMENT_UPDATE": "Reporter ou annuler"
+}

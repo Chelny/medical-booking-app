@@ -1,6 +1,6 @@
 import * as crypto from 'crypto'
-import { differenceInHours } from 'date-fns'
 import { User } from '@prisma/client'
+import { differenceInHours } from 'date-fns'
 
 export const Helpers = {
   generatePassword: (): string => {

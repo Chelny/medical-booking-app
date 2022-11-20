@@ -1,33 +1,33 @@
 import type { NextPage } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { useTranslation } from 'next-i18next'
 import { differenceInYears, format, parse, subYears } from 'date-fns'
-import React from 'react'
-import { toast } from 'react-toastify'
-import { getAuthCookie } from 'utils/auth-cookies'
-import { Regex } from 'constants/regex'
-import { Common } from 'constants/common'
-import { useForm } from 'hooks/useForm'
-import { Genders } from 'configs/genders'
-import { InputMaskUtil } from 'utils/input-mask'
-import { Countries } from 'configs/countries'
-import DefaultLayout from 'components/DefaultLayout'
-import MultiStepForm from 'components/MultiStepForm'
-import FormElement from 'components/FormElement'
-import PasswordStrengthMeter from 'components/PasswordStrengthMeter'
-import { useRequest } from 'hooks/useRequest'
-import { GraphQLError } from 'graphql'
+import { isEmpty, omit } from 'lodash-es'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
+import { toast } from 'react-toastify'
+import FormElement from 'components/FormElement'
+import MultiStepForm from 'components/MultiStepForm'
+import PageLayout from 'components/PageLayout'
+import PasswordStrengthMeter from 'components/PasswordStrengthMeter'
+import { Countries } from 'configs/countries'
+import { Genders } from 'configs/genders'
+import { Common } from 'constants/common'
+import { Regex } from 'constants/regex'
 import { Routes } from 'constants/routes'
+import { useForm } from 'hooks/useForm'
+import { useRequest } from 'hooks/useRequest'
+import { getAuthCookie } from 'utils/auth-cookies'
+import { InputMaskUtil } from 'utils/input-mask'
+import { TextFormatUtil } from 'utils/text-format'
 
 type SignUpResponse = GQLResponse<{ createPatient: { token: string; message: string } }>
 
-const SignUp: NextPage = ({ token }: IMixMap) => {
-  const { t } = useTranslation()
+const SignUp: NextPage = () => {
   const router = useRouter()
-  const maxBirthdate = format(subYears(new Date(), 18), Common.DATE_FORMAT)
+  const { t } = useTranslation()
   const minBirthdate = format(subYears(new Date(), 100), Common.DATE_FORMAT)
-  const [loading, setLoading] = React.useState(true)
+  const maxBirthdate = format(subYears(new Date(), 18), Common.DATE_FORMAT)
 
   const { values, errors, handleChange, handleSubmit } = useForm({
     initialValues: {
@@ -135,9 +135,17 @@ const SignUp: NextPage = ({ token }: IMixMap) => {
       if (!v.termsAndConditions) {
         e.termsAndConditions = 'TERMS_AND_CONDITIONS_REQUIRED'
       }
+
+      if (!isEmpty(e)) {
+        const fields = Object.keys(omit(e, 'termsAndConditions')).map((field) =>
+          t(`FORM.LABEL.${TextFormatUtil.camelCaseToSnakeCase(field).toUpperCase()}`)
+        )
+        toast.error<string>(t('INVALID_FIELDS_MESSAGE', { ns: 'sign-up', fields: fields.join(', ') }))
+      }
+
       return e
     },
-    onSubmit: () => {
+    onSubmit: async () => {
       const birthDate = new Date(values.birthDate)
       birthDate.setHours(0)
       birthDate.setMinutes(0)
@@ -163,31 +171,24 @@ const SignUp: NextPage = ({ token }: IMixMap) => {
         payload += `, language: "${router.locale}"`
       }
 
-      useRequest<SignUpResponse>(`{ createPatient(${payload}) { token, message } }`)
-        .then((res: SignUpResponse) => {
-          toast.success<String>(t(`SUCCESS.${res.data.createPatient.message}`, { ns: 'api' }))
-          router.push(Routes.DASHBOARD)
-        })
-        .catch((err: GraphQLError) => {
-          toast.error<String>(t(`ERROR.${err.extensions.code}`, { ns: 'api' }))
-        })
+      const { data, errors } = await useRequest<SignUpResponse>(`{ createPatient(${payload}) { token, message } }`)
+
+      if (data) {
+        toast.success<string>(t(`SUCCESS.${data.createPatient.message}`, { ns: 'api' }))
+        router.push(Routes.DASHBOARD)
+      }
+
+      if (errors) toast.error<string>(t(`ERROR.${errors[0].extensions.code}`, { ns: 'api' }))
     },
   })
 
-  const [phoneNumber, setPhoneNumber] = React.useState(values.phoneNumber)
-  const [postCode, setPostCode] = React.useState(values.postCode)
-  const [postCodeMaxLength, setPostCodeMaxLength] = React.useState(Common.POST_CODE.MAX_LENGTH)
-  const [maskMedicalId, setMaskMedicalId] = React.useState(values.medicalId)
-
-  React.useEffect(() => {
-    if (token) router.push(Routes.DASHBOARD)
-    setLoading(false)
-  }, [token])
-
-  if (loading) return <DefaultLayout>{t('LOADING')}</DefaultLayout>
+  const [phoneNumber, setPhoneNumber] = useState(values.phoneNumber)
+  const [postCode, setPostCode] = useState(values.postCode)
+  const [postCodeMaxLength, setPostCodeMaxLength] = useState(Common.POST_CODE.MAX_LENGTH)
+  const [maskMedicalId, setMaskMedicalId] = useState(values.medicalId)
 
   return (
-    <DefaultLayout>
+    <PageLayout>
       <>
         <h2>{t('SIGN_UP', { ns: 'sign-up' })}</h2>
         <MultiStepForm
@@ -445,17 +446,26 @@ const SignUp: NextPage = ({ token }: IMixMap) => {
           onComplete={handleSubmit}
         />
       </>
-    </DefaultLayout>
+    </PageLayout>
   )
 }
 
 export const getServerSideProps = async (context: IContext & ILocale) => {
   const token = getAuthCookie(context.req) || null
 
+  if (token) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: Routes.DASHBOARD,
+      },
+      props: {},
+    }
+  }
+
   return {
     props: {
       ...(await serverSideTranslations(context.locale, ['common', 'api', 'sign-up'])),
-      token,
     },
   }
 }

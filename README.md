@@ -88,6 +88,7 @@ $ yarn dev
 ## Credits
 
 - Background images: [Unsplash: Beautiful Free Images & Pictures](https://unsplash.com/)
+- User images: [This Person Does Not Exist](https://thispersondoesnotexist.com/)
 - useForm hook: [fgerschau/react-custom-form-validation-example](https://github.com/fgerschau/react-custom-form-validation-example)
 - Multi-step form: [codeempirev/multi-part-form-react-nextjs](https://github.com/codeempirev/multi-part-form-react-nextjs)
 

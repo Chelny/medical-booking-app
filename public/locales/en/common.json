@@ -3,10 +3,18 @@
   "OPTIONAL": "Optional",
   "ROUTES": {
     "HOME": "Home",
+    "SIGN_UP": "Sign Up",
     "FORGOT_PASSWORD": "Forgot Password",
     "RESET_PASSWORD": "Reset Password",
-    "SIGN_UP": "Sign Up",
-    "DASHBOARD": "Dashboard"
+    "DASHBOARD": "Dashboard",
+    "APPOINTMENTS": "Appointments",
+    "APPOINTMENT_CREATE": "Make an appointment",
+    "APPOINTMENT_UPDATE": "Edit an appointment",
+    "ACCOUNT": "Account",
+    "PROFILE": "Profile",
+    "SETTINGS": "Settings",
+    "HELP": "Help",
+    "LOGOUT": "Logout"
   },
   "BUTTON": {
     "CANCEL": "Cancel",
@@ -184,5 +192,22 @@
         "WY": "Wyoming"
       }
     }
+  },
+  "DOCTOR_DEPARTMENT": {
+    "FAMILY_MEDICINE": "Family Medicine",
+    "CARDIOLOGY": "Cardiology",
+    "DERMATOLOGY": "Dermatology",
+    "RADIOLOGY": "Radiology",
+    "NEUROLOGY": "Neurology",
+    "GYNECOLOGY": "Gynecology",
+    "GASTROENTEROLOGY": "Gastroenterology",
+    "OPHTHALMOLOGY": "Ophthalmology",
+    "REHABILITATION": "Physical Medicine and Rehabilitation",
+    "ONCOLOGY": "Oncology",
+    "RESPIROLOGY": "Respirology",
+    "UROLOGY": "Urology",
+    "RHEUMATOLOGY": "Rheumatology",
+    "PSYCHIATRY": "Psychiatry",
+    "PLASTIC_SURGERY": "Plastic Surgery"
   }
 }

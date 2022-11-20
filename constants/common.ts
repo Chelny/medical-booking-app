@@ -1,6 +1,12 @@
 export const Common = {
   APP_NAME: 'Medical Booking App',
-  API_PATH: '/api/graphql',
+  API_URL: 'http://localhost:3000/api/graphql',
+  BREAKPOINT: {
+    XS: 480,
+    SM: 768,
+    MD: 976,
+    LG: 1440,
+  },
   DATE_FORMAT: 'yyyy-MM-dd',
   POST_CODE: {
     MAX_LENGTH: 10,
