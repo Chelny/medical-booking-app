@@ -24,7 +24,7 @@
 
 ## Roadmap
 
-The project is currently unfinished. Here's a short list on what I will focus in the future.
+The project is currently unfinished. If you want to see the progression, go to `develop` branch. Here's a short list on what I will focus in the future.
 
 - ✅ Public Pages (Login, Forgot Password, Reset Password, Sign Up)
 - ⬜️ Admin Console ~ _**(in progress)**_
