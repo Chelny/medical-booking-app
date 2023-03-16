@@ -15,73 +15,25 @@
 </p>
 
 <p align="center">
-  <a href="#how-to-use">How To Use</a> •
+  <a href="#roadmap">Roadmap</a> •
   <a href="#credits">Credits</a> •
   <a href="#license">License</a>
 </p>
 
 ![screenshot](public/assets/images/github/home-page-tablet.png)
 
-## How To Use
+## Roadmap
 
-To clone and run this application, you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
+The project is currently unfinished. Here's a short list on what I will focus in the future.
 
-```bash
-# Clone this repository
-$ git clone https://github.com/chelny/medical-booking-app
-
-# Go into the repository
-$ cd medical-booking-app
-```
-
-First, you must create the "MedicalBookingApp" database. You'll find the .sql file in the root directory of the project.
-
-Then, setup Prisma:
-
-```bash
-# Creating your Prisma schema file
-$ npx prisma init
-```
-
-As stated in the [Prisma documentation](https://www.prisma.io/docs/getting-started/setup-prisma/add-to-existing-project/relational-databases-typescript-postgres#set-up-prisma):
-
-> This command does two things:
->
-> - creates a new directory called prisma that contains a file called schema.prisma, which contains the Prisma schema with your database connection variable and schema models
->
-> - creates the `.env` file in the root directory of the project, which is used for defining environment variables (such as your database connection)
-
-Open the `.env` file and add the missing keys and their values:
-
-```
-DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
-
-APP_URL=
-API_PATH=/api/graphql
-
-# Auth Tokens
-ACCESS_TOKEN_SECRET=
-REFRESH_TOKEN_SECRET=
-
-# Email Service
-TRANSPORTER_SERVICE=
-TRANSPORTER_NAME="Medical Booking App"
-TRANSPORTER_AUTH_USER=
-TRANSPORTER_AUTH_PASS=
-RECIPIENT_EMAIL=
-```
-
-A sample of the `.env` file is available at `.env.example`.
-
-Now, that the `.env` file has been filled, go to the command line and execute the remaining scripts:
-
-```bash
-# Install dependencies
-$ yarn
-
-# Run the app
-$ yarn dev
-```
+- ✅ Public Pages (Login, Forgot Password, Reset Password, Sign Up)
+- ⬜️ Admin Console ~ _**(in progress)**_
+- ⬜️ Appointments Page
+- ⬜️ Create + Edit Appointment
+- ⬜️ Edit Profile
+- ⬜️ Delete Profile
+- ⬜️ Logout Logic
+- ⬜️ Settings (Language change, App theme colour)
 
 <p align="end">(<a href="#readme-top">back to top</a>)</p>
 
