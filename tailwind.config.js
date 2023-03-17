@@ -10,12 +10,14 @@ module.exports = {
     colors: {
       transparent: 'transparent',
       black: '#292929',
-      white: '#E0E0E0',
+      white: '#F0F0F0',
       warning: '#C95C28',
       error: '#D61C4E',
       success: '#379237',
+      active: '#FC7B54',
+      inactive: '#CFD1D3',
       'primary-day': {
-        tint: '#DBC4DF',
+        tint: '#AF9CB2',
         DEFAULT: '#816797',
         shade: '#5C527F',
       },
@@ -26,18 +28,18 @@ module.exports = {
       },
       secondary: {
         tint: '#D15555',
-        DEFAULT: '#CC4141',
+        DEFAULT: '#FC7B54',
         shade: '#AC2E2E',
       },
       light: {
-        tint: '#FBFBFB',
+        tint: '#F9F9F9',
         DEFAULT: '#F4F4F4',
-        shade: '#E7E9EB',
+        shade: '#DBDBDB',
       },
       medium: {
-        tint: '#CFD8DC',
+        tint: '#CFD1D3',
         DEFAULT: '#898D93',
-        shade: '#5D6066',
+        shade: '#7B7E84',
       },
       dark: {
         tint: '#22252a',
@@ -52,6 +54,20 @@ module.exports = {
       },
     },
     extend: {
+      gridTemplateRows: {
+        'app-layout': 'minmax(max-content, calc(100vh/4.7)) 1fr auto',
+        'app-layout-md': '1fr auto',
+        main: 'minmax(max-content, calc(100vh/6.7)) auto',
+        'main-lg': '100%',
+      },
+      gridTemplateColumns: {
+        'app-layout': '100%',
+        'main-lg': 'minmax(max-content, calc(100vh/2.5)) auto',
+        listbox: '16px max-content',
+      },
+      width: {
+        'max-content': 'max-content',
+      },
       backgroundImage: {
         landing: 'linear-gradient(to top, #5C527Fba, #7858A6cc), url(/assets/images/backgrounds/landing.jpg)',
         dropdown: 'url(/assets/images/icons/chevron-down.svg)',
@@ -62,17 +78,12 @@ module.exports = {
       backgroundSize: {
         dropdown: '16px',
       },
-      gridTemplateRows: {
-        'app-layout': 'minmax(max-content, calc(100vh/4.7)) 1fr auto',
-        'app-layout-md': '1fr auto',
-        main: 'minmax(max-content, calc(100vh/6.7)) auto',
-        'main-lg': '100%',
-      },
-      gridTemplateColumns: {
-        'app-layout': '100%',
-        'main-lg': 'minmax(max-content, calc(100vh/2.5)) auto',
+      aria: {
+        none: 'sort="none"',
+        asc: 'sort="ascending"',
+        desc: 'sort="descending"',
       },
     },
   },
-  plugins: [],
+  plugins: [require('@headlessui/tailwindcss')({ prefix: 'ui' })],
 }

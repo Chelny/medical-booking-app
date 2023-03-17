@@ -1,10 +1,13 @@
-import { Appointment, Contact, Doctor, Patient, User } from '@prisma/client'
+import { Appointment, Contact, Doctor, Patient, Prisma, User } from '@prisma/client'
 import { compare, hash } from 'bcrypt'
 import { createSchema, createYoga } from 'graphql-yoga'
 import { omit } from 'lodash-es'
+import { Common } from 'constants/common'
 import { AuthResponse } from 'dtos/auth.response'
+import { GetUsersParams } from 'dtos/get-users.params'
+import { GetUsersResponse } from 'dtos/get-users.response'
 import { SuccessResponse } from 'dtos/success.response'
-import { DoctorContact, PatientContact, UserContact } from 'dtos/user-contact.response'
+import { IDoctorContact, IPatientContact } from 'dtos/user-contact.response'
 import { prisma } from 'pages/api/db'
 import { EmailService } from 'pages/api/email.service'
 import {
@@ -25,14 +28,23 @@ const typeDefs = `
   scalar Timestamp
 
   type Query {
-    login(email: String, username: String, password: String): AuthResponse!
+    login(email: String, username: String, password: String!): AuthResponse!
     logout: SuccessResponse!
-    forgotPassword(email: String): SuccessResponse!
-    resetPassword(password: String, token: String): SuccessResponse!
-    getUsers: [User!]!
-    getUserById(id: Int): User!
-    updateUserPassword(email: String, password: String, newPassword: String): SuccessResponse!
-    deleteUser(id: Int): SuccessResponse!
+    forgotPassword(email: String!): SuccessResponse!
+    resetPassword(password: String!, token: String): SuccessResponse!
+    getUsers(
+      offset: Int!,
+      limit: Int!,
+      query: String,
+      genders: [String],
+      roles: [Int],
+      languages: [String],
+      orderBy: String,
+      sort: String
+    ): GetUsersResponse!
+    getUserById(id: Int!): User!
+    updateUserPassword(email: String!, password: String!, newPassword: String!): SuccessResponse!
+    deleteUser(id: Int!): SuccessResponse!
     createDoctor(
       first_name: String
       last_name: String
@@ -214,6 +226,11 @@ const typeDefs = `
   type SuccessResponse {
     message: String!
   }
+
+  type GetUsersResponse {
+    results: [User!]!
+    count: Int!
+  }
 `
 
 const resolvers = {
@@ -305,9 +322,51 @@ const resolvers = {
 
       return { message: 'PASSWORD_RESET' }
     },
-    getUsers: async (parent: unknown, args: User, context: IContext): Promise<UserContact[]> => {
+    getUsers: async (parent: unknown, args: GetUsersParams, context: IContext): Promise<GetUsersResponse> => {
       // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
-      return await prisma.user.findMany({ include: { Contact: true } })
+      let whereClauseQuery = {}
+      let orderByClause = {}
+
+      if (args.query) {
+        whereClauseQuery = {
+          OR: [
+            { first_name: { contains: args.query } },
+            { last_name: { contains: args.query } },
+            { email: { contains: args.query } },
+            { username: { contains: args.query } },
+          ],
+        }
+      }
+
+      if (args.orderBy) {
+        orderByClause = {
+          orderBy: {
+            [args.orderBy]: args.sort ?? Prisma.SortOrder.asc,
+          },
+        }
+      }
+
+      const filters = {
+        where: {
+          ...whereClauseQuery,
+          gender: { in: args.genders },
+          role_id: { in: args.roles },
+          language: { in: args.languages },
+        },
+        ...orderByClause,
+      }
+
+      const getUsers = await prisma.$transaction([
+        prisma.user.findMany({
+          include: { Contact: true, Doctor: true, Patient: true },
+          skip: args.offset ?? 0,
+          take: args.limit ?? Common.PAGINATION.LIMIT,
+          ...filters,
+        }),
+        prisma.user.count({ ...filters }),
+      ])
+
+      return { results: getUsers[0], count: getUsers[1] }
     },
     getUserById: async (parent: unknown, args: User, context: IContext): Promise<Omit<User, 'password'>> => {
       // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
@@ -400,7 +459,11 @@ const resolvers = {
 
       return { message: 'ACCOUNT_CREATED' }
     },
-    updateDoctor: async (parent: unknown, args: User & Contact & Doctor, context: IContext): Promise<DoctorContact> => {
+    updateDoctor: async (
+      parent: unknown,
+      args: User & Contact & Doctor,
+      context: IContext
+    ): Promise<IDoctorContact> => {
       // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
 
       const user = await prisma.user.findUnique({
@@ -528,7 +591,7 @@ const resolvers = {
       parent: unknown,
       args: User & Contact & Patient,
       context: IContext
-    ): Promise<PatientContact> => {
+    ): Promise<IPatientContact> => {
       // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
 
       const user = await prisma.user.findUnique({
@@ -600,7 +663,7 @@ const resolvers = {
       return await prisma.appointment.findMany({
         where: { patient_id: args.id },
         include: { Doctor: { include: { User: true, Department: true } } },
-        orderBy: { start_date: 'asc' },
+        orderBy: { start_date: Prisma.SortOrder.asc },
       })
     },
   },

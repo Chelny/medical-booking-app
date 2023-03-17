@@ -1,18 +1,18 @@
 import { User, Appointment, Patient, Department, Doctor } from '@prisma/client'
 
-export interface DoctorPatientAppointement extends DoctorAppointement {
+export interface IDoctorPatientAppointement extends IDoctorAppointement {
   User: User
 }
 
-export interface DoctorAppointement extends Appointment {
-  Patient: Patient & DoctorPatientAppointement
+export interface IDoctorAppointement extends Appointment {
+  Patient: Patient & IDoctorPatientAppointement
 }
 
-export interface PatientDoctorAppointement extends PatientAppointement {
+export interface IPatientDoctorAppointement extends PatientAppointement {
   User: User
   Department: Department
 }
 
 export interface PatientAppointement extends Appointment {
-  Doctor: Doctor & PatientDoctorAppointement
+  Doctor: Doctor & IPatientDoctorAppointement
 }

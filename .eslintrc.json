@@ -1,7 +1,22 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": ["next/core-web-vitals", "eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
   "rules": {
-    "react-hooks/rules-of-hooks": "off",
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "interface",
+        "format": ["PascalCase"],
+        "prefix": ["I"]
+      },
+      {
+        "selector": "variable",
+        "types": ["boolean"],
+        "format": ["PascalCase"],
+        "prefix": ["is", "should", "has", "can", "did", "will"]
+      }
+    ],
     "import/order": [
       "error",
       {
@@ -22,6 +37,7 @@
           "caseInsensitive": true /* ignore case. Options: [true, false] */
         }
       }
-    ]
+    ],
+    "react-hooks/rules-of-hooks": "off"
   }
 }

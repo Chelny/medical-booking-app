@@ -1,101 +1,107 @@
 .react-calendar {
-  @apply w-full border-light-shade bg-light-shade text-light;
+  @apply w-full border-light-shade bg-light text-light;
+}
 
-  & .react-calendar__navigation {
-    @apply bg-primary-day;
+.react-calendar .react-calendar__navigation {
+  @apply bg-primary-day;
+}
 
-    & button {
-      @apply focus:bg-primary-day hover:bg-primary-day disabled:bg-transparent disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent;
-    }
-  }
+.react-calendar .react-calendar__navigation button {
+  @apply focus:bg-primary-day hover:bg-primary-day disabled:bg-transparent disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent;
+}
 
-  & .react-calendar__viewContainer {
-    @apply text-black;
+.react-calendar .react-calendar__viewContainer {
+  @apply text-black;
+}
 
-    & .react-calendar__month-view {
-      & button.react-calendar__tile {
-        @apply h-[48px];
-      }
-    }
+.react-calendar .react-calendar__viewContainer .react-calendar__month-view button.react-calendar__tile {
+  @apply h-[48px];
+}
 
-    & button.react-calendar__tile {
-      @apply rounded-md focus:bg-medium-tint hover:bg-medium-tint disabled:bg-transparent disabled:opacity-25 disabled:cursor-not-allowed;
+.react-calendar .react-calendar__viewContainer button.react-calendar__tile {
+  @apply rounded-md focus:bg-light-shade hover:bg-light-shade disabled:bg-transparent disabled:opacity-25 disabled:cursor-not-allowed;
+}
 
-      &.react-calendar__month-view__days__day {
-        &:not(.react-calendar__tile--now):not(.react-calendar__tile--active) {
-          @apply text-black;
+.react-calendar
+  .react-calendar__viewContainer
+  button.react-calendar__tile.react-calendar__month-view__days__day:not(.react-calendar__tile--now):not(
+    .react-calendar__tile--active
+  ) {
+  @apply text-black;
+}
 
-          &.react-calendar__month-view__days__day--weekend {
-            @apply opacity-60;
-          }
+.react-calendar
+  .react-calendar__viewContainer
+  button.react-calendar__tile.react-calendar__month-view__days__day:not(.react-calendar__tile--now):not(
+    .react-calendar__tile--active
+  ).react-calendar__month-view__days__day--weekend {
+  @apply opacity-60;
+}
 
-          &.react-calendar__month-view__days__day--neighboringMonth {
-            @apply opacity-25;
-          }
-        }
+.react-calendar
+  .react-calendar__viewContainer
+  button.react-calendar__tile.react-calendar__month-view__days__day:not(.react-calendar__tile--now):not(
+    .react-calendar__tile--active
+  ).react-calendar__month-view__days__day--neighboringMonth {
+  @apply opacity-25;
+}
 
-        &.has-appointments {
-          @apply after:content-['\A'] after:block after:w-[8px] after:h-[8px] after:rounded-full after:mx-auto after:bg-primary-day;
-        }
-      }
+.react-calendar
+  .react-calendar__viewContainer
+  button.react-calendar__tile.react-calendar__month-view__days__day.has-appointments {
+  @apply after:content-['\A'] after:block after:w-[8px] after:h-[8px] after:rounded-full after:mx-auto after:bg-active;
+}
 
-      &.react-calendar__tile--now {
-        @apply text-primary-day-shade font-bold opacity-100;
-      }
+.react-calendar .react-calendar__viewContainer button.react-calendar__tile.react-calendar__tile--now {
+  @apply text-active font-bold opacity-100;
+}
 
-      &.react-calendar__tile--active {
-        @apply bg-primary-day text-white;
+.react-calendar
+  .react-calendar__viewContainer
+  button.react-calendar__tile.react-calendar__tile--now.react-calendar__tile--active {
+  @apply text-white;
+}
 
-        &.react-calendar__month-view__days__day {
-          &.has-appointments {
-            @apply after:bg-white;
-          }
-        }
-      }
-    }
-  }
+.react-calendar .react-calendar__viewContainer button.react-calendar__tile.react-calendar__tile--active {
+  @apply bg-primary-day text-white;
+}
+
+.react-calendar
+  .react-calendar__viewContainer
+  button.react-calendar__tile.react-calendar__tile--active.react-calendar__month-view__days__day.has-appointments {
+  @apply after:bg-active;
 }
 
 @media (prefers-color-scheme: dark) {
   .react-calendar {
     @apply border-dark-shade bg-dark-shade text-light;
+  }
 
-    & .react-calendar__navigation {
-      @apply bg-primary-night-shade;
+  .react-calendar .react-calendar__navigation {
+    @apply bg-primary-night-shade;
+  }
 
-      & button {
-        @apply focus:bg-primary-night hover:bg-primary-night;
-      }
-    }
+  .react-calendar .react-calendar__navigation button {
+    @apply focus:bg-primary-night hover:bg-primary-night;
+  }
 
-    & .react-calendar__viewContainer {
-      @apply text-white;
+  .react-calendar .react-calendar__viewContainer {
+    @apply text-white;
+  }
 
-      & button.react-calendar__tile {
-        @apply focus:bg-dark hover:bg-dark;
+  .react-calendar .react-calendar__viewContainer button.react-calendar__tile {
+    @apply focus:bg-dark hover:bg-dark;
+  }
 
-        &.react-calendar__month-view__days__day {
-          &:not(.react-calendar__tile--now):not(.react-calendar__tile--active) {
-            @apply text-white;
-          }
+  .react-calendar
+    .react-calendar__viewContainer
+    button.react-calendar__tile.react-calendar__month-view__days__day:not(.react-calendar__tile--now):not(
+      .react-calendar__tile--active
+    ) {
+    @apply text-white;
+  }
 
-          &.has-appointments {
-            @apply after:bg-primary-night-tint;
-          }
-        }
-
-        &.react-calendar__tile--now {
-          @apply border-primary-night-tint text-primary-night-tint;
-        }
-
-        &.react-calendar__tile--active {
-          @apply bg-primary-night;
-
-          &.has-appointments {
-            @apply after:bg-white;
-          }
-        }
-      }
-    }
+  .react-calendar .react-calendar__viewContainer button.react-calendar__tile.react-calendar__tile--active {
+    @apply bg-primary-night;
   }
 }

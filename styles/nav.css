@@ -1,41 +1,29 @@
-nav {
-  &.auth-route {
-    & ul {
-      @apply flex justify-evenly;
+nav.auth-route ul {
+  @apply flex justify-evenly;
+}
 
-      & li {
-        @apply w-full h-[50px];
+nav.auth-route ul li {
+  @apply w-full h-[50px];
+}
 
-        & a {
-          @apply flex justify-center items-center w-full h-full py-2 px-4 text-primary-day-tint no-underline hover:text-light-tint visited:text-primary-day-tint;
+nav.auth-route ul li a {
+  @apply flex justify-center items-center w-full h-full py-2 px-4 text-primary-day-tint no-underline hover:text-light-tint visited:text-primary-day-tint;
+}
 
-          &.active {
-            @apply text-light-tint;
-          }
+nav.auth-route ul li a.active {
+  @apply text-light-tint;
+}
 
-          & .svg-inline--fa {
-            height: 24px;
-          }
-        }
-      }
-    }
-  }
+nav.auth-route ul li a .svg-inline--fa {
+  height: 24px;
 }
 
 @media (prefers-color-scheme: dark) {
-  nav {
-    &.auth-route {
-      & ul {
-        & li {
-          & a {
-            @apply text-primary-night hover:text-primary-night-tint visited:text-primary-night;
+  nav.auth-route ul li a {
+    @apply text-primary-night hover:text-primary-night-tint visited:text-primary-night;
+  }
 
-            &.active {
-              @apply text-primary-night-tint;
-            }
-          }
-        }
-      }
-    }
+  nav.auth-route ul li a.active {
+    @apply text-primary-night-tint;
   }
 }

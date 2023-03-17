@@ -21,13 +21,11 @@ import { getAuthCookie } from 'utils/auth-cookies'
 import { InputMaskUtil } from 'utils/input-mask'
 import { TextFormatUtil } from 'utils/text-format'
 
-type SignUpResponse = GQLResponse<{ createPatient: { token: string; message: string } }>
+type SignUpGQLResponse = GQLResponse<{ createPatient: { token: string; message: string } }>
 
 const SignUp: NextPage = () => {
   const router = useRouter()
   const { t } = useTranslation()
-  const minBirthdate = format(subYears(new Date(), 100), Common.DATE_FORMAT)
-  const maxBirthdate = format(subYears(new Date(), 18), Common.DATE_FORMAT)
 
   const { values, errors, handleChange, handleSubmit } = useForm({
     initialValues: {
@@ -171,7 +169,7 @@ const SignUp: NextPage = () => {
         payload += `, language: "${router.locale}"`
       }
 
-      const { data, errors } = await useRequest<SignUpResponse>(`{ createPatient(${payload}) { token, message } }`)
+      const { data, errors } = await useRequest<SignUpGQLResponse>(`{ createPatient(${payload}) { token, message } }`)
 
       if (data) {
         toast.success<string>(t(`SUCCESS.${data.createPatient.message}`, { ns: 'api' }))
@@ -201,6 +199,9 @@ const SignUp: NextPage = () => {
                   type="text"
                   id="first-name"
                   value={values.firstName}
+                  aria-required="true"
+                  aria-invalid={!!errors.firstName}
+                  aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_firstName`}
                   onChange={handleChange}
                 />
               </FormElement>
@@ -210,12 +211,15 @@ const SignUp: NextPage = () => {
                   type="text"
                   id="last-name"
                   value={values.lastName}
+                  aria-required="true"
+                  aria-invalid={!!errors.lastName}
+                  aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_lastName`}
                   onChange={handleChange}
                 />
               </FormElement>
-              <FormElement error={errors.gender}>
+              <FormElement fieldName="gender" error={errors.gender}>
                 <fieldset className="checkbox-radio-group">
-                  <legend>{t('FORM.LABEL.GENDER')}</legend>
+                  <legend>{t('FORM.LABEL.SELECT_GENDER')}</legend>
                   {Genders.map((item) => (
                     <div key={item.id}>
                       <input
@@ -225,9 +229,14 @@ const SignUp: NextPage = () => {
                         name="gender"
                         checked={values.gender === item.value}
                         value={item.value}
+                        aria-required="true"
+                        aria-invalid={!!errors.gender}
+                        aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_gender`}
                         onChange={handleChange}
                       />
-                      <label htmlFor={`gender-${item.label}`}>{t(`GENDERS.${item.label.toUpperCase()}`)}</label>
+                      <label htmlFor={`gender-${item.label}`}>
+                        {t(`FORM.LIST.GENDERS.${item.label.toUpperCase()}`)}
+                      </label>
                     </div>
                   ))}
                 </fieldset>
@@ -237,9 +246,12 @@ const SignUp: NextPage = () => {
                   data-testid="form-input-birth-date"
                   type="date"
                   id="birthDate"
-                  min={minBirthdate}
-                  max={maxBirthdate}
+                  min={Common.BIRTH_DATE.MIN}
+                  max={Common.BIRTH_DATE.MAX}
                   value={values.birthDate}
+                  aria-required="true"
+                  aria-invalid={!!errors.birthDate}
+                  aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_birthDate`}
                   onChange={handleChange}
                 />
               </FormElement>
@@ -253,6 +265,9 @@ const SignUp: NextPage = () => {
                   id="email"
                   autoComplete="email"
                   value={values.email}
+                  aria-required="true"
+                  aria-invalid={!!errors.email}
+                  aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_email`}
                   onChange={handleChange}
                 />
               </FormElement>
@@ -262,6 +277,9 @@ const SignUp: NextPage = () => {
                   type="text"
                   id="username"
                   value={values.username}
+                  aria-required="false"
+                  aria-invalid={!!errors.username}
+                  aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_username`}
                   onChange={handleChange}
                 />
               </FormElement>
@@ -272,6 +290,9 @@ const SignUp: NextPage = () => {
                   id="password"
                   autoComplete="new-password"
                   value={values.password}
+                  aria-required="true"
+                  aria-invalid={!!errors.password}
+                  aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_password`}
                   onChange={handleChange}
                 />
               </FormElement>
@@ -282,6 +303,9 @@ const SignUp: NextPage = () => {
                   type="password"
                   id="password-confirmation"
                   value={values.passwordConfirmation}
+                  aria-required="true"
+                  aria-invalid={!!errors.passwordConfirmation}
+                  aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_passwordConfirmation`}
                   onChange={handleChange}
                 />
               </FormElement>
@@ -294,6 +318,9 @@ const SignUp: NextPage = () => {
                   type="text"
                   id="addressLine1"
                   value={values.addressLine1}
+                  aria-required="true"
+                  aria-invalid={!!errors.addressLine1}
+                  aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_addressLine1`}
                   onChange={handleChange}
                 />
               </FormElement>
@@ -304,11 +331,22 @@ const SignUp: NextPage = () => {
                   id="addressLine2"
                   placeholder={t('FORM.PLACEHOLDER.ADDRESS_LINE2')}
                   value={values.addressLine2}
+                  aria-required="false"
+                  aria-invalid={!!errors.addressLine2}
+                  aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_addressLine2`}
                   onChange={handleChange}
                 />
               </FormElement>
               <FormElement fieldName="country" error={errors.country}>
-                <select data-testid="form-input-country" id="country" value={values.country} onChange={handleChange}>
+                <select
+                  data-testid="form-input-country"
+                  id="country"
+                  value={values.country}
+                  aria-required="true"
+                  aria-invalid={!!errors.country}
+                  aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_country`}
+                  onChange={handleChange}
+                >
                   <option aria-label={t('FORM.PLACEHOLDER.SELECT')} />
                   {Countries.map((country, index: number) => (
                     <option key={+index} value={country.abbr}>
@@ -323,6 +361,9 @@ const SignUp: NextPage = () => {
                   id="region"
                   disabled={!values.country}
                   value={values.region}
+                  aria-required="true"
+                  aria-invalid={!!errors.region}
+                  aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_region`}
                   onChange={handleChange}
                 >
                   <option>{!values.country ? t('FORM.PLACEHOLDER.REGION') : ''}</option>
@@ -346,6 +387,9 @@ const SignUp: NextPage = () => {
                   type="text"
                   id="city"
                   value={values.city}
+                  aria-required="true"
+                  aria-invalid={!!errors.city}
+                  aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_city`}
                   onChange={handleChange}
                 />
               </FormElement>
@@ -356,6 +400,9 @@ const SignUp: NextPage = () => {
                   id="post-code"
                   maxLength={postCodeMaxLength}
                   value={postCode}
+                  aria-required="true"
+                  aria-invalid={!!errors.postCode}
+                  aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_postCode`}
                   onChange={(e) =>
                     InputMaskUtil.maskPostCode(e, values, setPostCode, setPostCodeMaxLength, handleChange)
                   }
@@ -370,6 +417,9 @@ const SignUp: NextPage = () => {
                     placeholder={Common.PHONE_NUMBER.PLACEHOLDER}
                     maxLength={Common.PHONE_NUMBER.MAX_LENGTH}
                     value={phoneNumber}
+                    aria-required="true"
+                    aria-invalid={!!errors.phoneNumber}
+                    aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_phoneNumber`}
                     onChange={(e) => InputMaskUtil.maskPhoneNumber(e, setPhoneNumber, handleChange)}
                   />
                 </FormElement>
@@ -379,6 +429,9 @@ const SignUp: NextPage = () => {
                     type="tel"
                     id="phone-number-ext"
                     value={values.phoneNumberExt}
+                    aria-required="false"
+                    aria-invalid={!!errors.phoneNumberExt}
+                    aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_phoneNumberExt`}
                     onChange={handleChange}
                   />
                 </FormElement>
@@ -394,6 +447,9 @@ const SignUp: NextPage = () => {
                   placeholder={Common.MEDICAL_ID.PLACEHOLDER}
                   maxLength={Common.MEDICAL_ID.MAX_LENGTH}
                   value={maskMedicalId}
+                  aria-required="true"
+                  aria-invalid={!!errors.medicalId}
+                  aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_medicalId`}
                   onChange={(e) => InputMaskUtil.maskMedicalId(e, setMaskMedicalId, handleChange)}
                 />
               </FormElement>
@@ -406,6 +462,9 @@ const SignUp: NextPage = () => {
                     min={Common.HEIGHT.MIN}
                     step={Common.HEIGHT.STEP}
                     value={values.height}
+                    aria-required="false"
+                    aria-invalid={!!errors.height}
+                    aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_height`}
                     onChange={handleChange}
                   />
                 </FormElement>
@@ -417,17 +476,23 @@ const SignUp: NextPage = () => {
                     min={Common.WEIGHT.MIN}
                     step={Common.WEIGHT.STEP}
                     value={values.weight}
+                    aria-required="false"
+                    aria-invalid={!!errors.weight}
+                    aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_weight`}
                     onChange={handleChange}
                   />
                 </FormElement>
               </div>
-              <FormElement error={errors.termsAndConditions}>
+              <FormElement fieldName="termsAndConditions" isLabelHidden error={errors.termsAndConditions}>
                 <div className="grid gap-4">
                   <input
                     data-testid="form-checkbox-terms-and-conditions"
                     type="checkbox"
                     id="termsAndConditions"
                     checked={values.termsAndConditions}
+                    aria-required="true"
+                    aria-invalid={!!errors.termsAndConditions}
+                    aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_termsAndConditions`}
                     onChange={handleChange}
                   />
                   <label

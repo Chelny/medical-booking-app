@@ -17,7 +17,8 @@
 <p align="center">
   <a href="#how-to-use">How To Use</a> •
   <a href="#credits">Credits</a> •
-  <a href="#license">License</a>
+  <a href="#license">License</a> •
+  <a href="#websites">Websites</a>
 </p>
 
 ![screenshot](public/assets/images/github/home-page-tablet.png)
@@ -34,9 +35,9 @@ $ git clone https://github.com/chelny/medical-booking-app
 $ cd medical-booking-app
 ```
 
-First, you must create the "MedicalBookingApp" database. You'll find the .sql file in the root directory of the project.
+First, you must create the "MedicalBookingApp" database. You'll find the .sql file in the root directory of the project (eg.: `MedicalBookingApp_2022-01-01.sql`). Import this file to your local database.
 
-Then, setup Prisma:
+Then, set up Prisma:
 
 ```bash
 # Creating your Prisma schema file
@@ -51,12 +52,14 @@ As stated in the [Prisma documentation](https://www.prisma.io/docs/getting-start
 >
 > - creates the `.env` file in the root directory of the project, which is used for defining environment variables (such as your database connection)
 
+<br />
+
 Open the `.env` file and add the missing keys and their values:
 
 ```
 DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
 
-APP_URL=
+APP_URL=http://localhost:3000
 API_PATH=/api/graphql
 
 # Auth Tokens
@@ -73,15 +76,39 @@ RECIPIENT_EMAIL=
 
 A sample of the `.env` file is available at `.env.example`.
 
-Now, that the `.env` file has been filled, go to the command line and execute the remaining scripts:
+<br/>
+
+### Run the project
+
+Open the terminal and execute the following scripts:
 
 ```bash
+# Change directory to the root of the project
+$ cd medical-booking-app
+
 # Install dependencies
 $ yarn
 
 # Run the app
 $ yarn dev
 ```
+
+Open the browser and go to http://localhost:3000/. You should see the login page.
+
+GraphQL playground is accessible at http://localhost:3000/api/graphql.
+
+<br/>
+
+### Login Crendentials
+
+A user can either use their `username` or `email` to log in into their account.
+
+| Username  |               Email               |  Password  |  Role   |
+| :-------: | :-------------------------------: | :--------: | :-----: |
+|   admin   |     admin@medical-booking.app     | Admin1234! |  Admin  |
+|    --     | z.donatas+dev@medical-booking.app |    ???     | Doctor  |
+| dr.gputra |    g.putra@medical-booking.app    | Test1234!  | Doctor  |
+| norigami  |     worigami85@hotmail.local      | Test1234!  | Patient |
 
 <p align="end">(<a href="#readme-top">back to top</a>)</p>
 
@@ -98,9 +125,11 @@ $ yarn dev
 
 MIT
 
----
+<p align="end">(<a href="#readme-top">back to top</a>)</p>
 
-> GitHub [@chelny](https://github.com/chelny) &nbsp;&middot;&nbsp;
-> LinkedIn [Chelny](https://linkedin.com/in/chelny)
+## Websites
+
+GitHub: [@chelny](https://github.com/chelny) &nbsp;&middot;&nbsp;
+LinkedIn: [Chelny](https://linkedin.com/in/chelny)
 
 <p align="end">(<a href="#readme-top">back to top</a>)</p>

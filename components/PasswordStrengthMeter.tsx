@@ -6,7 +6,7 @@ type PasswordStrengthMeterProps = {
   password: InputHTMLAttributes<HTMLInputElement>['value']
 }
 
-const PasswordStrengthMeter = ({ password }: PasswordStrengthMeterProps) => {
+const PasswordStrengthMeter = ({ password }: PasswordStrengthMeterProps): JSX.Element => {
   const { t } = useTranslation()
   const [meter, setMeter] = useState(0)
 

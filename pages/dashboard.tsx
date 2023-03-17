@@ -27,8 +27,8 @@ type DashboardProps = {
   appointmentsErrors: GraphQLError[]
 }
 
-type GetUserByIdResponse = GQLResponse<{ getUserById: User }>
-type GetAppointmentsByPatientIdResponse = GQLResponse<{ getAppointmentsByPatientId: PatientAppointement[] }>
+type GetUserByIdGQLResponse = GQLResponse<{ getUserById: User }>
+type GetAppointmentsByPatientIdGQLResponse = GQLResponse<{ getAppointmentsByPatientId: PatientAppointement[] }>
 
 const Dashboard: NextPage<DashboardProps> = ({ userToken, user, userErrors, appointments, appointmentsErrors }) => {
   const router = useRouter()
@@ -89,7 +89,7 @@ const Dashboard: NextPage<DashboardProps> = ({ userToken, user, userErrors, appo
           }
           onChange={handleSelectDate}
         />
-        <section id="appointmentDetails" className="p-4 mt-6 bg-light-shade dark:bg-dark-shade dark:text-white">
+        <section id="appointmentDetails" className="p-4 mt-6 bg-light dark:bg-dark-shade dark:text-white">
           <h3>
             {t('APPOINTMENTS', {
               ns: 'dashboard',
@@ -103,8 +103,9 @@ const Dashboard: NextPage<DashboardProps> = ({ userToken, user, userErrors, appo
                 <li key={i} className="py-4 border-b border-b-medium-tint last:border-b-0 dark:border-b-dark-tint">
                   <>
                     <div>
-                      {appointment.Doctor.User.first_name} {appointment.Doctor.User.last_name} (
-                      {t(`DOCTOR_DEPARTMENT.${appointment.Doctor.Department.title}`)}) <br />
+                      {appointment.Doctor.User.first_name} {appointment.Doctor.User.last_name}
+                      {' - '}
+                      {t(`DOCTOR_DEPARTMENT.${appointment.Doctor.Department.title}`)} <br />
                       {TextFormatUtil.dateFormat(appointment.start_date, router, 'p')}
                       {' - '}
                       {TextFormatUtil.dateFormat(appointment.end_date, router, 'p')} <br />
@@ -145,10 +146,10 @@ export const getServerSideProps = async (context: IContext & ILocale) => {
   }
 
   const decodedToken = token && jwt_decode(token)
-  const { data: user, errors: getUserErrors } = await useRequest<GetUserByIdResponse>(
+  const { data: user, errors: getUserErrors } = await useRequest<GetUserByIdGQLResponse>(
     `{ getUserById(id: ${decodedToken?.user?.id}) { first_name, last_name } }`
   )
-  const { data: appointments, errors: getAppointmentsErrors } = await useRequest<GetAppointmentsByPatientIdResponse>(
+  const { data: appointments, errors: getAppointmentsErrors } = await useRequest<GetAppointmentsByPatientIdGQLResponse>(
     `{ getAppointmentsByPatientId(id: ${decodedToken?.user?.id}) { reason, start_date, end_date, notes, Doctor {
       image_name, User { first_name, last_name }, Department { title } } } }`
   )

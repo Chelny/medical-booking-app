@@ -2,45 +2,55 @@ input:not([type='checkbox']):not([type='radio']),
 textarea,
 select {
   @apply p-3 border border-medium-tint rounded-md shadow-sm mb-1.5 bg-light text-medium;
+}
 
-  /* Edge */
-  &::-webkit-input-placeholder {
-    @apply opacity-[75%];
-  }
+/* Edge */
+input:not([type='checkbox']):not([type='radio'])::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder,
+select::-webkit-input-placeholder {
+  @apply opacity-[75%];
+}
 
-  /* Internet Explorer 10-11 */
-  &:-ms-input-placeholder {
-    @apply opacity-[75%];
-  }
+/* Internet Explorer 10-11 */
+input:not([type='checkbox']):not([type='radio']):-ms-input-placeholder,
+textarea:-ms-input-placeholder,
+select:-ms-input-placeholder {
+  @apply opacity-[75%];
+}
 
-  &::placeholder {
-    @apply opacity-[75%];
-  }
+input:not([type='checkbox']):not([type='radio'])::placeholder,
+textarea::placeholder,
+select::placeholder {
+  @apply opacity-[75%];
+}
 
-  &:focus {
-    @apply outline-primary-day;
-  }
+input:not([type='checkbox']):not([type='radio']):focus,
+textarea:focus,
+select:focus {
+  @apply outline-primary-day;
+}
 
-  &:disabled {
-    @apply opacity-50 cursor-not-allowed;
-  }
+input:not([type='checkbox']):not([type='radio']):disabled,
+textarea:disabled,
+select:disabled {
+  @apply opacity-50 cursor-not-allowed;
 }
 
 /* Fix on mobile devices */
 input[type='date'] {
   @apply appearance-none;
+}
 
-  &::-webkit-date-and-time-value {
-    @apply p-3 text-left;
-  }
+input[type='date']::-webkit-date-and-time-value {
+  @apply p-3 text-left;
 }
 
 .checkbox-radio-group {
   @apply flex flex-row flex-wrap justify-between mb-[5px];
+}
 
-  & > legend {
-    @apply mb-[13px];
-  }
+.checkbox-radio-group > legend {
+  @apply mb-[13px];
 }
 
 input[type='checkbox']:checked,
@@ -120,66 +130,72 @@ textarea {
   }
 }
 
-.form-validation-failed {
-  & input,
-  & textarea,
-  & select {
-    @apply border-error !important;
-  }
+.form-validation-failed input,
+.form-validation-failed textarea,
+.form-validation-failed select {
+  @apply border-error !important;
 }
 
 meter {
   background: none;
-
-  &::-webkit-meter-inner-element {
-    @apply block;
-  }
-
-  /* Chrome/Safari/Opera */
-  &::-webkit-meter-bar {
-    @apply border-light-shade rounded bg-light-shade;
-    background: #dcdcdc;
-  }
-
-  /* Chrome/Safari/Opera */
-  &[value='1']::-webkit-meter-optimum-value {
-    @apply bg-error;
-  }
-  &[value='2']::-webkit-meter-optimum-value {
-    @apply bg-warning;
-  }
-  &[value='3']::-webkit-meter-optimum-value {
-    @apply bg-warning;
-  }
-  &[value='4']::-webkit-meter-optimum-value {
-    @apply bg-success;
-  }
-
-  /* Firefox */
-  &[value='1']::-moz-meter-bar {
-    @apply bg-error;
-  }
-  &[value='2']::-moz-meter-bar {
-    @apply bg-warning;
-  }
-  &[value='3']::-moz-meter-bar {
-    @apply bg-warning;
-  }
-  &[value='4']::-moz-meter-bar {
-    @apply bg-success;
-  }
 }
 
-form {
-  & button {
-    &[type='button'] {
-      @apply bg-primary-day-tint;
-    }
+meter::-webkit-meter-inner-element {
+  @apply block;
+}
 
-    &[type='submit'] {
-      @apply bg-primary-day;
-    }
-  }
+/* Chrome/Safari/Opera */
+meter::-webkit-meter-bar {
+  @apply border-light-shade rounded bg-light-shade;
+  background: #dcdcdc;
+}
+
+/* Chrome/Safari/Opera */
+meter[value='1']::-webkit-meter-optimum-value {
+  @apply bg-error;
+}
+meter[value='2']::-webkit-meter-optimum-value {
+  @apply bg-warning;
+}
+meter[value='3']::-webkit-meter-optimum-value {
+  @apply bg-warning;
+}
+meter[value='4']::-webkit-meter-optimum-value {
+  @apply bg-success;
+}
+
+/* Firefox */
+meter[value='1']::-moz-meter-bar {
+  @apply bg-error;
+}
+meter[value='2']::-moz-meter-bar {
+  @apply bg-warning;
+}
+meter[value='3']::-moz-meter-bar {
+  @apply bg-warning;
+}
+meter[value='4']::-moz-meter-bar {
+  @apply bg-success;
+}
+
+button {
+  @apply text-sm disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+form button[type='button'] {
+  @apply bg-primary-day-tint;
+}
+
+form button[type='submit'] {
+  @apply bg-primary-day;
+}
+
+form button[type='reset'] {
+  @apply bg-medium-tint text-black;
+}
+
+form button.close {
+  @apply w-min border border-medium-tint bg-transparent text-medium-shade !important;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -187,28 +203,38 @@ form {
   textarea,
   select {
     @apply border-dark-shade shadow-md bg-dark-shade text-medium-tint;
+  }
 
-    /* Edge */
-    &::-webkit-input-placeholder {
-      @apply opacity-50;
-    }
+  /* Edge */
+  input:not([type='checkbox']):not([type='radio'])::-webkit-input-placeholder,
+  textarea::-webkit-input-placeholder,
+  select::-webkit-input-placeholder {
+    @apply opacity-50;
+  }
 
-    /* Internet Explorer 10-11 */
-    &:-ms-input-placeholder {
-      @apply opacity-50;
-    }
+  /* Internet Explorer 10-11 */
+  input:not([type='checkbox']):not([type='radio']):-ms-input-placeholder,
+  textarea:-ms-input-placeholder,
+  select:-ms-input-placeholder {
+    @apply opacity-50;
+  }
 
-    &::placeholder {
-      @apply opacity-50;
-    }
+  input:not([type='checkbox']):not([type='radio'])::placeholder,
+  textarea::placeholder,
+  select::placeholder {
+    @apply opacity-50;
+  }
 
-    &:focus {
-      @apply outline-primary-night;
-    }
+  input:not([type='checkbox']):not([type='radio']):focus,
+  textarea:focus,
+  select:focus {
+    @apply outline-primary-night;
+  }
 
-    &:disabled {
-      @apply opacity-25;
-    }
+  input:not([type='checkbox']):not([type='radio']):disabled,
+  textarea:disabled,
+  select:disabled {
+    @apply opacity-25;
   }
 
   input[type='checkbox']:checked + label::before,
@@ -235,22 +261,24 @@ form {
     @apply outline-primary-night;
   }
 
-  meter {
-    &::-webkit-meter-bar {
-      @apply border-dark-tint bg-dark-tint;
-      background: #393e46;
-    }
+  meter::-webkit-meter-bar {
+    @apply border-dark-tint bg-dark-tint;
+    background: #393e46;
   }
 
-  form {
-    & button {
-      &[type='button'] {
-        @apply bg-primary-night-shade;
-      }
+  form button[type='button'] {
+    @apply bg-primary-night-shade;
+  }
 
-      &[type='submit'] {
-        @apply bg-primary-night;
-      }
-    }
+  form button[type='submit'] {
+    @apply bg-primary-night;
+  }
+
+  form button[type='reset'] {
+    @apply bg-dark-tint text-white;
+  }
+
+  form button.close {
+    @apply border-dark-tint text-light-shade !important;
   }
 }

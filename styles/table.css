@@ -1,0 +1,107 @@
+table {
+  @apply w-full;
+}
+
+/* Server-side Tables */
+.table-filter,
+.table-pagination {
+  @apply grid sm:grid-flow-col sm:auto-cols-max justify-between items-center;
+}
+
+.table-filter {
+  @apply justify-between items-center py-2;
+}
+
+.table-filter__items-per-page,
+.table-filter__search {
+  @apply grid grid-flow-col auto-cols-max items-center gap-2 py-1;
+}
+
+.table-column-wrapper {
+  @apply grid grid-flow-col justify-center items-center gap-2;
+}
+
+.table-pagination {
+  @apply items-center p-2;
+}
+
+.table-pagination__items-displayed,
+.table-pagination__navigation {
+  @apply grid sm:grid-flow-col sm:auto-cols-max justify-between items-center py-1;
+}
+
+.table-pagination__navigation ol {
+  @apply grid grid-flow-col gap-x-2;
+}
+
+.table-pagination__navigation ol li {
+  @apply grid justify-center items-center w-[36px] h-[36px] bg-light-shade;
+}
+
+.table-pagination__navigation ol li button {
+  @apply disabled:opacity-25 disabled:cursor-not-allowed;
+}
+
+/* Admin Console */
+table.admin-console {
+  @apply table-auto border-separate border-spacing-0 bg-light-shade text-dark;
+}
+
+table.admin-console thead {
+  @apply bg-primary-day text-light;
+}
+
+table.admin-console th,
+table.admin-console td {
+  @apply p-2 border;
+}
+
+table.admin-console th {
+  @apply min-w-[150px] border-light-shade bg-primary-day font-normal whitespace-nowrap;
+}
+
+table.admin-console tbody tr {
+  @apply hover:bg-light-shade;
+}
+
+table.admin-console tbody tr:nth-child(odd) td {
+  @apply bg-light;
+}
+
+table.admin-console td {
+  @apply border-light-tint bg-light-shade text-center;
+}
+
+table.admin-console .admin-console__user-actions {
+  @apply grid grid-flow-col justify-evenly;
+}
+
+@media (prefers-color-scheme: dark) {
+  table.admin-console {
+    @apply bg-dark-shade text-light;
+  }
+
+  table.admin-console thead {
+    @apply bg-primary-night-shade;
+  }
+
+  table.admin-console th {
+    @apply border-dark-shade bg-primary-night-shade;
+  }
+
+  table.admin-console tbody tr {
+    @apply hover:bg-dark-tint;
+  }
+
+  table.admin-console tbody tr:nth-child(odd) td {
+    @apply bg-dark;
+  }
+
+  table.admin-console td {
+    @apply bg-dark-shade border-dark-tint;
+  }
+
+  .table-pagination__navigation ol li {
+    @apply bg-dark-shade;
+  }
+}

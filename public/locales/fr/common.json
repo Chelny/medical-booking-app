@@ -1,6 +1,9 @@
 {
   "LOADING": "Chargement...",
   "OPTIONAL": "Optionnel",
+  "CREATED_AT": "Création",
+  "UPDATED_AT": "Modification",
+  "ACTIONS": "Actions",
   "ROUTES": {
     "HOME": "Accueil",
     "SIGN_UP": "Créer un compte",
@@ -10,6 +13,7 @@
     "APPOINTMENTS": "Rendez-vous",
     "APPOINTMENT_CREATE": "Prendre un rendez-vous",
     "APPOINTMENT_UPDATE": "Modifier un rendez-vous",
+    "ADMIN": "Console d'administration",
     "ACCOUNT": "Compte",
     "PROFILE": "Profil",
     "SETTINGS": "Paramètres",
@@ -25,13 +29,18 @@
     "CONFIRM": "Confirmer",
     "BACK": "Retour",
     "NEXT": "Suivant",
-    "CLOSE": "Fermer"
+    "CLOSE": "Fermer",
+    "RESET": "Reset",
+    "APPLY": "Appliquer",
+    "SAVE": "Sauvegarder"
   },
   "FORM": {
     "LABEL": {
+      "ID": "ID",
       "FIRST_NAME": "Prénom",
       "LAST_NAME": "Nom",
       "GENDER": "Sexe",
+      "SELECT_GENDER": "Choisissez le sexe",
       "BIRTH_DATE": "Date de naissance",
       "LOGIN_ID": "Nom d'utilisateur ou courriel",
       "EMAIL": "Courriel",
@@ -40,6 +49,8 @@
       "PASSWORD_CONFIRMATION": "Confirmer le mot de passe",
       "NEW_PASSWORD": "Nouveau mot de passe",
       "NEW_PASSWORD_CONFIRMATION": "Confirmer le nouveau mot de passe",
+      "ROLE": "Rôle",
+      "LANGUAGE": "Langue",
       "ADDRESS_LINE1": "Adresse ligne 1",
       "ADDRESS_LINE2": "Adresse ligne 2",
       "CITY": "Ville",
@@ -105,12 +116,37 @@
         "3": "Bien",
         "4": "Robuste"
       }
+    },
+    "LIST": {
+      "GENDERS": {
+        "MALE": "Homme",
+        "FEMALE": "Femme",
+        "OTHER": "Autre"
+      }
+    }
+  },
+  "TABLE": {
+    "FILTER": {
+      "ITEMS_PER_PAGE": "Résultats par page",
+      "SEARCH": "Recherche"
+    },
+    "PAGINATION": {
+      "CURRENT_PAGE": "Affichage de {{offset}} à {{lastItem}} sur {{total}} entrées"
     }
   },
   "GENDERS": {
-    "MALE": "Homme",
-    "FEMALE": "Femme",
-    "OTHER": "Autre"
+    "M": "Homme",
+    "F": "Femme",
+    "O": "Autre"
+  },
+  "ROLES": {
+    "1": "Admin",
+    "2": "Médecin",
+    "3": "Patient"
+  },
+  "LANGUAGES": {
+    "EN": "Anglais",
+    "FR": "Français"
   },
   "COUNTRIES": {
     "CAN": {

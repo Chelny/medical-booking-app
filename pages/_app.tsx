@@ -34,7 +34,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <title>{Common.APP_NAME}</title>
-        <meta name="description" content="Book an appointment with the doctor of your choice!" />
+        <meta name="description" content="Book a medical appointment!" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta
           name="viewport"

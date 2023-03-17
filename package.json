@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "author": {
-    "name": "Chelny"
+    "name": "Chelny Duplan"
   },
   "scripts": {
     "dev": "next dev",
@@ -19,7 +19,9 @@
     "@fortawesome/free-regular-svg-icons": "6.2.1",
     "@fortawesome/free-solid-svg-icons": "6.2.1",
     "@fortawesome/react-fontawesome": "0.2.0",
-    "@prisma/client": "4.6.1",
+    "@headlessui/react": "1.7.13",
+    "@headlessui/tailwindcss": "0.1.2",
+    "@prisma/client": "4.11.0",
     "autoprefixer": "10.4.12",
     "bcrypt": "5.1.0",
     "cookie": "0.5.0",
@@ -39,7 +41,6 @@
     "postcss": "8.4.18",
     "postcss-import": "15.0.0",
     "postcss-nesting": "10.2.0",
-    "prisma": "4.6.1",
     "react": "18.2.0",
     "react-calendar": "4.0.0",
     "react-dom": "18.2.0",
@@ -62,9 +63,12 @@
     "@types/react-calendar": "3.5.3",
     "@types/react-dom": "18.0.6",
     "@types/zxcvbn": "4.4.1",
-    "eslint": "8.26.0",
-    "eslint-config-next": "13.0.1",
-    "eslint-plugin-import": "2.26.0",
-    "typescript": "4.8.4"
+    "@typescript-eslint/eslint-plugin": "5.55.0",
+    "@typescript-eslint/parser": "5.55.0",
+    "eslint": "8.36.0",
+    "eslint-config-next": "13.2.4",
+    "eslint-plugin-import": "2.27.5",
+    "prisma": "4.11.0",
+    "typescript": "5.0.2"
   }
 }

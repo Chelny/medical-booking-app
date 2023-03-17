@@ -14,7 +14,7 @@ import { useForm } from 'hooks/useForm'
 import { useRequest } from 'hooks/useRequest'
 import { getAuthCookie } from 'utils/auth-cookies'
 
-type ResetPasswordResponse = GQLResponse<{ resetPassword: { message: string } }>
+type ResetPasswordGQLResponse = GQLResponse<{ resetPassword: { message: string } }>
 
 const ResetPassword: NextPage = () => {
   const router = useRouter()
@@ -43,7 +43,7 @@ const ResetPassword: NextPage = () => {
       return e
     },
     onSubmit: async () => {
-      const { data, errors } = await useRequest<ResetPasswordResponse>(
+      const { data, errors } = await useRequest<ResetPasswordGQLResponse>(
         `{ resetPassword(password: "${values.newPassword}", token: "${router.query.token}") { message } }`
       )
 

@@ -7,6 +7,7 @@ export const Routes = {
   APPOINTMENTS: '/appointments',
   APPOINTMENT_CREATE: '/appointment',
   APPOINTMENT_UPDATE: '/appointment/:slug',
+  ADMIN: '/admin',
   ACCOUNT: '/account',
   PROFILE: '/profile',
   SETTINGS: '/settings',

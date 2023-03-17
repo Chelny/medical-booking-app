@@ -1,0 +1,8 @@
+{
+  "ADMIN_CONSOLE": "Console d'administration",
+  "ADD_USER": "Ajouter un utilisateur",
+  "USER_PROFILE_MODAL": {
+    "CREATE_TITLE": "Création d'un utilisateur",
+    "EDIT_TITLE": "Modification d'un utilisateur"
+  }
+}

@@ -4,6 +4,7 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import ActiveLink from 'components/ActiveLink'
 import { Routes } from 'constants/routes'
+import { UserRole } from 'enums/user-role.enum'
 
 type NavProps = {
   user?: User
@@ -33,7 +34,7 @@ const Nav = ({ user, isAuthRoute }: NavProps): JSX.Element => {
             </ActiveLink>
           </li>
         )}
-        {user && (
+        {user && user.role_id !== UserRole.ADMIN && (
           <li>
             <ActiveLink activeClassName="active" href={Routes.APPOINTMENTS}>
               <a>
@@ -46,20 +47,23 @@ const Nav = ({ user, isAuthRoute }: NavProps): JSX.Element => {
             </ActiveLink>
           </li>
         )}
-        {user && user.role_id === 2 && (
+        {user && user.role_id === UserRole.ADMIN && (
           <li>
-            <ActiveLink activeClassName="active" href={Routes.ACCOUNT}>
+            <ActiveLink activeClassName="active" href={Routes.ADMIN}>
               <a>
-                <FontAwesomeIcon icon="user-doctor" aria-label={t('ROUTES.ACCOUNT')} />
+                <FontAwesomeIcon icon="users-gear" aria-label={t('ROUTES.ADMIN')} />
               </a>
             </ActiveLink>
           </li>
         )}
-        {user && user.role_id === 3 && (
+        {user && (
           <li>
             <ActiveLink activeClassName="active" href={Routes.ACCOUNT}>
               <a>
-                <FontAwesomeIcon icon="user" aria-label={t('ROUTES.ACCOUNT')} />
+                <FontAwesomeIcon
+                  icon={user.role_id === UserRole.DOCTOR ? 'user-doctor' : 'user'}
+                  aria-label={t('ROUTES.ACCOUNT')}
+                />
               </a>
             </ActiveLink>
           </li>

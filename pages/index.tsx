@@ -7,12 +7,13 @@ import { toast } from 'react-toastify'
 import Button from 'components/Button'
 import FormElement from 'components/FormElement'
 import PageLayout from 'components/PageLayout'
+import { Common } from 'constants/common'
 import { Routes } from 'constants/routes'
 import { useForm } from 'hooks/useForm'
 import { useRequest } from 'hooks/useRequest'
 import { getAuthCookie } from 'utils/auth-cookies'
 
-type LoginResponse = GQLResponse<{ login: { token: string } }>
+type LoginGQLResponse = GQLResponse<{ login: { token: string } }>
 
 const Home: NextPage = () => {
   const router = useRouter()
@@ -30,7 +31,7 @@ const Home: NextPage = () => {
       return e
     },
     onSubmit: async () => {
-      const { data, errors } = await useRequest<LoginResponse>(
+      const { data, errors } = await useRequest<LoginGQLResponse>(
         `{ login(email: "${values.loginId}", username: "${values.loginId}", password: "${values.password}") { token } }`
       )
 
@@ -50,6 +51,9 @@ const Home: NextPage = () => {
               type="text"
               id="loginId"
               value={values.loginId}
+              aria-required="true"
+              aria-invalid={!!errors.loginId}
+              aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_loginId`}
               onChange={handleChange}
             />
           </FormElement>
@@ -63,6 +67,9 @@ const Home: NextPage = () => {
               type="password"
               id="password"
               value={values.password}
+              aria-required="true"
+              aria-invalid={!!errors.password}
+              aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_password`}
               onChange={handleChange}
             />
           </FormElement>

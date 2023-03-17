@@ -7,17 +7,17 @@ interface IGender {
 export const Genders: IGender[] = [
   {
     id: 1,
-    label: 'male',
+    label: 'Male',
     value: 'M',
   },
   {
     id: 2,
-    label: 'female',
+    label: 'Female',
     value: 'F',
   },
   {
     id: 3,
-    label: 'other',
+    label: 'Other',
     value: 'O',
   },
 ]

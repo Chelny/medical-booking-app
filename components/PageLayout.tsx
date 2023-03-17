@@ -1,9 +1,11 @@
+import { ReactElement } from 'react'
+
 type PageLayoutProps = {
-  children: JSX.Element
+  children: ReactElement
 }
 
 const PageLayout = ({ children }: PageLayoutProps): JSX.Element => {
-  return <section className="p-4 overflow-y-auto">{children}</section>
+  return <section className="p-4">{children}</section>
 }
 
 export default PageLayout

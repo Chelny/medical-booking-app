@@ -11,7 +11,7 @@ import { useForm } from 'hooks/useForm'
 import { useRequest } from 'hooks/useRequest'
 import { getAuthCookie } from 'utils/auth-cookies'
 
-type ForgotPasswordResponse = GQLResponse<{ forgotPassword: { message: string } }>
+type ForgotPasswordGQLResponse = GQLResponse<{ forgotPassword: { message: string } }>
 
 const ForgotPassword: NextPage = () => {
   const { t } = useTranslation()
@@ -28,7 +28,7 @@ const ForgotPassword: NextPage = () => {
       return e
     },
     onSubmit: async () => {
-      const { data, errors } = await useRequest<ForgotPasswordResponse>(
+      const { data, errors } = await useRequest<ForgotPasswordGQLResponse>(
         `{ forgotPassword(email: "${values.email}") { message } }`
       )
 
