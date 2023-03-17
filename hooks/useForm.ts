@@ -8,6 +8,7 @@ interface IOptions<T> {
 }
 
 type EmptyObject = { [K in never]: never }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Values<T> = Record<keyof T, any>
 type Validations<T> = Partial<Record<keyof T, string>>
 type Errors<T> = Partial<Record<keyof T, string>>
@@ -17,6 +18,7 @@ type Errors<T> = Partial<Record<keyof T, string>>
  * @param options
  * @returns {Object}
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const useForm = <T extends Values<T> = EmptyObject>(options: IOptions<T>): any => {
   const [values, setValues] = useState<Values<T>>((options.initialValues || {}) as T)
   const [errors, setErrors] = useState<Errors<T>>({})
@@ -45,7 +47,7 @@ export const useForm = <T extends Values<T> = EmptyObject>(options: IOptions<T>)
 
     // Select box
     else if ('target' in event) {
-      const target = event.target as HTMLSelectElement
+      const target = (event as FormEvent<HTMLElement>).target as HTMLSelectElement
       key = TextFormatUtil.kebabCaseToCamelCase(target.id)
       value = target.value
     }

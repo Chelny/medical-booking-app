@@ -48,7 +48,7 @@ const MultiStepForm = ({ fieldGroups, submitBtnLabel, onComplete }: MultiStepFor
   // Mark the input group already filled as blue or gray if not
   const Dots = () => <div className="w-full flex items-center justify-center gap-1 py-4">{renderMarkers()}</div>
   const renderMarkers = () => {
-    let markers = []
+    const markers = []
     for (let i = 0; i < fieldGroups.length; i++) {
       markers.push(
         <span

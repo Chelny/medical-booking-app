@@ -55,11 +55,11 @@ export const Helpers = {
     try {
       const key = crypto.createHash('sha256').update('popcorn').digest()
 
-      let textParts = stringToDecrypt.split(':')
-      let iv = Buffer.from(String(textParts.shift()), 'hex')
-      let encryptedText = Buffer.from(textParts.join(':'), 'hex')
-      let decipher = crypto.createDecipheriv('aes-256-cbc', key, iv)
-      let decrypted = decipher.update(encryptedText)
+      const textParts = stringToDecrypt.split(':')
+      const iv = Buffer.from(String(textParts.shift()), 'hex')
+      const encryptedText = Buffer.from(textParts.join(':'), 'hex')
+      const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv)
+      const decrypted = decipher.update(encryptedText)
 
       const result = Buffer.concat([decrypted, decipher.final()])
 

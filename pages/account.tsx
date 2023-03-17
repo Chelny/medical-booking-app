@@ -11,7 +11,7 @@ type AccountProps = {
   userToken: User
 }
 
-const Account: NextPage<AccountProps> = ({ userToken }) => {
+const Account: NextPage<AccountProps> = () => {
   const { t } = useTranslation()
 
   return (

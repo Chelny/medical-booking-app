@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { User } from '@prisma/client'
-import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
 import ActiveLink from 'components/ActiveLink'
 import { Routes } from 'constants/routes'
 import { UserRole } from 'enums/user-role.enum'

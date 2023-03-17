@@ -8,11 +8,11 @@ export interface IDoctorAppointement extends Appointment {
   Patient: Patient & IDoctorPatientAppointement
 }
 
-export interface IPatientDoctorAppointement extends PatientAppointement {
+export interface IPatientDoctorAppointement extends IPatientAppointement {
   User: User
   Department: Department
 }
 
-export interface PatientAppointement extends Appointment {
+export interface IPatientAppointement extends Appointment {
   Doctor: Doctor & IPatientDoctorAppointement
 }

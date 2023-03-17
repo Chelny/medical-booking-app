@@ -3,10 +3,10 @@ import { compare, hash } from 'bcrypt'
 import { createSchema, createYoga } from 'graphql-yoga'
 import { omit } from 'lodash-es'
 import { Common } from 'constants/common'
-import { AuthResponse } from 'dtos/auth.response'
-import { GetUsersParams } from 'dtos/get-users.params'
-import { GetUsersResponse } from 'dtos/get-users.response'
-import { SuccessResponse } from 'dtos/success.response'
+import { IAuthResponse } from 'dtos/auth.response'
+import { IGetUsersParams } from 'dtos/get-users.params'
+import { IGetUsersResponse } from 'dtos/get-users.response'
+import { ISuccessResponse } from 'dtos/success.response'
 import { IDoctorContact, IPatientContact } from 'dtos/user-contact.response'
 import { prisma } from 'pages/api/db'
 import { EmailService } from 'pages/api/email.service'
@@ -17,12 +17,11 @@ import {
   CustomApiErrorDuplicateMedicalId,
   CustomApiErrorDuplicateUsername,
   CustomApiErrorInvalidToken,
-  CustomApiErrorUnauthorized,
   CustomApiErrorUserNotFound,
 } from 'pages/api/errors'
 import { Helpers } from 'pages/api/helpers'
 import { createTokens } from 'pages/api/tokens'
-import { getAuthCookie, removeAuthCookie, setAuthCookie } from 'utils/auth-cookies'
+import { removeAuthCookie, setAuthCookie } from 'utils/auth-cookies'
 
 const typeDefs = `
   scalar Timestamp
@@ -235,7 +234,7 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    login: async (parent: unknown, args: User, context: IContext): Promise<AuthResponse> => {
+    login: async (parent: unknown, args: User, context: IContext): Promise<IAuthResponse> => {
       // Check if the user exists
       const user = await prisma.user.findFirst({
         where: { OR: [{ email: args.email }, { username: args.username }] },
@@ -253,12 +252,12 @@ const resolvers = {
 
       return { token }
     },
-    logout: async (parent: unknown, args: User, context: IContext): Promise<SuccessResponse> => {
+    logout: async (parent: unknown, args: User, context: IContext): Promise<ISuccessResponse> => {
       // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
       removeAuthCookie(context.res)
       return { message: '' }
     },
-    forgotPassword: async (parent: unknown, args: User, context: IContext): Promise<SuccessResponse> => {
+    forgotPassword: async (parent: unknown, args: User): Promise<ISuccessResponse> => {
       const user = await prisma.user.findFirst({ where: { email: args.email } })
       if (!user) throw CustomApiErrorUserNotFound()
 
@@ -266,13 +265,14 @@ const resolvers = {
       const link = `${process.env.APP_URL}/reset-password?token=${token}`
 
       // FIXME: Find better way to get translated texts
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const emailMessage = (firstName?: string, link?: string): any => {
         return {
           en: {
             RESET_PASSWORD: {
               EMAIL: {
                 SUBJECT: 'Reset Password',
-                BODY: `Hi ${firstName},<br/><br/>You have requested to reset your password. Please <a href="${link}">click here</a> or copy/paste the following link in your browser: ${link} to reset.<br/><br/>If you didn\'t request to change your password, please ignore this email.`,
+                BODY: `Hi ${firstName},<br/><br/>You have requested to reset your password. Please <a href="${link}">click here</a> or copy/paste the following link in your browser: ${link} to reset.<br/><br/>If you didn't request to change your password, please ignore this email.`,
               },
             },
           },
@@ -280,7 +280,7 @@ const resolvers = {
             RESET_PASSWORD: {
               EMAIL: {
                 SUBJECT: 'Réinitialisation de votre mot de passe',
-                BODY: `Bonjour ${firstName},<br/><br/>Vous avez demandé la réinitialisation de votre mot de passe. Veuillez <a href="${link}">cliquez ici</a> ou copier/coller le lien suivant dans votre navigateur : ${link} pour réinitialiser.<br/><br/>Si vous n\'avez pas demandé à changer votre mot de passe, veuillez ignorer ce courriel.`,
+                BODY: `Bonjour ${firstName},<br/><br/>Vous avez demandé la réinitialisation de votre mot de passe. Veuillez <a href="${link}">cliquez ici</a> ou copier/coller le lien suivant dans votre navigateur : ${link} pour réinitialiser.<br/><br/>Si vous n'avez pas demandé à changer votre mot de passe, veuillez ignorer ce courriel.`,
               },
             },
           },
@@ -288,19 +288,18 @@ const resolvers = {
       }
 
       const emailService = new EmailService(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         process.env.NODE_ENV === 'production' ? user.email : process.env.RECIPIENT_EMAIL!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         emailMessage()[user.language!].RESET_PASSWORD.EMAIL.SUBJECT,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         emailMessage(user.first_name, link)[user.language!].RESET_PASSWORD.EMAIL.BODY
       )
       emailService.sendMail()
 
       return { message: 'RESET_PASSWORD_LINK_SEND' }
     },
-    resetPassword: async (
-      parent: unknown,
-      args: User & { token: string },
-      context: IContext
-    ): Promise<SuccessResponse> => {
+    resetPassword: async (parent: unknown, args: User & { token: string }): Promise<ISuccessResponse> => {
       // Decrypt token
       const decryptedToken = Helpers.decryptToken(args.token)
       if (!decryptedToken) throw CustomApiErrorInvalidToken()
@@ -322,7 +321,7 @@ const resolvers = {
 
       return { message: 'PASSWORD_RESET' }
     },
-    getUsers: async (parent: unknown, args: GetUsersParams, context: IContext): Promise<GetUsersResponse> => {
+    getUsers: async (parent: unknown, args: IGetUsersParams): Promise<IGetUsersResponse> => {
       // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
       let whereClauseQuery = {}
       let orderByClause = {}
@@ -368,7 +367,7 @@ const resolvers = {
 
       return { results: getUsers[0], count: getUsers[1] }
     },
-    getUserById: async (parent: unknown, args: User, context: IContext): Promise<Omit<User, 'password'>> => {
+    getUserById: async (parent: unknown, args: User): Promise<Omit<User, 'password'>> => {
       // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
 
       const user = await prisma.user.findUnique({ where: { id: args.id } })
@@ -376,11 +375,7 @@ const resolvers = {
 
       return omit(user, 'password')
     },
-    updateUserPassword: async (
-      parent: unknown,
-      args: User & { new_password: string },
-      context: IContext
-    ): Promise<SuccessResponse> => {
+    updateUserPassword: async (parent: unknown, args: User & { new_password: string }): Promise<ISuccessResponse> => {
       // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
 
       const user = await prisma.user.findUnique({ where: { id: args.id } })
@@ -397,7 +392,7 @@ const resolvers = {
 
       return { message: 'PASSWORD_UPDATED' }
     },
-    deleteUser: async (parent: unknown, args: User, context: IContext): Promise<SuccessResponse> => {
+    deleteUser: async (parent: unknown, args: User): Promise<ISuccessResponse> => {
       // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
 
       await prisma.user.delete({
@@ -409,11 +404,7 @@ const resolvers = {
 
       return { message: 'USER_DELETED' }
     },
-    createDoctor: async (
-      parent: unknown,
-      args: User & Contact & Doctor,
-      context: IContext
-    ): Promise<SuccessResponse> => {
+    createDoctor: async (parent: unknown, args: User & Contact & Doctor): Promise<ISuccessResponse> => {
       const findEmail = await prisma.user.findUnique({ where: { email: args.email } })
       if (findEmail) throw CustomApiErrorDuplicateEmail()
 
@@ -459,11 +450,7 @@ const resolvers = {
 
       return { message: 'ACCOUNT_CREATED' }
     },
-    updateDoctor: async (
-      parent: unknown,
-      args: User & Contact & Doctor,
-      context: IContext
-    ): Promise<IDoctorContact> => {
+    updateDoctor: async (parent: unknown, args: User & Contact & Doctor): Promise<IDoctorContact> => {
       // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
 
       const user = await prisma.user.findUnique({
@@ -525,7 +512,7 @@ const resolvers = {
 
       return doctor
     },
-    getAppointmentsByDoctorId: async (parent: unknown, args: User, context: IContext): Promise<Appointment[]> => {
+    getAppointmentsByDoctorId: async (parent: unknown, args: User): Promise<Appointment[]> => {
       // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
       return await prisma.appointment.findMany({
         where: { doctor_id: args.id },
@@ -536,7 +523,7 @@ const resolvers = {
       parent: unknown,
       args: User & Contact & Patient,
       context: IContext
-    ): Promise<AuthResponse> => {
+    ): Promise<IAuthResponse> => {
       const findEmail = await prisma.user.findUnique({ where: { email: args.email } })
       if (findEmail) throw CustomApiErrorDuplicateEmail()
 
@@ -587,11 +574,7 @@ const resolvers = {
 
       return { token, message: 'ACCOUNT_CREATED' }
     },
-    updatePatient: async (
-      parent: unknown,
-      args: User & Contact & Patient,
-      context: IContext
-    ): Promise<IPatientContact> => {
+    updatePatient: async (parent: unknown, args: User & Contact & Patient): Promise<IPatientContact> => {
       // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
 
       const user = await prisma.user.findUnique({
@@ -658,7 +641,7 @@ const resolvers = {
 
       return patient
     },
-    getAppointmentsByPatientId: async (parent: unknown, args: User, context: IContext): Promise<Appointment[]> => {
+    getAppointmentsByPatientId: async (parent: unknown, args: User): Promise<Appointment[]> => {
       // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
       return await prisma.appointment.findMany({
         where: { patient_id: args.id },

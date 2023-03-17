@@ -3,7 +3,9 @@ import { JSXElementConstructor, MouseEventHandler, ReactElement } from 'react'
 import Button from 'components/Button'
 
 type FormActionsProps = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cancelButton?: { label: ReactElement<any, string | JSXElementConstructor<any>> }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   confirmButton: { label: ReactElement<any, string | JSXElementConstructor<any>>; disabled?: boolean }
   handleCancelAction: MouseEventHandler<HTMLButtonElement>
   handleConfirmAction?: MouseEventHandler<HTMLButtonElement>

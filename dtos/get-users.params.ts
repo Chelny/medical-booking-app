@@ -1,7 +1,6 @@
 import { Prisma, User_gender } from '@prisma/client'
-import { UserRoleValues } from 'enums/user-role.enum'
 
-export interface GetUsersParams {
+export interface IGetUsersParams {
   offset: number
   limit: number
   query: string

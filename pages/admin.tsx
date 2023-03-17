@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Prisma, User, User_gender } from '@prisma/client'
 import { GraphQLError } from 'graphql'
 import jwt_decode from 'jwt-decode'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { useRouter } from 'next/router'
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import Button from 'components/Button'
 import ColumnSort from 'components/ColumnSort'
@@ -16,8 +16,8 @@ import { Genders } from 'configs/genders'
 import { Locales } from 'configs/locales'
 import { Common } from 'constants/common'
 import { Routes } from 'constants/routes'
-import { GetUsersParams } from 'dtos/get-users.params'
-import { GetUsersResponse } from 'dtos/get-users.response'
+import { IGetUsersParams } from 'dtos/get-users.params'
+import { IGetUsersResponse } from 'dtos/get-users.response'
 import { IUserContact } from 'dtos/user-contact.response'
 import { UserRole } from 'enums/user-role.enum'
 import { useRequest } from 'hooks/useRequest'
@@ -28,9 +28,9 @@ type AdminProps = {
   userToken: User
 }
 
-type GetUsersGQLResponse = GQLResponse<{ getUsers: GetUsersResponse }>
+type GetUsersGQLResponse = GQLResponse<{ getUsers: IGetUsersResponse }>
 
-const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
+const Admin: NextPage<AdminProps> = (): JSX.Element => {
   const { t } = useTranslation()
   const router = useRouter()
   const GendersMap = Genders.map(({ value }) => value as User_gender)
@@ -38,8 +38,7 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
   const LanguagesMap = Object.keys(Locales)
   const [users, setUsers] = useState<IUserContact[]>([])
   const [usersErrors, setUsersErrors] = useState<GraphQLError[]>([])
-  const [isGetUsersLoading, setGetUsersLoading] = useState<boolean>(false)
-  const [getUsersParams, setGetUsersParams] = useState<GetUsersParams>({
+  const [getUsersParams, setGetUsersParams] = useState<IGetUsersParams>({
     offset: 0,
     limit: Common.PAGINATION.LIMIT,
     query: '',
@@ -53,13 +52,15 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
   const [isUserProfileModalOpen, setIsUserProfileModalOpen] = useState<boolean>(false)
   const [viewUser, setViewUser] = useState<IUserContact>({} as IUserContact)
 
-  useEffect(() => {
-    getUsers()
-  }, [getUsersParams])
+  useEffect(
+    () => {
+      getUsers()
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [getUsersParams]
+  )
 
   const getUsers = async () => {
-    setGetUsersLoading(true)
-
     setUsers([])
     setGetUsersCount(0)
     setUsersErrors([])
@@ -119,7 +120,6 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
         setGetUsersCount(value.data.getUsers.count)
       }
       if (value.errors) setUsersErrors(value.errors)
-      setGetUsersLoading(false)
     })
   }
 
@@ -318,40 +318,46 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user: IUserContact) => (
-              <tr key={user.id}>
-                <td className="column-id sticky-start">{user.id}</td>
-                <td className="column-first-name sticky-start">{user.first_name}</td>
-                <td className="column-last-name sticky-start">{user.last_name}</td>
-                <td>{t(`GENDERS.${user.gender}`)}</td>
-                <td>{TextFormatUtil.dateFormat(user.birth_date, router)}</td>
-                <td>{user.email}</td>
-                <td>{user.username ?? '--'}</td>
-                <td>{t(`ROLES.${user.role_id}`)}</td>
-                <td>{user.language?.toUpperCase()}</td>
-                <td>{user.created_at && TextFormatUtil.dateFormat(user.created_at, router, 'PPpp')}</td>
-                <td>{TextFormatUtil.dateFormat(user.updated_at, router, 'PPpp')}</td>
-                <td className="sticky-end">
-                  <div className="admin-console__user-actions">
-                    <button
-                      type="button"
-                      className="text-secondary"
-                      onClick={() => {
-                        setViewUser(user)
-                        setIsUserProfileModalOpen(true)
-                      }}
-                    >
-                      <FontAwesomeIcon icon="user-pen" aria-label={t('ROUTES.DASHBOARD')} />
-                    </button>
-                    {user.id != 1 && (
-                      <button type="button" className="text-error">
-                        <FontAwesomeIcon icon="user-minus" aria-label={t('ROUTES.DASHBOARD')} />
+            {users.map((user: IUserContact) => {
+              return usersErrors && usersErrors.length > 0 ? (
+                <tr>
+                  <td colSpan={12}>{usersErrors[0].message}</td>
+                </tr>
+              ) : (
+                <tr key={user.id}>
+                  <td className="column-id sticky-start">{user.id}</td>
+                  <td className="column-first-name sticky-start">{user.first_name}</td>
+                  <td className="column-last-name sticky-start">{user.last_name}</td>
+                  <td>{t(`GENDERS.${user.gender}`)}</td>
+                  <td>{TextFormatUtil.dateFormat(user.birth_date, router)}</td>
+                  <td>{user.email}</td>
+                  <td>{user.username ?? '--'}</td>
+                  <td>{t(`ROLES.${user.role_id}`)}</td>
+                  <td>{user.language?.toUpperCase()}</td>
+                  <td>{user.created_at && TextFormatUtil.dateFormat(user.created_at, router, 'PPpp')}</td>
+                  <td>{TextFormatUtil.dateFormat(user.updated_at, router, 'PPpp')}</td>
+                  <td className="sticky-end">
+                    <div className="admin-console__user-actions">
+                      <button
+                        type="button"
+                        className="text-secondary"
+                        onClick={() => {
+                          setViewUser(user)
+                          setIsUserProfileModalOpen(true)
+                        }}
+                      >
+                        <FontAwesomeIcon icon="user-pen" aria-label={t('ROUTES.DASHBOARD')} />
                       </button>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
+                      {user.id != 1 && (
+                        <button type="button" className="text-error">
+                          <FontAwesomeIcon icon="user-minus" aria-label={t('ROUTES.DASHBOARD')} />
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
 

@@ -1,10 +1,6 @@
 import { GraphQLError } from 'graphql'
 
-export const CustomApiError = (
-  status: number = 500,
-  message: string = 'Internal Server Error',
-  code: string = 'INTERNAL_SERVER_ERROR'
-) => {
+export const CustomApiError = (status = 500, message = 'Internal Server Error', code = 'INTERNAL_SERVER_ERROR') => {
   return new GraphQLError(message, {
     extensions: {
       code,
@@ -22,7 +18,7 @@ export const CustomApiErrorUnauthorized = () => {
   })
 }
 
-export const CustomApiBadRequest = (message: string = 'Bad request', code: string = 'BAD_REQUEST') => {
+export const CustomApiBadRequest = (message = 'Bad request', code = 'BAD_REQUEST') => {
   return new GraphQLError(message, {
     extensions: {
       code,

@@ -1,6 +1,6 @@
 import { UserContact } from 'dtos/user-contact.response'
 
-export interface GetUsersResponse {
+export interface IGetUsersResponse {
   results: UserContact[]
   count: number
 }

@@ -1,9 +1,9 @@
 import type { NextPage } from 'next'
-import { differenceInYears, format, parse, subYears } from 'date-fns'
+import { differenceInYears, parse } from 'date-fns'
 import { isEmpty, omit } from 'lodash-es'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import FormElement from 'components/FormElement'
@@ -218,7 +218,12 @@ const SignUp: NextPage = () => {
                 />
               </FormElement>
               <FormElement fieldName="gender" error={errors.gender}>
-                <fieldset className="checkbox-radio-group">
+                <fieldset
+                  className="checkbox-radio-group"
+                  aria-required="true"
+                  aria-invalid={!!errors.gender}
+                  aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_gender`}
+                >
                   <legend>{t('FORM.LABEL.SELECT_GENDER')}</legend>
                   {Genders.map((item) => (
                     <div key={item.id}>
@@ -229,9 +234,6 @@ const SignUp: NextPage = () => {
                         name="gender"
                         checked={values.gender === item.value}
                         value={item.value}
-                        aria-required="true"
-                        aria-invalid={!!errors.gender}
-                        aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_gender`}
                         onChange={handleChange}
                       />
                       <label htmlFor={`gender-${item.label}`}>

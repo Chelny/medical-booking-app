@@ -11,7 +11,7 @@ type AppointmentsProps = {
   userToken: User
 }
 
-const Appointments: NextPage<AppointmentsProps> = ({ userToken }) => {
+const Appointments: NextPage<AppointmentsProps> = () => {
   const { t } = useTranslation()
 
   return (

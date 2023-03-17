@@ -1,12 +1,16 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-type ColumnSortProps = {
+type ColumnSortProps<T> = {
   columnName: string
-  params: { [key: string]: any }
+  params: T
   handleClick: (field: string) => void
 }
 
-const ColumnSort = ({ columnName, params, handleClick }: ColumnSortProps): JSX.Element => {
+const ColumnSort = <T extends { orderBy: string }>({
+  columnName,
+  params,
+  handleClick,
+}: ColumnSortProps<T>): JSX.Element => {
   return (
     <button onClick={() => handleClick(columnName)}>
       <FontAwesomeIcon

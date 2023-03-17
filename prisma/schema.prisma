@@ -58,9 +58,9 @@ model Doctor {
   end_date      DateTime?     @db.DateTime(0)
   created_at    DateTime?     @default(now()) @db.DateTime(0)
   updated_at    DateTime      @default(now()) @db.Timestamp(0)
+  Appointment   Appointment[]
   Department    Department    @relation(fields: [department_id], references: [id], onUpdate: Restrict, map: "doctor_ibfk_1")
   User          User          @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "doctor_ibfk_2")
-  Appointment   Appointment[]
 
   @@index([department_id], map: "department_id")
 }
@@ -73,8 +73,8 @@ model Patient {
   weight      String?       @db.VarChar(255)
   created_at  DateTime?     @default(now()) @db.DateTime(0)
   updated_at  DateTime      @default(now()) @db.Timestamp(0)
-  User        User          @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "patient_ibfk_1")
   Appointment Appointment[]
+  User        User          @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "patient_ibfk_1")
 }
 
 model Role {
@@ -95,13 +95,13 @@ model User {
   username   String?     @unique(map: "username") @db.VarChar(255)
   password   String      @db.VarChar(255)
   role_id    Int         @default(3)
-  language   String?     @default("en") @db.VarChar(255)
+  language   String      @default("EN") @db.VarChar(255)
   created_at DateTime?   @default(now()) @db.DateTime(0)
   updated_at DateTime    @default(now()) @db.Timestamp(0)
-  Role       Role        @relation(fields: [role_id], references: [id], onUpdate: Restrict, map: "user_ibfk_1")
   Contact    Contact?
   Doctor     Doctor?
   Patient    Patient?
+  Role       Role        @relation(fields: [role_id], references: [id], onUpdate: Restrict, map: "user_ibfk_1")
 
   @@index([role_id], map: "role_id")
 }

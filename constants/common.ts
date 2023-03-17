@@ -1,4 +1,4 @@
-import { format, subYears } from 'date-fns'
+import { addYears, format, subYears } from 'date-fns'
 
 export const Common = {
   APP_NAME: 'Medical Booking App',
@@ -8,6 +8,10 @@ export const Common = {
     SM: 768,
     MD: 976,
     LG: 1440,
+  },
+  CALENDAR: {
+    MIN_DATE: new Date(2022, 0, 1),
+    MAX_DATE: addYears(new Date(), 1),
   },
   DATE_FORMAT: 'yyyy-MM-dd',
   ERROR_MESSAGE_ID_PREFIX: 'errorMessage',

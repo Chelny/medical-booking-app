@@ -16,7 +16,6 @@ const RootLayout = ({ children }: { children: ReactNode }): JSX.Element => {
         <meta name="theme-color" media="(prefers-color-scheme: light)" content="#5B4B8A" />
         <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#4C3575" />
         <link rel="icon" href="/favicon.ico" />
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/antd/4.24.1/antd.min.css" />
       </head>
       <body>{children}</body>
     </html>

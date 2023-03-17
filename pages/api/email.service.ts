@@ -1,5 +1,5 @@
 import * as nodemailer from 'nodemailer'
-import SMTPTransport from 'nodemailer/lib/smtp-transport'
+// import SMTPTransport from 'nodemailer/lib/smtp-transport'
 
 interface IEmailMessage {
   from: string
@@ -64,7 +64,7 @@ export class EmailService {
           pass: process.env.TRANSPORTER_AUTH_PASS,
         },
       })
-      .sendMail(this.message, (error: Error | null, info: SMTPTransport.SentMessageInfo) => {
+      .sendMail(this.message, (error: Error | null /*, info: SMTPTransport.SentMessageInfo*/) => {
         if (error) throw new Error('RESET_PASSWORD.EMAIL.ERROR')
       })
   }

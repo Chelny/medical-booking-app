@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import Button from 'components/Button'
@@ -19,7 +19,7 @@ type ResetPasswordGQLResponse = GQLResponse<{ resetPassword: { message: string }
 const ResetPassword: NextPage = () => {
   const router = useRouter()
   const { t } = useTranslation()
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
 
   const { values, errors, handleChange, handleSubmit } = useForm({
     initialValues: {
@@ -60,10 +60,10 @@ const ResetPassword: NextPage = () => {
   useEffect(() => {
     if (!router.isReady) return
     if (!router.query.token) router.push(Routes.HOME)
-    setLoading(false)
+    setIsLoading(false)
   }, [router])
 
-  if (loading) return <PageLayout>{t('LOADING')}</PageLayout>
+  if (isLoading) return <PageLayout>{t('LOADING')}</PageLayout>
 
   return (
     <PageLayout>

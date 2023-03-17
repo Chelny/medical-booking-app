@@ -12,7 +12,7 @@ export const TextFormatUtil = {
   kebabCaseToCamelCase: (str: string): string => {
     return str.replace(/-./g, (x) => x[1].toUpperCase())
   },
-  dateFormat: (date: Date, router: NextRouter, pattern: string = 'yyyy-MM-dd') => {
+  dateFormat: (date: Date, router: NextRouter, pattern = 'yyyy-MM-dd') => {
     return format(new Date(date), pattern, { locale: router.locale === 'fr' ? frCA : enCA })
   },
 }

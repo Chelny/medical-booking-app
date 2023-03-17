@@ -5,7 +5,9 @@ import FormActions from 'components/FormActions'
 type ModalProps = {
   children: ReactElement
   title: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cancelButton?: { label: ReactElement<any, string | JSXElementConstructor<any>> }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   confirmButton: { label: ReactElement<any, string | JSXElementConstructor<any>>; disabled?: boolean }
   isOpen: boolean
   setIsOpen: (state: boolean) => void

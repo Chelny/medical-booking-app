@@ -1,19 +1,19 @@
 import type { NextPage } from 'next'
 import { User } from '@prisma/client'
-import { addYears, getHours, isEqual } from 'date-fns'
+import { getHours, isEqual } from 'date-fns'
 import { GraphQLError } from 'graphql'
 import jwt_decode from 'jwt-decode'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import Calendar from 'react-calendar'
-// import { toast } from 'react-toastify'
+import Calendar, { CalendarTileProperties } from 'react-calendar'
+import { toast } from 'react-toastify'
 import Button from 'components/Button'
 import PageLayout from 'components/PageLayout'
 import { Common } from 'constants/common'
 import { Routes } from 'constants/routes'
-import { PatientAppointement } from 'dtos/user-appointment.response'
+import { IPatientAppointement } from 'dtos/user-appointment.response'
 import { useRequest } from 'hooks/useRequest'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { getAuthCookie } from 'utils/auth-cookies'
@@ -23,39 +23,38 @@ type DashboardProps = {
   userToken: User
   user: User
   userErrors: GraphQLError[]
-  appointments: PatientAppointement[]
+  appointments: IPatientAppointement[]
   appointmentsErrors: GraphQLError[]
 }
 
 type GetUserByIdGQLResponse = GQLResponse<{ getUserById: User }>
-type GetAppointmentsByPatientIdGQLResponse = GQLResponse<{ getAppointmentsByPatientId: PatientAppointement[] }>
+type GetAppointmentsByPatientIdGQLResponse = GQLResponse<{ getAppointmentsByPatientId: IPatientAppointement[] }>
 
-const Dashboard: NextPage<DashboardProps> = ({ userToken, user, userErrors, appointments, appointmentsErrors }) => {
+const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsErrors }) => {
   const router = useRouter()
   const { t } = useTranslation()
   const { width } = useWindowSize()
-  const [displayedAppointments, setDisplayedAppointments] = useState<PatientAppointement[]>([])
+  const [displayedAppointments, setDisplayedAppointments] = useState<IPatientAppointement[]>([])
   const [selectedDate, setSelectDate] = useState<Date>(new Date())
   const [timePeriod, setTimePeriod] = useState('NIGHT')
-  const minDate = new Date(2022, 0, 1)
-  const maxDate = addYears(new Date(), 1)
 
   const handleSelectDate = (date: Date) => {
     setSelectDate(date)
     setDisplayedAppointments(
-      appointments.filter((appointment: PatientAppointement) =>
+      appointments.filter((appointment: IPatientAppointement) =>
         isEqual(new Date(appointment.start_date).setHours(0, 0, 0, 0), date)
       )
     )
   }
 
   useEffect(() => {
-    // TODO: User and appointments errors
-    // if (appointmentsErrors) {
-    //   appointmentsErrors.forEach((error) => {
-    //     toast.error<string>(t(`ERROR.${error.extensions.code}`, { ns: 'api' }))
-    //   })
-    // }
+    if (appointmentsErrors) {
+      // TODO: User and appointments errors
+      // appointmentsErrors.forEach((error) => {
+      //   toast.error<string>(t(`ERROR.${error.extensions.code}`, { ns: 'api' }))
+      // })
+      toast.error<string>(appointmentsErrors[0].message)
+    }
 
     const hour = getHours(new Date())
 
@@ -68,7 +67,7 @@ const Dashboard: NextPage<DashboardProps> = ({ userToken, user, userErrors, appo
     } else {
       setTimePeriod('NIGHT')
     }
-  }, [])
+  }, [appointmentsErrors])
 
   return (
     <PageLayout>
@@ -77,11 +76,11 @@ const Dashboard: NextPage<DashboardProps> = ({ userToken, user, userErrors, appo
         <Calendar
           calendarType="US"
           locale={router.locale}
-          minDate={minDate}
-          maxDate={maxDate}
+          minDate={Common.CALENDAR.MIN_DATE}
+          maxDate={Common.CALENDAR.MAX_DATE}
           showDoubleView={width >= Common.BREAKPOINT.MD}
-          tileClassName={({ activeStartDate, date, view }) =>
-            appointments.find((appointment: PatientAppointement) =>
+          tileClassName={({ date }: CalendarTileProperties) =>
+            appointments.find((appointment: IPatientAppointement) =>
               isEqual(new Date(appointment.start_date).setHours(0, 0, 0, 0), date)
             )
               ? 'has-appointments'
