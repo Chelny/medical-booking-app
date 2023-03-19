@@ -51,7 +51,7 @@ const Modal = ({ children, title, cancelButton, confirmButton, isOpen, setIsOpen
             >
               <Dialog.Panel
                 as="form"
-                className="w-full max-w-md transform overflow-hidden rounded-md bg-light-tint p-6 text-left align-middle shadow-xl transition-all dark:bg-dark-shade"
+                className="w-full md:max-w-screen-md transform overflow-hidden rounded-md bg-light-tint p-6 text-left align-middle shadow-xl transition-all dark:bg-dark"
               >
                 <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-black dark:text-white">
                   {title}

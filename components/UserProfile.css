@@ -1,0 +1,15 @@
+.tab-list {
+  @apply grid grid-flow-col grid-cols-tab justify-evenly space-x-1 rounded-md p-1 bg-light dark:bg-primary-night-shade;
+}
+
+.tab-list__tab {
+  @apply flex justify-center items-center flex-col py-2.5 rounded-md bg-light text-sm font-medium ui-selected:bg-primary-day ui-selected:shadow ui-selected:text-white ui-not-selected:text-medium dark:bg-primary-night-shade dark:ui-selected:bg-primary-night dark:ui-not-selected:text-white !important;
+}
+
+.tab-panels {
+  @apply md:min-h-[500px] mt-2;
+}
+
+.tab-panels__panel {
+  @apply py-4;
+}

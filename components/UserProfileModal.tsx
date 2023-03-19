@@ -1,9 +1,10 @@
 import { useTranslation } from 'next-i18next'
 import Modal from 'components/Modal'
-import { IUserContact } from 'dtos/user-contact.response'
+import UserProfile from 'components/UserProfile'
+import { UserContact } from 'dtos/user-contact.response'
 
 type UserProfileModalProps = {
-  user: IUserContact
+  user: UserContact
   isOpen: boolean
   setModalState: (state: boolean) => void
 }
@@ -18,7 +19,7 @@ const UserProfileModal = ({ user, isOpen, setModalState }: UserProfileModalProps
       confirmButton={{ label: t('BUTTON.SAVE') }}
       setIsOpen={setModalState}
     >
-      <>{JSON.stringify(user, null, 2)}</>
+      <UserProfile user={user} />
     </Modal>
   )
 }

@@ -1,0 +1,9 @@
+{
+  "PROFILE": {
+    "PERSONAL_INFORMATION": "Personal Information",
+    "LOGIN_INFORMATION": "Login Information",
+    "CONTACT_INFORMATION": "Contact Information",
+    "DOCTOR_INFORMATION": "Employee Information",
+    "PATIENT_INFORMATION": "Patient Information"
+  }
+}

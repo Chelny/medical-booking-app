@@ -18,7 +18,7 @@ import { Common } from 'constants/common'
 import { Routes } from 'constants/routes'
 import { IGetUsersParams } from 'dtos/get-users.params'
 import { IGetUsersResponse } from 'dtos/get-users.response'
-import { IUserContact } from 'dtos/user-contact.response'
+import { UserContact } from 'dtos/user-contact.response'
 import { UserRole } from 'enums/user-role.enum'
 import { useRequest } from 'hooks/useRequest'
 import { getAuthCookie } from 'utils/auth-cookies'
@@ -36,7 +36,7 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
   const GendersMap = Genders.map(({ value }) => value as User_gender)
   const RolesMap = Object.values(UserRole).filter((roleId) => typeof roleId === 'number') as number[]
   const LanguagesMap = Object.keys(Locales)
-  const [users, setUsers] = useState<IUserContact[]>([])
+  const [users, setUsers] = useState<UserContact[]>([])
   const [usersErrors, setUsersErrors] = useState<GraphQLError[]>([])
   const [getUsersParams, setGetUsersParams] = useState<IGetUsersParams>({
     offset: 0,
@@ -50,7 +50,7 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
   })
   const [getUsersCount, setGetUsersCount] = useState<number>(0)
   const [isUserProfileModalOpen, setIsUserProfileModalOpen] = useState<boolean>(false)
-  const [viewUser, setViewUser] = useState<IUserContact>({} as IUserContact)
+  const [viewUser, setViewUser] = useState<UserContact>({} as UserContact)
 
   useEffect(
     () => {
@@ -124,7 +124,7 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
   }
 
   const addUser = () => {
-    setViewUser({} as IUserContact)
+    setViewUser({} as UserContact)
     setIsUserProfileModalOpen(true)
   }
 
@@ -181,11 +181,11 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
       <>
         <h2>{t('ADMIN_CONSOLE', { ns: 'admin' })}</h2>
 
-        <div className="w-fit">
+        {/* <div className="w-fit">
           <Button type="button" className="bg-success" onClick={() => addUser()}>
             {t('ADD_USER', { ns: 'admin' })}
           </Button>
-        </div>
+        </div> */}
 
         <div className="table-filter">
           <div className="table-filter__items-per-page">
@@ -318,7 +318,7 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user: IUserContact) => {
+            {users.map((user: UserContact) => {
               return usersErrors && usersErrors.length > 0 ? (
                 <tr>
                   <td colSpan={12}>{usersErrors[0].message}</td>
@@ -337,7 +337,7 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
                   <td>{user.created_at && TextFormatUtil.dateFormat(user.created_at, router, 'PPpp')}</td>
                   <td>{TextFormatUtil.dateFormat(user.updated_at, router, 'PPpp')}</td>
                   <td className="sticky-end">
-                    <div className="admin-console__user-actions">
+                    {/* <div className="admin-console__user-actions">
                       <button
                         type="button"
                         className="text-secondary"
@@ -353,7 +353,7 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
                           <FontAwesomeIcon icon="user-minus" aria-label={t('ROUTES.DASHBOARD')} />
                         </button>
                       )}
-                    </div>
+                    </div> */}
                   </td>
                 </tr>
               )
@@ -416,7 +416,7 @@ export const getServerSideProps = async (context: IContext & ILocale) => {
 
   return {
     props: {
-      ...(await serverSideTranslations(context.locale, ['common', 'api', 'admin'])),
+      ...(await serverSideTranslations(context.locale, ['common', 'api', 'admin', 'account'])),
       userToken: decodedToken?.user,
     },
   }

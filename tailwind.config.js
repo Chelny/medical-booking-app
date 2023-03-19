@@ -64,6 +64,7 @@ module.exports = {
         'app-layout': '100%',
         'main-lg': 'minmax(max-content, calc(100vh/2.5)) auto',
         listbox: '16px max-content',
+        tab: 'repeat(auto-fit, minmax(100px, 1fr))',
       },
       width: {
         'max-content': 'max-content',
