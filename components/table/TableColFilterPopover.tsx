@@ -1,8 +1,7 @@
+import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Listbox, Popover } from '@headlessui/react'
 import { useTranslation } from 'next-i18next'
-import React, { useState } from 'react'
-import Button from 'components/Button'
 
 type TableColFilterPopoverProps<T> = {
   list: T[]

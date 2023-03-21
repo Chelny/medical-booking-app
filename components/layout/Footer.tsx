@@ -1,6 +1,6 @@
 import { User } from '@prisma/client'
 import LanguageSelector from 'components/LanguageSelector'
-import './Footer.css'
+import styles from 'styles/modules/Footer.module.css'
 
 type FooterProps = {
   user: User | undefined
@@ -9,7 +9,7 @@ type FooterProps = {
 
 const Footer = ({ isAuthRoute }: FooterProps): JSX.Element => {
   return (
-    <footer className="py-4 bg-light text-medium-shade text-xs text-center dark:bg-dark-shade">
+    <footer className={`${styles.footer} py-4 bg-light text-medium-shade text-xs text-center dark:bg-dark-shade`}>
       <LanguageSelector />
     </footer>
   )

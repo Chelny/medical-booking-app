@@ -21,6 +21,10 @@ table {
   @apply grid grid-flow-col justify-center items-center gap-2;
 }
 
+.table-column-wrapper button {
+  @apply p-0;
+}
+
 .table-pagination {
   @apply items-center p-2;
 }
@@ -35,7 +39,7 @@ table {
 }
 
 .table-pagination__navigation ol li {
-  @apply grid justify-center items-center w-[36px] h-[36px] bg-light-shade;
+  @apply grid justify-center items-center min-w-[36px] min-h-[36px] bg-light-shade;
 }
 
 .table-pagination__navigation ol li button {

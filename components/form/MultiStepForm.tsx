@@ -1,5 +1,5 @@
-import { useTranslation } from 'next-i18next'
 import { MouseEventHandler, useState } from 'react'
+import { useTranslation } from 'next-i18next'
 import Button from 'components/Button'
 
 type MultiStepFormProps = {
@@ -18,7 +18,7 @@ const MultiStepForm = ({ fieldGroups, submitBtnLabel, onComplete }: MultiStepFor
         <Button
           type="submit"
           className="flex-[0_50%] bg-primary-day-shade dark:bg-primary-night-tint"
-          onClick={onComplete}
+          handleClick={onComplete}
         >
           <>{submitBtnLabel}</>
         </Button>
@@ -28,7 +28,7 @@ const MultiStepForm = ({ fieldGroups, submitBtnLabel, onComplete }: MultiStepFor
           type="button"
           className="flex-[0_50%] bg-primary-day-tint dark:bg-primary-night-shade"
           disabled={false}
-          onClick={() => {
+          handleClick={() => {
             setStep(step + 1)
           }}
         >
@@ -39,7 +39,7 @@ const MultiStepForm = ({ fieldGroups, submitBtnLabel, onComplete }: MultiStepFor
         <Button
           type="button"
           className="flex-[0_50%] bg-primary-day-tint dark:bg-primary-night-shade"
-          onClick={() => {
+          handleClick={() => {
             setStep(step - 1)
           }}
         >

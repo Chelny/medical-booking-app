@@ -1,6 +1,8 @@
-import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, JSXElementConstructor, ReactElement } from 'react'
-import FormActions from 'components/form/FormActions'
+import { Dialog, Transition } from '@headlessui/react'
+import { useTranslation } from 'next-i18next'
+import Button from 'components/Button'
+import styles from 'styles/modules/Modal.module.css'
 
 type ModalProps = {
   children: ReactElement
@@ -14,6 +16,8 @@ type ModalProps = {
 }
 
 const Modal = ({ children, title, cancelButton, confirmButton, isOpen, setIsOpen }: ModalProps): JSX.Element => {
+  const { t } = useTranslation()
+
   const closeModal = () => {
     setIsOpen(false)
   }
@@ -25,7 +29,7 @@ const Modal = ({ children, title, cancelButton, confirmButton, isOpen, setIsOpen
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={closeModal}>
+      <Dialog as="div" className={styles.dialog} onClose={closeModal}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -35,11 +39,11 @@ const Modal = ({ children, title, cancelButton, confirmButton, isOpen, setIsOpen
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
+          <div className={styles.backdrop} />
         </Transition.Child>
 
-        <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex justify-center items-center min-h-full p-4 text-center">
+        <div className="fixed inset-0">
+          <div className="flex justify-center items-center min-h-full p-4">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -49,23 +53,25 @@ const Modal = ({ children, title, cancelButton, confirmButton, isOpen, setIsOpen
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel
-                as="form"
-                className="w-full md:max-w-screen-md transform overflow-hidden rounded-md bg-light-tint p-6 text-left align-middle shadow-xl transition-all dark:bg-dark"
-              >
-                <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-black dark:text-white">
+              <Dialog.Panel as="form" className={styles.dialogPanel}>
+                <Dialog.Title as="h3" className={styles.dialogTitle}>
                   {title}
                 </Dialog.Title>
 
-                <div className="mt-2 text-sm text-black dark:text-white">{children}</div>
+                <div className={styles.dialogContent}>{children}</div>
 
-                <div className="flex justify-end gap-2 mt-4">
-                  <FormActions
-                    cancelButton={cancelButton}
-                    confirmButton={confirmButton}
-                    handleCancelAction={closeModal}
-                    handleConfirmAction={confirm}
-                  />
+                <div className={styles.actionButtons}>
+                  <Button type="button" className={styles.cancelBtn} handleClick={closeModal}>
+                    {(cancelButton && cancelButton.label) ?? t('BUTTON.CLOSE')}
+                  </Button>
+                  <Button
+                    type="submit"
+                    className={styles.confirmBtn}
+                    disabled={confirmButton.disabled}
+                    handleClick={confirm}
+                  >
+                    {confirmButton && confirmButton.label}
+                  </Button>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

@@ -1,12 +1,12 @@
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Prisma, User, User_gender } from '@prisma/client'
 import { GraphQLError } from 'graphql'
 import jwt_decode from 'jwt-decode'
-import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import Button from 'components/Button'
 import ColumnSort from 'components/table/ColumnSort'
 import TableColFilterPopover from 'components/table/TableColFilterPopover'
@@ -180,7 +180,7 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
       <h2>{t('ADMIN_CONSOLE', { ns: 'admin' })}</h2>
 
       <div className="w-fit">
-        <Button type="button" className="bg-success" onClick={() => addUser()}>
+        <Button type="button" className="bg-success" handleClick={() => addUser()}>
           {t('ADD_USER', { ns: 'admin' })}
         </Button>
       </div>
@@ -337,20 +337,20 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
                   <td>{TextFormatUtil.dateFormat(user.updated_at, router, 'PPpp')}</td>
                   <td className="sticky-end">
                     <div className="admin-console__user-actions">
-                      <button
+                      <Button
                         type="button"
                         className="text-secondary"
-                        onClick={() => {
+                        handleClick={() => {
                           setViewUser(user)
                           setIsUserProfileModalOpen(true)
                         }}
                       >
                         <FontAwesomeIcon icon="user-pen" aria-label={t('ROUTES.DASHBOARD')} />
-                      </button>
+                      </Button>
                       {user.id != 1 && (
-                        <button type="button" className="text-error">
+                        <Button type="button" className="text-error">
                           <FontAwesomeIcon icon="user-minus" aria-label={t('ROUTES.DASHBOARD')} />
-                        </button>
+                        </Button>
                       )}
                     </div>
                   </td>
@@ -375,18 +375,18 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
         <div className="table-pagination__navigation">
           <ol>
             <li>
-              <button type="button" disabled={isFirstPage()} onClick={() => goToPreviousPage()}>
+              <Button type="button" disabled={isFirstPage()} handleClick={() => goToPreviousPage()}>
                 <FontAwesomeIcon icon="chevron-left" />
-              </button>
+              </Button>
             </li>
             {/* TODO: Jump to page */}
             {/* <li>
-                <button onClick={() => goToPage()}></button>
+                <Button handleClick={() => goToPage()}></Button>
               </li> */}
             <li>
-              <button type="button" disabled={isLastPage()} onClick={() => goToNextPage()}>
+              <Button type="button" disabled={isLastPage()} handleClick={() => goToNextPage()}>
                 <FontAwesomeIcon icon="chevron-right" />
-              </button>
+              </Button>
             </li>
           </ol>
         </div>

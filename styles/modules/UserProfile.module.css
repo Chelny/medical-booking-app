@@ -1,0 +1,25 @@
+.list {
+  @apply grid grid-flow-col grid-cols-tab justify-evenly space-x-1 rounded-md p-1 bg-light;
+}
+
+.tab {
+  @apply flex justify-center items-center flex-col px-2 py-2.5 rounded-md bg-light font-medium ui-selected:bg-primary-day ui-selected:shadow ui-selected:text-white ui-not-selected:text-medium !important;
+}
+
+.panels {
+  @apply md:min-h-[500px] mt-2;
+}
+
+.panel {
+  @apply py-4;
+}
+
+@media (prefers-color-scheme: dark) {
+  .list {
+    @apply bg-primary-night-shade;
+  }
+
+  .tab {
+    @apply bg-primary-night-shade ui-selected:bg-primary-night ui-not-selected:text-white !important;
+  }
+}

@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Button from 'components/Button'
 
 type ColumnSortProps<T> = {
   columnName: string
@@ -12,12 +13,12 @@ const ColumnSort = <T extends { orderBy: string }>({
   handleClick,
 }: ColumnSortProps<T>): JSX.Element => {
   return (
-    <button onClick={() => handleClick(columnName)}>
+    <Button handleClick={() => handleClick(columnName)}>
       <FontAwesomeIcon
         icon={params.orderBy !== columnName ? 'sort' : 'sort-up'}
         className="text-inactive group-aria-[sort=ascending]:text-active group-aria-[sort=ascending]:rotate-0 group-aria-[sort=descending]:text-active group-aria-[sort=descending]:rotate-180"
       />
-    </button>
+    </Button>
   )
 }
 

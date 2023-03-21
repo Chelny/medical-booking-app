@@ -33,7 +33,8 @@ body {
 }
 
 [class*='bg-primary'],
-[class*='bg-dark'] {
+[class*='bg-dark'],
+[class*='bg-success'] {
   @apply text-white;
 }
 

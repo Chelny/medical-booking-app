@@ -1,0 +1,49 @@
+.dialog {
+  @apply relative z-10;
+}
+
+.backdrop {
+  @apply fixed inset-0 bg-black bg-opacity-50;
+}
+
+.dialogPanel {
+  @apply w-full md:max-w-screen-md transform overflow-hidden rounded-md bg-light-tint p-6 text-left align-middle shadow-xl transition-all;
+}
+
+.dialogTitle {
+  @apply text-lg font-medium leading-6 text-black;
+}
+
+.dialogContent {
+  @apply mt-2 text-black dark:text-white;
+}
+
+.actionButtons {
+  @apply flex justify-end gap-2 mt-4;
+}
+
+.cancelBtn {
+  @apply w-min border border-medium-tint bg-transparent text-dark-tint !important;
+}
+
+.confirmBtn {
+  @apply w-min;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dialogPanel {
+    @apply bg-dark;
+  }
+
+  .dialogTitle {
+    @apply text-white;
+  }
+
+  .dialogContent {
+    @apply text-white;
+  }
+
+  .cancelBtn {
+    @apply border-dark-tint bg-dark-tint text-light-shade !important;
+  }
+}

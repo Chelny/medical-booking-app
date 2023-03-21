@@ -136,73 +136,6 @@ textarea {
   @apply border-error !important;
 }
 
-meter {
-  background: none;
-}
-
-meter::-webkit-meter-inner-element {
-  @apply block;
-}
-
-/* Chrome/Safari/Opera */
-meter::-webkit-meter-bar {
-  @apply border-light-shade rounded bg-light-shade;
-  background: #dcdcdc;
-}
-
-/* Chrome/Safari/Opera */
-meter[value='1']::-webkit-meter-optimum-value {
-  @apply bg-error;
-}
-meter[value='2']::-webkit-meter-optimum-value {
-  @apply bg-warning;
-}
-meter[value='3']::-webkit-meter-optimum-value {
-  @apply bg-warning;
-}
-meter[value='4']::-webkit-meter-optimum-value {
-  @apply bg-success;
-}
-
-/* Firefox */
-meter[value='1']::-moz-meter-bar {
-  @apply bg-error;
-}
-meter[value='2']::-moz-meter-bar {
-  @apply bg-warning;
-}
-meter[value='3']::-moz-meter-bar {
-  @apply bg-warning;
-}
-meter[value='4']::-moz-meter-bar {
-  @apply bg-success;
-}
-
-button {
-  @apply px-3 py-2 shadow-sm my-1 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed;
-}
-
-form button,
-.btn {
-  @apply w-full px-3 py-2 shadow-sm my-1 text-white hover:relative hover:top-0.5;
-}
-
-form button[type='button'] {
-  @apply bg-primary-day-tint;
-}
-
-form button[type='submit'] {
-  @apply bg-primary-day;
-}
-
-form button[type='reset'] {
-  @apply bg-medium-tint text-black;
-}
-
-form button.close {
-  @apply w-min border border-medium-tint bg-transparent text-medium-shade !important;
-}
-
 @media (prefers-color-scheme: dark) {
   input:not([type='checkbox']):not([type='radio']),
   textarea,
@@ -264,26 +197,5 @@ form button.close {
   input[type='checkbox']:focus + label::before,
   input[type='radio']:focus + label::before {
     @apply outline-primary-night;
-  }
-
-  meter::-webkit-meter-bar {
-    @apply border-dark-tint bg-dark-tint;
-    background: #393e46;
-  }
-
-  form button[type='button'] {
-    @apply bg-primary-night-shade;
-  }
-
-  form button[type='submit'] {
-    @apply bg-primary-night;
-  }
-
-  form button[type='reset'] {
-    @apply bg-dark-tint text-white;
-  }
-
-  form button.close {
-    @apply border-dark-tint text-light-shade !important;
   }
 }

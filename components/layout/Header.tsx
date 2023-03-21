@@ -1,7 +1,7 @@
 import { User } from '@prisma/client'
 import { Common } from 'constants/common'
 import { useWindowSize } from 'hooks/useWindowSize'
-import './Header.css'
+import styles from 'styles/modules/Header.module.css'
 
 type HeaderProps = {
   user: User | undefined
@@ -13,7 +13,7 @@ const Header = ({ isAuthRoute, className }: HeaderProps): JSX.Element => {
   const { width } = useWindowSize()
 
   return (
-    <header className={className}>
+    <header className={`${styles.header} ${className ?? ''}`}>
       <h1
         className={`${
           isAuthRoute && width >= Common.BREAKPOINT.LG

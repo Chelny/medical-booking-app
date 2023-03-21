@@ -1,17 +1,17 @@
+import { useState } from 'react'
+import router from 'next/router'
 import { Tab } from '@headlessui/react'
 import { parse, differenceInYears } from 'date-fns'
 import { isEmpty, omit } from 'lodash-es'
-import router from 'next/router'
 import { useTranslation } from 'next-i18next'
-import { useState } from 'react'
 import { toast } from 'react-toastify'
-import FormElement from 'components/FormElement'
+import FormElement from 'components/form/FormElement'
 import { Common } from 'constants/common'
 import { Regex } from 'constants/regex'
 import { UserContact } from 'dtos/user-contact.response'
 import { useForm } from 'hooks/useForm'
 import { TextFormatUtil } from 'utils/text-format'
-import './UserProfile.css'
+import styles from 'styles/modules/UserProfile.module.css'
 
 type UserProfileProps = {
   user: UserContact
@@ -183,15 +183,15 @@ const UserProfile = ({ user }: UserProfileProps): JSX.Element => {
 
   return (
     <Tab.Group>
-      <Tab.List className="tab-list">
-        <Tab className="tab-list__tab">{t('PROFILE.PERSONAL_INFORMATION', { ns: 'account' })}</Tab>
-        <Tab className="tab-list__tab">{t('PROFILE.LOGIN_INFORMATION', { ns: 'account' })}</Tab>
-        <Tab className="tab-list__tab">{t('PROFILE.CONTACT_INFORMATION', { ns: 'account' })}</Tab>
-        {isUserDoctor && <Tab className="tab-list__tab">{t('PROFILE.DOCTOR_INFORMATION', { ns: 'account' })}</Tab>}
-        {isUserPatient && <Tab className="tab-list__tab">{t('PROFILE.PATIENT_INFORMATION', { ns: 'account' })}</Tab>}
+      <Tab.List className={styles.list}>
+        <Tab className={styles.tab}>{t('PROFILE.PERSONAL_INFORMATION', { ns: 'account' })}</Tab>
+        <Tab className={styles.tab}>{t('PROFILE.LOGIN_INFORMATION', { ns: 'account' })}</Tab>
+        <Tab className={styles.tab}>{t('PROFILE.CONTACT_INFORMATION', { ns: 'account' })}</Tab>
+        {isUserDoctor && <Tab className={styles.tab}>{t('PROFILE.DOCTOR_INFORMATION', { ns: 'account' })}</Tab>}
+        {isUserPatient && <Tab className={styles.tab}>{t('PROFILE.PATIENT_INFORMATION', { ns: 'account' })}</Tab>}
       </Tab.List>
-      <Tab.Panels className="tab-panels">
-        <Tab.Panel className="tab-panels__panel">
+      <Tab.Panels className={styles.panels}>
+        <Tab.Panel className={styles.panel}>
           <div className="grid grid-cols-2 gap-2">
             <FormElement fieldName="firstName" error={errors.firstName}>
               <input
@@ -219,10 +219,10 @@ const UserProfile = ({ user }: UserProfileProps): JSX.Element => {
             </FormElement>
           </div>
         </Tab.Panel>
-        <Tab.Panel className="tab-panels__panel">{JSON.stringify(user, null, 2)}</Tab.Panel>
-        <Tab.Panel className="tab-panels__panel">{JSON.stringify(user.Contact, null, 2)}</Tab.Panel>
-        {isUserDoctor && <Tab.Panel className="tab-panels__panel">{JSON.stringify(user.Doctor, null, 2)}</Tab.Panel>}
-        {isUserPatient && <Tab.Panel className="tab-panels__panel">{JSON.stringify(user.Patient, null, 2)}</Tab.Panel>}
+        <Tab.Panel className={styles.panel}>{JSON.stringify(user, null, 2)}</Tab.Panel>
+        <Tab.Panel className={styles.panel}>{JSON.stringify(user.Contact, null, 2)}</Tab.Panel>
+        {isUserDoctor && <Tab.Panel className={styles.panel}>{JSON.stringify(user.Doctor, null, 2)}</Tab.Panel>}
+        {isUserPatient && <Tab.Panel className={styles.panel}>{JSON.stringify(user.Patient, null, 2)}</Tab.Panel>}
       </Tab.Panels>
     </Tab.Group>
   )

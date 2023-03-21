@@ -1,6 +1,7 @@
-import { useTranslation } from 'next-i18next'
 import { InputHTMLAttributes, useEffect, useState } from 'react'
+import { useTranslation } from 'next-i18next'
 import zxcvbn from 'zxcvbn'
+import styles from 'styles/modules/PasswordStrengthMeter.module.css'
 
 type PasswordStrengthMeterProps = {
   password: InputHTMLAttributes<HTMLInputElement>['value']
@@ -16,12 +17,7 @@ const PasswordStrengthMeter = ({ password }: PasswordStrengthMeterProps): JSX.El
 
   return (
     <>
-      <meter
-        data-testid="password-strength-meter"
-        className="w-full h-[0.5rem] rounded mx-auto mb-2 bg-medium"
-        max={4}
-        value={meter}
-      />
+      <meter className={styles.meter} max={4} value={meter} data-testid="password-strength-meter" />
       <p className="text-medium text-right">
         &nbsp;{password?.valueOf() && t(`FORM.PASSWORD_STRENGTH.SCALE.${meter}`)}
       </p>
