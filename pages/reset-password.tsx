@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import Button from 'components/Button'
 import FormElement from 'components/FormElement'
-import PageLayout from 'components/PageLayout'
 import PasswordStrengthMeter from 'components/PasswordStrengthMeter'
 import { Regex } from 'constants/regex'
 import { Routes } from 'constants/routes'
@@ -63,36 +62,34 @@ const ResetPassword: NextPage = () => {
     setIsLoading(false)
   }, [router])
 
-  if (isLoading) return <PageLayout>{t('LOADING')}</PageLayout>
+  if (isLoading) return <>{t('LOADING')}</>
 
   return (
-    <PageLayout>
-      <>
-        <h2>{t('RESET_PASSWORD', { ns: 'reset-password' })}</h2>
-        <form data-testid="reset-password-form" noValidate onSubmit={handleSubmit}>
-          <FormElement fieldName="newPassword" error={errors.newPassword}>
-            <input
-              data-testid="reset-password-form-new-password"
-              type="password"
-              id="newPassword"
-              value={values.newPassword}
-              onChange={handleChange}
-            />
-          </FormElement>
-          <PasswordStrengthMeter password={values.newPassword} />
-          <FormElement fieldName="newPasswordConfirmation" error={errors.newPasswordConfirmation}>
-            <input
-              data-testid="reset-password-form-new-password-confirmation"
-              type="password"
-              id="newPasswordConfirmation"
-              value={values.newPasswordConfirmation}
-              onChange={handleChange}
-            />
-          </FormElement>
-          <Button type="submit">{t('RESET_PASSWORD', { ns: 'reset-password' })}</Button>
-        </form>
-      </>
-    </PageLayout>
+    <>
+      <h2>{t('RESET_PASSWORD', { ns: 'reset-password' })}</h2>
+      <form data-testid="reset-password-form" noValidate onSubmit={handleSubmit}>
+        <FormElement fieldName="newPassword" error={errors.newPassword}>
+          <input
+            data-testid="reset-password-form-new-password"
+            type="password"
+            id="newPassword"
+            value={values.newPassword}
+            onChange={handleChange}
+          />
+        </FormElement>
+        <PasswordStrengthMeter password={values.newPassword} />
+        <FormElement fieldName="newPasswordConfirmation" error={errors.newPasswordConfirmation}>
+          <input
+            data-testid="reset-password-form-new-password-confirmation"
+            type="password"
+            id="newPasswordConfirmation"
+            value={values.newPasswordConfirmation}
+            onChange={handleChange}
+          />
+        </FormElement>
+        <Button type="submit">{t('RESET_PASSWORD', { ns: 'reset-password' })}</Button>
+      </form>
+    </>
   )
 }
 

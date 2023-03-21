@@ -5,9 +5,10 @@ export const Common = {
   API_URL: 'http://localhost:3000/api/graphql',
   BREAKPOINT: {
     XS: 480,
-    SM: 768,
-    MD: 976,
-    LG: 1440,
+    SM: 640,
+    MD: 768,
+    LG: 1024,
+    XL: 1280,
   },
   CALENDAR: {
     MIN_DATE: new Date(2022, 0, 1),

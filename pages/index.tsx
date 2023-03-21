@@ -5,8 +5,7 @@ import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { toast } from 'react-toastify'
 import Button from 'components/Button'
-import FormElement from 'components/FormElement'
-import PageLayout from 'components/PageLayout'
+import FormElement from 'components/form/FormElement'
 import { Common } from 'constants/common'
 import { Routes } from 'constants/routes'
 import { useForm } from 'hooks/useForm'
@@ -41,45 +40,43 @@ const Home: NextPage = () => {
   })
 
   return (
-    <PageLayout>
-      <>
-        <h2>{t('LOGIN', { ns: 'home' })}</h2>
-        <form noValidate onSubmit={handleSubmit}>
-          <FormElement fieldName="loginId" error={errors.loginId}>
-            <input
-              data-testid="form-input-login-id"
-              type="text"
-              id="loginId"
-              value={values.loginId}
-              aria-required="true"
-              aria-invalid={!!errors.loginId}
-              aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_loginId`}
-              onChange={handleChange}
-            />
-          </FormElement>
-          <FormElement
-            fieldName="password"
-            link={<Link href={Routes.FORGOT_PASSWORD}>{t('FORGOT_PASSWORD', { ns: 'home' })}</Link>}
-            error={errors.password}
-          >
-            <input
-              data-testid="form-input-password"
-              type="password"
-              id="password"
-              value={values.password}
-              aria-required="true"
-              aria-invalid={!!errors.password}
-              aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_password`}
-              onChange={handleChange}
-            />
-          </FormElement>
-          <Button type="submit">{t('LOGIN', { ns: 'home' })}</Button>
-          <div className="my-4 text-center">
-            {t('NEW_USER', { ns: 'home' })} <Link href={Routes.SIGN_UP}>{t('SIGN_UP', { ns: 'home' })}</Link>
-          </div>
-        </form>
-      </>
-    </PageLayout>
+    <>
+      <h2>{t('LOGIN', { ns: 'home' })}</h2>
+      <form noValidate onSubmit={handleSubmit}>
+        <FormElement fieldName="loginId" error={errors.loginId}>
+          <input
+            data-testid="form-input-login-id"
+            type="text"
+            id="loginId"
+            value={values.loginId}
+            aria-required="true"
+            aria-invalid={!!errors.loginId}
+            aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_loginId`}
+            onChange={handleChange}
+          />
+        </FormElement>
+        <FormElement
+          fieldName="password"
+          link={<Link href={Routes.FORGOT_PASSWORD}>{t('FORGOT_PASSWORD', { ns: 'home' })}</Link>}
+          error={errors.password}
+        >
+          <input
+            data-testid="form-input-password"
+            type="password"
+            id="password"
+            value={values.password}
+            aria-required="true"
+            aria-invalid={!!errors.password}
+            aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_password`}
+            onChange={handleChange}
+          />
+        </FormElement>
+        <Button type="submit">{t('LOGIN', { ns: 'home' })}</Button>
+        <div className="my-4 text-center">
+          {t('NEW_USER', { ns: 'home' })} <Link href={Routes.SIGN_UP}>{t('SIGN_UP', { ns: 'home' })}</Link>
+        </div>
+      </form>
+    </>
   )
 }
 

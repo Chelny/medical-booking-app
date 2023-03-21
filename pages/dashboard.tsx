@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react'
 import Calendar, { CalendarTileProperties } from 'react-calendar'
 import { toast } from 'react-toastify'
 import Button from 'components/Button'
-import PageLayout from 'components/PageLayout'
 import { Common } from 'constants/common'
 import { Routes } from 'constants/routes'
 import { IPatientAppointement } from 'dtos/user-appointment.response'
@@ -70,64 +69,62 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
   }, [appointmentsErrors])
 
   return (
-    <PageLayout>
-      <>
-        <h2>{t('WELCOME', { ns: 'dashboard', context: timePeriod, name: user.first_name })}</h2>
-        <Calendar
-          calendarType="US"
-          locale={router.locale}
-          minDate={Common.CALENDAR.MIN_DATE}
-          maxDate={Common.CALENDAR.MAX_DATE}
-          showDoubleView={width >= Common.BREAKPOINT.MD}
-          tileClassName={({ date }: CalendarTileProperties) =>
-            appointments.find((appointment: IPatientAppointement) =>
-              isEqual(new Date(appointment.start_date).setHours(0, 0, 0, 0), date)
-            )
-              ? 'has-appointments'
-              : null
-          }
-          onChange={handleSelectDate}
-        />
-        <section id="appointmentDetails" className="p-4 mt-6 bg-light dark:bg-dark-shade dark:text-white">
-          <h3>
-            {t('APPOINTMENTS', {
-              ns: 'dashboard',
-              date: TextFormatUtil.dateFormat(selectedDate, router, 'PPPP'),
-            })}
-          </h3>
+    <>
+      <h2>{t('WELCOME', { ns: 'dashboard', context: timePeriod, name: user.first_name })}</h2>
+      <Calendar
+        calendarType="US"
+        locale={router.locale}
+        minDate={Common.CALENDAR.MIN_DATE}
+        maxDate={Common.CALENDAR.MAX_DATE}
+        showDoubleView={width >= Common.BREAKPOINT.MD}
+        tileClassName={({ date }: CalendarTileProperties) =>
+          appointments.find((appointment: IPatientAppointement) =>
+            isEqual(new Date(appointment.start_date).setHours(0, 0, 0, 0), date)
+          )
+            ? 'has-appointments'
+            : null
+        }
+        onChange={handleSelectDate}
+      />
+      <section id="appointmentDetails" className="p-4 mt-6 bg-light dark:bg-dark-shade dark:text-white">
+        <h3>
+          {t('APPOINTMENTS', {
+            ns: 'dashboard',
+            date: TextFormatUtil.dateFormat(selectedDate, router, 'PPPP'),
+          })}
+        </h3>
 
-          {displayedAppointments.length > 0 ? (
-            <ul>
-              {displayedAppointments.map((appointment, i) => (
-                <li key={i} className="py-4 border-b border-b-medium-tint last:border-b-0 dark:border-b-dark-tint">
-                  <>
-                    <div>
-                      {appointment.Doctor.User.first_name} {appointment.Doctor.User.last_name}
-                      {' - '}
-                      {t(`DOCTOR_DEPARTMENT.${appointment.Doctor.Department.title}`)} <br />
-                      {TextFormatUtil.dateFormat(appointment.start_date, router, 'p')}
-                      {' - '}
-                      {TextFormatUtil.dateFormat(appointment.end_date, router, 'p')} <br />
-                      {appointment.reason} <br />
-                    </div>
-                    <div className="sm:flex sm:gap-1">
-                      <Button className="bg-primary-day dark:bg-primary-night">
-                        {t('APPOINTMENT_DETAILS', { ns: 'dashboard' })}
-                      </Button>
-                      <Button className="bg-primary-day-shade dark:bg-primary-night-shade">
-                        {t('APPOINTMENT_UPDATE', { ns: 'dashboard' })}
-                      </Button>
-                    </div>
-                  </>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-medium dark:text-medium-shade">{t('NO_APPOINTMENTS', { ns: 'dashboard' })}</p>
-          )}
-        </section>
-      </>
-    </PageLayout>
+        {displayedAppointments.length > 0 ? (
+          <ul>
+            {displayedAppointments.map((appointment, i) => (
+              <li key={i} className="py-4 border-b border-b-medium-tint last:border-b-0 dark:border-b-dark-tint">
+                <>
+                  <div>
+                    {appointment.Doctor.User.first_name} {appointment.Doctor.User.last_name}
+                    {' - '}
+                    {t(`DOCTOR_DEPARTMENT.${appointment.Doctor.Department.title}`)} <br />
+                    {TextFormatUtil.dateFormat(appointment.start_date, router, 'p')}
+                    {' - '}
+                    {TextFormatUtil.dateFormat(appointment.end_date, router, 'p')} <br />
+                    {appointment.reason} <br />
+                  </div>
+                  <div className="sm:flex sm:gap-1">
+                    <Button className="bg-primary-day dark:bg-primary-night">
+                      {t('APPOINTMENT_DETAILS', { ns: 'dashboard' })}
+                    </Button>
+                    <Button className="bg-primary-day-shade dark:bg-primary-night-shade">
+                      {t('APPOINTMENT_UPDATE', { ns: 'dashboard' })}
+                    </Button>
+                  </div>
+                </>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-medium dark:text-medium-shade">{t('NO_APPOINTMENTS', { ns: 'dashboard' })}</p>
+        )}
+      </section>
+    </>
   )
 }
 

@@ -3,7 +3,6 @@ import { User } from '@prisma/client'
 import jwt_decode from 'jwt-decode'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import PageLayout from 'components/PageLayout'
 import { Routes } from 'constants/routes'
 import { getAuthCookie } from 'utils/auth-cookies'
 
@@ -15,11 +14,9 @@ const Account: NextPage<AccountProps> = () => {
   const { t } = useTranslation()
 
   return (
-    <PageLayout>
-      <>
-        <h2>{t('', { ns: 'dashboard' })}</h2>
-      </>
-    </PageLayout>
+    <>
+      <h2>{t('', { ns: 'dashboard' })}</h2>
+    </>
   )
 }
 

@@ -5,23 +5,26 @@ import { useTranslation } from 'next-i18next'
 import ActiveLink from 'components/ActiveLink'
 import { Routes } from 'constants/routes'
 import { UserRole } from 'enums/user-role.enum'
+import './Nav.css'
 
 type NavProps = {
-  user?: User
+  user: User | undefined
   isAuthRoute?: boolean
 }
 
-const Nav = ({ user, isAuthRoute }: NavProps): JSX.Element => {
+const Nav = ({ user }: NavProps): JSX.Element => {
   const router = useRouter()
   const { t } = useTranslation()
 
   return (
-    <nav className={`w-full ${isAuthRoute ? 'auth-route' : ''}`}>
+    <nav>
       <ul>
         {!user && router.route !== Routes.HOME && (
           <li>
             <ActiveLink activeClassName="active" href={Routes.HOME}>
-              <a>{isAuthRoute ? <FontAwesomeIcon icon="house" aria-label={t('ROUTES.HOME')} /> : t('ROUTES.HOME')}</a>
+              <a>
+                <FontAwesomeIcon icon="house" aria-label={t('ROUTES.HOME')} /> {t('ROUTES.HOME')}
+              </a>
             </ActiveLink>
           </li>
         )}
@@ -29,7 +32,7 @@ const Nav = ({ user, isAuthRoute }: NavProps): JSX.Element => {
           <li>
             <ActiveLink activeClassName="active" href={Routes.DASHBOARD}>
               <a>
-                <FontAwesomeIcon icon="house" aria-label={t('ROUTES.DASHBOARD')} />
+                <FontAwesomeIcon icon="house" aria-label={t('ROUTES.DASHBOARD')} /> {t('ROUTES.DASHBOARD')}
               </a>
             </ActiveLink>
           </li>
@@ -42,7 +45,8 @@ const Nav = ({ user, isAuthRoute }: NavProps): JSX.Element => {
                   icon="calendar-check"
                   title={t('ROUTES.APPOINTMENTS')}
                   aria-label={t('ROUTES.APPOINTMENTS')}
-                />
+                />{' '}
+                {t('ROUTES.APPOINTMENTS')}
               </a>
             </ActiveLink>
           </li>
@@ -51,7 +55,7 @@ const Nav = ({ user, isAuthRoute }: NavProps): JSX.Element => {
           <li>
             <ActiveLink activeClassName="active" href={Routes.ADMIN}>
               <a>
-                <FontAwesomeIcon icon="users-gear" aria-label={t('ROUTES.ADMIN')} />
+                <FontAwesomeIcon icon="users-gear" aria-label={t('ROUTES.ADMIN')} /> {t('ROUTES.ADMIN')}
               </a>
             </ActiveLink>
           </li>
@@ -63,7 +67,8 @@ const Nav = ({ user, isAuthRoute }: NavProps): JSX.Element => {
                 <FontAwesomeIcon
                   icon={user.role_id === UserRole.DOCTOR ? 'user-doctor' : 'user'}
                   aria-label={t('ROUTES.ACCOUNT')}
-                />
+                />{' '}
+                {t('ROUTES.ACCOUNT')}
               </a>
             </ActiveLink>
           </li>

@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, JSXElementConstructor, ReactElement } from 'react'
-import FormActions from 'components/FormActions'
+import FormActions from 'components/form/FormActions'
 
 type ModalProps = {
   children: ReactElement

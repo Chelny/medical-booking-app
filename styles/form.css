@@ -179,7 +179,12 @@ meter[value='4']::-moz-meter-bar {
 }
 
 button {
-  @apply text-sm disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply px-3 py-2 shadow-sm my-1 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+form button,
+.btn {
+  @apply w-full px-3 py-2 shadow-sm my-1 text-white hover:relative hover:top-0.5;
 }
 
 form button[type='button'] {

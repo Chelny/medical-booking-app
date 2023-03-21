@@ -4,7 +4,6 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { toast } from 'react-toastify'
 import Button from 'components/Button'
 import FormElement from 'components/FormElement'
-import PageLayout from 'components/PageLayout'
 import { Regex } from 'constants/regex'
 import { Routes } from 'constants/routes'
 import { useForm } from 'hooks/useForm'
@@ -38,23 +37,21 @@ const ForgotPassword: NextPage = () => {
   })
 
   return (
-    <PageLayout>
-      <>
-        <h2>{t('FORGOT_PASSWORD', { ns: 'forgot-password' })}</h2>
-        <form data-testid="forgot-password-form" noValidate onSubmit={handleSubmit}>
-          <FormElement fieldName="email" error={errors.email}>
-            <input
-              data-testid="forgot-password-form-email"
-              type="email"
-              id="email"
-              value={values.email}
-              onChange={handleChange}
-            />
-          </FormElement>
-          <Button type="submit">{t('SEND_EMAIL', { ns: 'forgot-password' })}</Button>
-        </form>
-      </>
-    </PageLayout>
+    <>
+      <h2>{t('FORGOT_PASSWORD', { ns: 'forgot-password' })}</h2>
+      <form data-testid="forgot-password-form" noValidate onSubmit={handleSubmit}>
+        <FormElement fieldName="email" error={errors.email}>
+          <input
+            data-testid="forgot-password-form-email"
+            type="email"
+            id="email"
+            value={values.email}
+            onChange={handleChange}
+          />
+        </FormElement>
+        <Button type="submit">{t('SEND_EMAIL', { ns: 'forgot-password' })}</Button>
+      </form>
+    </>
   )
 }
 

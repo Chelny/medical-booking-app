@@ -10,9 +10,13 @@ const LanguageSelector = (): JSX.Element => {
   }
 
   return (
-    <select className="py-1 text-dark shadow-none dark:text-light" value={router.locale} onChange={handleLocaleChange}>
+    <select
+      className="bg-light border-0 py-1 text-dark shadow-none dark:bg-dark-shade dark:text-light"
+      value={router.locale?.toUpperCase()}
+      onChange={handleLocaleChange}
+    >
       {Object.keys(Locales).map((code: string) => (
-        <option key={code} label={Locales[code].label} value={code}>
+        <option key={code} value={code}>
           {Locales[code].label}
         </option>
       ))}

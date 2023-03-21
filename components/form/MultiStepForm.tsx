@@ -15,7 +15,11 @@ const MultiStepForm = ({ fieldGroups, submitBtnLabel, onComplete }: MultiStepFor
   const Navigation = () => (
     <div className="flex flex-cols flex-row-reverse gap-1">
       {step === fieldGroups.length - 1 && (
-        <Button type="submit" className="flex-[0_50%]" onClick={onComplete}>
+        <Button
+          type="submit"
+          className="flex-[0_50%] bg-primary-day-shade dark:bg-primary-night-tint"
+          onClick={onComplete}
+        >
           <>{submitBtnLabel}</>
         </Button>
       )}

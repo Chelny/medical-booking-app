@@ -55,10 +55,10 @@ const TableColFilterPopover = <T,>({
           </Listbox.Options>
         </Listbox>
         <div className="flex flex-cols gap-1">
-          <Button type="reset" className="flex-[0_50%]" onClick={() => setSelectedItems(list)}>
+          <Popover.Button type="reset" onClick={() => setSelectedItems(list)}>
             {t('BUTTON.RESET')}
-          </Button>
-          <Popover.Button type="submit" className="flex-[0_50%]" onClick={() => handleChange(selectedItems)}>
+          </Popover.Button>
+          <Popover.Button type="submit" onClick={() => handleChange(selectedItems)}>
             {t('BUTTON.APPLY')}
           </Popover.Button>
         </div>

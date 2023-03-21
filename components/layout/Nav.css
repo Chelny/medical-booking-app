@@ -1,0 +1,33 @@
+nav {
+  grid-area: nav;
+}
+
+nav ul {
+  @apply flex flex-col justify-evenly gap-1;
+}
+
+nav ul li {
+  @apply rounded-md;
+}
+
+nav ul li a {
+  @apply grid grid-cols-[32px_auto] justify-start items-center gap-2 py-4 px-2 border-b border-light-shade text-medium no-underline hover:text-primary-day-shade visited:text-medium;
+}
+
+nav ul li a.active {
+  @apply border-primary-day-shade text-primary-day-shade;
+}
+
+nav ul li a .svg-inline--fa {
+  height: 24px;
+}
+
+@media (prefers-color-scheme: dark) {
+  nav ul li a {
+    @apply border-dark-tint text-medium-shade hover:text-primary-night-tint visited:text-medium-shade;
+  }
+
+  nav ul li a.active {
+    @apply border-primary-night-tint text-primary-night-tint;
+  }
+}

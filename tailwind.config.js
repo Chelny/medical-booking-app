@@ -10,7 +10,7 @@ module.exports = {
     colors: {
       transparent: 'transparent',
       black: '#292929',
-      white: '#F0F0F0',
+      white: '#FCFCFC',
       warning: '#C95C28',
       error: '#D61C4E',
       success: '#379237',
@@ -53,16 +53,31 @@ module.exports = {
         xl: '1440px',
       },
     },
+    screens: {
+      sm: '640px', // => @media (min-width: 640px) { ... }
+      md: '768px', // => @media (min-width: 768px) { ... }
+      lg: '1024px', // => @media (min-width: 1024px) { ... }
+      xl: '1280px', // => @media (min-width: 1280px) { ... }
+    },
     extend: {
+      gridTemplateAreas: {
+        'layout-unauth': ['header', 'main', 'footer'],
+        'layout-unauth-lg': ['sidebar main', 'footer footer'],
+        'layout-auth': ['header', 'main', 'footer'],
+        'layout-auth-lg': ['sidebar main', 'footer footer'],
+      },
       gridTemplateRows: {
-        'app-layout': 'minmax(max-content, calc(100vh/4.7)) 1fr auto',
-        'app-layout-md': '1fr auto',
-        main: 'minmax(max-content, calc(100vh/6.7)) auto',
-        'main-lg': '100%',
+        'layout-unauth': '125px auto max-content',
+        'layout-unauth-lg': 'auto max-content',
+        'layout-auth': '125px auto max-content',
+        'layout-auth-lg': 'auto max-content',
+        main: 'auto min-content',
       },
       gridTemplateColumns: {
-        'app-layout': '100%',
-        'main-lg': 'minmax(max-content, calc(100vh/2.5)) auto',
+        'layout-unauth': '100%',
+        'layout-auth': '100%',
+        'layout-unauth-lg': '50%',
+        'layout-auth-lg': '350px auto',
         listbox: '16px max-content',
         tab: 'repeat(auto-fit, minmax(100px, 1fr))',
       },
@@ -79,6 +94,15 @@ module.exports = {
       backgroundSize: {
         dropdown: '16px',
       },
+      fontSize: {
+        sm: '0.8rem',
+        base: '1rem',
+        xl: '1.25rem',
+        '2xl': '1.563rem',
+        '3xl': '1.953rem',
+        '4xl': '2.441rem',
+        '5xl': '3.052rem',
+      },
       aria: {
         none: 'sort="none"',
         asc: 'sort="ascending"',
@@ -87,5 +111,5 @@ module.exports = {
     },
   },
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  plugins: [require('@headlessui/tailwindcss')({ prefix: 'ui' })],
+  plugins: [require('@headlessui/tailwindcss')({ prefix: 'ui' }), require('@savvywombat/tailwindcss-grid-areas')],
 }

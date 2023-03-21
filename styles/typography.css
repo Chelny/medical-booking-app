@@ -7,19 +7,20 @@
   }
 
   h1 {
-    @apply text-2xl m-0;
+    @apply m-0 dark:text-white;
   }
 
   h2 {
-    @apply text-xl;
+    @apply text-2xl;
   }
 
-  h3 {
+  h3,
+  h2 + fieldset > legend {
     @apply text-lg;
   }
 
   a {
-    @apply text-secondary underline underline-offset-2;
+    @apply text-secondary underline underline-offset-2 transition-colors;
   }
 
   a:hover {

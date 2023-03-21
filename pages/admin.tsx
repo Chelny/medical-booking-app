@@ -8,9 +8,8 @@ import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import Button from 'components/Button'
-import ColumnSort from 'components/ColumnSort'
-import PageLayout from 'components/PageLayout'
-import TableColFilterPopover from 'components/TableColFilterPopover'
+import ColumnSort from 'components/table/ColumnSort'
+import TableColFilterPopover from 'components/table/TableColFilterPopover'
 import UserProfileModal from 'components/UserProfileModal'
 import { Genders } from 'configs/genders'
 import { Locales } from 'configs/locales'
@@ -177,43 +176,43 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
   }
 
   return (
-    <PageLayout>
-      <>
-        <h2>{t('ADMIN_CONSOLE', { ns: 'admin' })}</h2>
+    <>
+      <h2>{t('ADMIN_CONSOLE', { ns: 'admin' })}</h2>
 
-        {/* <div className="w-fit">
-          <Button type="button" className="bg-success" onClick={() => addUser()}>
-            {t('ADD_USER', { ns: 'admin' })}
-          </Button>
-        </div> */}
+      <div className="w-fit">
+        <Button type="button" className="bg-success" onClick={() => addUser()}>
+          {t('ADD_USER', { ns: 'admin' })}
+        </Button>
+      </div>
 
-        <div className="table-filter">
-          <div className="table-filter__items-per-page">
-            <label htmlFor="itemsPerPage">{t('TABLE.FILTER.ITEMS_PER_PAGE')}</label>
-            <select
-              id="itemsPerPage"
-              defaultValue={getUsersParams.limit}
-              onChange={(event: ChangeEvent<HTMLSelectElement>) => setItemsPerPage(+event.target.value)}
-            >
-              {Common.PAGINATION.RESULTS_PER_PAGE.map((limit: number, key: number) => (
-                <option key={key} value={limit}>
-                  {limit}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="table-filter__search">
-            <label htmlFor="search">{t('TABLE.FILTER.SEARCH')}</label>
-            <input
-              id="search"
-              type="search"
-              onInput={(event: FormEvent<HTMLInputElement>) =>
-                filterResultsByQuery((event.target as HTMLInputElement).value)
-              }
-            />
-          </div>
+      <div className="table-filter">
+        <div className="table-filter__items-per-page">
+          <label htmlFor="itemsPerPage">{t('TABLE.FILTER.ITEMS_PER_PAGE')}</label>
+          <select
+            id="itemsPerPage"
+            defaultValue={getUsersParams.limit}
+            onChange={(event: ChangeEvent<HTMLSelectElement>) => setItemsPerPage(+event.target.value)}
+          >
+            {Common.PAGINATION.RESULTS_PER_PAGE.map((limit: number, key: number) => (
+              <option key={key} value={limit}>
+                {limit}
+              </option>
+            ))}
+          </select>
         </div>
+        <div className="table-filter__search">
+          <label htmlFor="search">{t('TABLE.FILTER.SEARCH')}</label>
+          <input
+            id="search"
+            type="search"
+            onInput={(event: FormEvent<HTMLInputElement>) =>
+              filterResultsByQuery((event.target as HTMLInputElement).value)
+            }
+          />
+        </div>
+      </div>
 
+      <div className="overflow-auto">
         <table className="admin-console">
           <thead>
             <tr>
@@ -337,7 +336,7 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
                   <td>{user.created_at && TextFormatUtil.dateFormat(user.created_at, router, 'PPpp')}</td>
                   <td>{TextFormatUtil.dateFormat(user.updated_at, router, 'PPpp')}</td>
                   <td className="sticky-end">
-                    {/* <div className="admin-console__user-actions">
+                    <div className="admin-console__user-actions">
                       <button
                         type="button"
                         className="text-secondary"
@@ -353,49 +352,49 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
                           <FontAwesomeIcon icon="user-minus" aria-label={t('ROUTES.DASHBOARD')} />
                         </button>
                       )}
-                    </div> */}
+                    </div>
                   </td>
                 </tr>
               )
             })}
           </tbody>
         </table>
+      </div>
 
-        <div className="table-pagination">
-          <div className="table-pagination__items-displayed">
-            {t('TABLE.PAGINATION.CURRENT_PAGE', {
-              offset: getUsersParams.offset === 0 ? 1 : getUsersParams.offset,
-              lastItem:
-                getUsersParams.offset + getUsersParams.limit >= getUsersCount
-                  ? getUsersCount
-                  : getUsersParams.offset + getUsersParams.limit,
-              total: getUsersCount,
-            })}
-          </div>
-          <div className="table-pagination__navigation">
-            <ol>
-              <li>
-                <button type="button" disabled={isFirstPage()} onClick={() => goToPreviousPage()}>
-                  <FontAwesomeIcon icon="chevron-left" />
-                </button>
-              </li>
-              {/* TODO: Jump to page */}
-              {/* <li>
+      <div className="table-pagination">
+        <div className="table-pagination__items-displayed">
+          {t('TABLE.PAGINATION.CURRENT_PAGE', {
+            offset: getUsersParams.offset === 0 ? 1 : getUsersParams.offset,
+            lastItem:
+              getUsersParams.offset + getUsersParams.limit >= getUsersCount
+                ? getUsersCount
+                : getUsersParams.offset + getUsersParams.limit,
+            total: getUsersCount,
+          })}
+        </div>
+        <div className="table-pagination__navigation">
+          <ol>
+            <li>
+              <button type="button" disabled={isFirstPage()} onClick={() => goToPreviousPage()}>
+                <FontAwesomeIcon icon="chevron-left" />
+              </button>
+            </li>
+            {/* TODO: Jump to page */}
+            {/* <li>
                 <button onClick={() => goToPage()}></button>
               </li> */}
-              <li>
-                <button type="button" disabled={isLastPage()} onClick={() => goToNextPage()}>
-                  <FontAwesomeIcon icon="chevron-right" />
-                </button>
-              </li>
-            </ol>
-          </div>
+            <li>
+              <button type="button" disabled={isLastPage()} onClick={() => goToNextPage()}>
+                <FontAwesomeIcon icon="chevron-right" />
+              </button>
+            </li>
+          </ol>
         </div>
+      </div>
 
-        {/* User Profile Modal */}
-        <UserProfileModal user={viewUser} isOpen={isUserProfileModalOpen} setModalState={setIsUserProfileModalOpen} />
-      </>
-    </PageLayout>
+      {/* User Profile Modal */}
+      <UserProfileModal user={viewUser} isOpen={isUserProfileModalOpen} setModalState={setIsUserProfileModalOpen} />
+    </>
   )
 }
 
