@@ -27,12 +27,14 @@
 The project is currently unfinished. If you want to see the progression, go to `develop` branch. Here's a short list on what I will focus in the future.
 
 - ✅ Public Pages (Login, Forgot Password, Reset Password, Sign Up)
-- ⬜️ Admin Console ~ _**(in progress)**_
+- ✅ Admin Console (Basics: view users, add user, edit user, reset user password and delete user)
 - ⬜️ Appointments Page
 - ⬜️ Create + Edit Appointment
 - ⬜️ Edit Profile
-- ⬜️ Delete Profile
-- ⬜️ Logout Logic
+- ⬜️ Update Password
+- ⬜️ Delete Account
+- ⬜️ Authenticated user provider + Logout logic
+- ⬜️ Remove password fields in admin console
 - ⬜️ Settings (Language change, App theme colour)
 
 <p align="end">(<a href="#readme-top">back to top</a>)</p>
