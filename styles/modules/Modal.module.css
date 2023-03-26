@@ -3,11 +3,35 @@
 }
 
 .backdrop {
-  @apply fixed inset-0 bg-black bg-opacity-50;
+  @apply fixed inset-0 bg-black bg-opacity-75;
+}
+
+.dialogPanelContainerParent {
+  @apply fixed inset-0;
+}
+
+.dialogPanelContainerChild {
+  @apply flex justify-center items-center md:h-auto min-h-full p-0 md:p-4;
 }
 
 .dialogPanel {
-  @apply w-full md:max-w-screen-md transform overflow-hidden rounded-md bg-light-tint p-6 text-left align-middle shadow-xl transition-all;
+  @apply overflow-hidden grid grid-rows-dialog-panel-sm w-full md:w-3/4 lg:max-w-screen-md h-screen md:h-full transform overflow-hidden rounded-md bg-light-tint p-4 md:p-6 text-left align-middle shadow-xl transition-all;
+}
+
+.modalSizeXs {
+  @apply w-[480px];
+}
+
+.modalSizeSm {
+  @apply w-[640px];
+}
+
+.modalSizeMd {
+  @apply w-[768px];
+}
+
+.modalSizeLg {
+  @apply w-[1024px];
 }
 
 .dialogTitle {
@@ -15,11 +39,11 @@
 }
 
 .dialogContent {
-  @apply mt-2 text-black dark:text-white;
+  @apply overflow-y-auto grid auto-rows-max mt-2 text-black dark:text-white;
 }
 
 .actionButtons {
-  @apply flex justify-end gap-2 mt-4;
+  @apply flex justify-end gap-2 mt-4 bg-light-tint dark:bg-dark;
 }
 
 .cancelBtn {
@@ -28,6 +52,10 @@
 
 .confirmBtn {
   @apply w-min;
+}
+
+.btnDanger {
+  @apply bg-error !important;
 }
 
 @media (prefers-color-scheme: dark) {

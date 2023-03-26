@@ -21,7 +21,7 @@
   <a href="#websites">Websites</a>
 </p>
 
-![screenshot](public/assets/images/github/home-page-tablet.png)
+![screenshot](public/assets/images/github/home-page-desktop.png)
 
 ## How To Use
 
@@ -57,7 +57,7 @@ As stated in the [Prisma documentation](https://www.prisma.io/docs/getting-start
 Open the `.env` file and add the missing keys and their values:
 
 ```
-DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
+DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public?serverTimezone=UTC"
 
 APP_URL=http://localhost:3000
 API_PATH=/api/graphql

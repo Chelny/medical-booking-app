@@ -3,7 +3,7 @@ import { User } from '@prisma/client'
 import jwt_decode from 'jwt-decode'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { Routes } from 'constants/routes'
+import { Common } from 'constants/common'
 import { getAuthCookie } from 'utils/auth-cookies'
 
 type AppointmentsProps = {
@@ -15,7 +15,7 @@ const Appointments: NextPage<AppointmentsProps> = () => {
 
   return (
     <>
-      <h2>{t('', { ns: 'dashboard' })}</h2>
+      <h2>{t('', { ns: 'appointments' })}</h2>
     </>
   )
 }
@@ -23,21 +23,16 @@ const Appointments: NextPage<AppointmentsProps> = () => {
 export const getServerSideProps = async (context: IContext & ILocale) => {
   const token = getAuthCookie(context.req) || null
 
-  if (!token) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: Routes.HOME,
-      },
-      props: {},
-    }
-  }
+  if (!token) return Common.SERVER_SIDE_PROPS.NO_TOKEN
 
   const decodedToken = token && jwt_decode(token)
 
   return {
     props: {
-      ...(await serverSideTranslations(context.locale, ['common', 'api', 'appointments'])),
+      ...(await serverSideTranslations(context.locale, [
+        ...Common.SERVER_SIDE_PROPS.TRANSLATION_NAMESPACES,
+        'appointments',
+      ])),
       userToken: decodedToken?.user,
     },
   }

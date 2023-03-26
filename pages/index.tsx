@@ -83,19 +83,11 @@ const Home: NextPage = () => {
 export const getServerSideProps = async (context: IContext & ILocale) => {
   const token = getAuthCookie(context.req) || null
 
-  if (token) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: Routes.DASHBOARD,
-      },
-      props: {},
-    }
-  }
+  if (token) return Common.SERVER_SIDE_PROPS.TOKEN
 
   return {
     props: {
-      ...(await serverSideTranslations(context.locale, ['common', 'api', 'home'])),
+      ...(await serverSideTranslations(context.locale, [...Common.SERVER_SIDE_PROPS.TRANSLATION_NAMESPACES, 'home'])),
     },
   }
 }

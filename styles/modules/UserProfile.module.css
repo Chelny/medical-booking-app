@@ -1,13 +1,13 @@
 .list {
-  @apply grid grid-flow-col grid-cols-tab justify-evenly space-x-1 rounded-md p-1 bg-light;
+  @apply grid grid-flow-col grid-cols-tab justify-evenly gap-1 px-1 rounded-lg bg-light;
 }
 
 .tab {
-  @apply flex justify-center items-center flex-col px-2 py-2.5 rounded-md bg-light font-medium ui-selected:bg-primary-day ui-selected:shadow ui-selected:text-white ui-not-selected:text-medium !important;
+  @apply flex justify-center items-center flex-col py-2.5 rounded-md bg-light font-medium ui-selected:bg-primary-day ui-selected:shadow ui-selected:text-white ui-not-selected:text-medium !important;
 }
 
 .panels {
-  @apply md:min-h-[500px] mt-2;
+  @apply overflow-y-scroll md:min-h-[500px] mt-2;
 }
 
 .panel {

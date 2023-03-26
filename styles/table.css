@@ -21,7 +21,7 @@ table {
   @apply grid grid-flow-col justify-center items-center gap-2;
 }
 
-.table-column-wrapper button {
+.table-column-wrapper button[type='button'] {
   @apply p-0;
 }
 

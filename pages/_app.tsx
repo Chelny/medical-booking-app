@@ -13,7 +13,6 @@ import Header from 'components/layout/Header'
 import Nav from 'components/layout/Nav'
 import PageLayout from 'components/layout/PageLayout'
 import { Common } from 'constants/common'
-import { Routes } from 'constants/routes'
 import { useWindowSize } from 'hooks/useWindowSize'
 // The following import prevents a Font Awesome icon server-side rendering bug,
 // where the icons flash from a very large icon down to a properly sized one:
@@ -31,8 +30,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState()
 
   useEffect(() => {
-    const unauthRoutes = [Routes.HOME, Routes.SIGN_UP, Routes.FORGOT_PASSWORD, Routes.RESET_PASSWORD]
-    const isAuthRoute = !unauthRoutes.find((route: string) => isEqual(router.route, route))
+    const isAuthRoute = !Common.UNAUTH_ROUTES.find((route: string) => isEqual(router.route, route))
     setIsAuthRoute(isAuthRoute)
     setUser(pageProps.userToken)
   }, [pageProps])
@@ -99,7 +97,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             theme="colored"
           />
         </main>
-        <Footer user={user} isAuthRoute={isAuthRoute} />
+        <Footer />
       </div>
     </>
   )

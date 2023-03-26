@@ -63,7 +63,7 @@ const Nav = ({ user }: NavProps): JSX.Element => {
             </ActiveLink>
           </li>
         )}
-        {user && (
+        {/* {user && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.ACCOUNT}>
               <a>
@@ -76,8 +76,8 @@ const Nav = ({ user }: NavProps): JSX.Element => {
               </a>
             </ActiveLink>
           </li>
-        )}
-        {user && (
+        )} */}
+        {/* {user && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.HELP}>
               <a>
@@ -86,8 +86,8 @@ const Nav = ({ user }: NavProps): JSX.Element => {
               </a>
             </ActiveLink>
           </li>
-        )}
-        {user && (
+        )} */}
+        {/* {user && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.LOGOUT}>
               <a>
@@ -96,7 +96,7 @@ const Nav = ({ user }: NavProps): JSX.Element => {
               </a>
             </ActiveLink>
           </li>
-        )}
+        )} */}
       </ul>
       {/* <FontAwesomeIcon icon="sun" /> */}
       {/* <FontAwesomeIcon icon="moon" /> */}

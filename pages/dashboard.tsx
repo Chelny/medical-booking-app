@@ -11,8 +11,8 @@ import Calendar, { CalendarTileProperties } from 'react-calendar'
 import { toast } from 'react-toastify'
 import Button from 'components/Button'
 import { Common } from 'constants/common'
-import { Routes } from 'constants/routes'
 import { IPatientAppointement } from 'dtos/user-appointment.response'
+import { UserRole } from 'enums/user-role.enum'
 import { useRequest } from 'hooks/useRequest'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { getAuthCookie } from 'utils/auth-cookies'
@@ -102,7 +102,7 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
                   <div>
                     {appointment.Doctor.User.first_name} {appointment.Doctor.User.last_name}
                     {' - '}
-                    {t(`DOCTOR_DEPARTMENT.${appointment.Doctor.Department.title}`)} <br />
+                    {t(`DOCTOR_DEPARTMENTS.${appointment.Doctor.DoctorDepartment.name}`)} <br />
                     {TextFormatUtil.dateFormat(appointment.start_date, router, 'p')}
                     {' - '}
                     {TextFormatUtil.dateFormat(appointment.end_date, router, 'p')} <br />
@@ -130,36 +130,43 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
 
 export const getServerSideProps = async (context: IContext & ILocale) => {
   const token = getAuthCookie(context.req) || null
+  let props = {}
 
-  if (!token) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: Routes.HOME,
-      },
-      props: {},
-    }
-  }
+  if (!token) return Common.SERVER_SIDE_PROPS.NO_TOKEN
 
   const decodedToken = token && jwt_decode(token)
   const { data: user, errors: getUserErrors } = await useRequest<GetUserByIdGQLResponse>(
-    `{ getUserById(id: ${decodedToken?.user?.id}) { first_name, last_name } }`
-  )
-  const { data: appointments, errors: getAppointmentsErrors } = await useRequest<GetAppointmentsByPatientIdGQLResponse>(
-    `{ getAppointmentsByPatientId(id: ${decodedToken?.user?.id}) { reason, start_date, end_date, notes, Doctor {
-      image_name, User { first_name, last_name }, Department { title } } } }`
+    `{ getUserById(id: ${decodedToken?.user?.id}) { first_name, last_name, role_id } }`
   )
 
-  return {
-    props: {
-      ...(await serverSideTranslations(context.locale, ['common', 'api', 'dashboard'])),
-      userToken: decodedToken?.user,
-      user: user?.getUserById || ({} as User),
-      userErrors: getUserErrors || null,
+  props = {
+    ...props,
+    ...(await serverSideTranslations(context.locale, [
+      ...Common.SERVER_SIDE_PROPS.TRANSLATION_NAMESPACES,
+      'dashboard',
+    ])),
+    userToken: decodedToken?.user,
+    user: user?.getUserById || ({} as User),
+    userErrors: getUserErrors || null,
+    appointments: [],
+    appointmentsErrors: null,
+  }
+
+  if (user && user.getUserById.role_id !== UserRole.ADMIN) {
+    const { data: appointments, errors: getAppointmentsErrors } =
+      await useRequest<GetAppointmentsByPatientIdGQLResponse>(
+        `{ getAppointmentsByPatientId(id: ${decodedToken?.user?.id}) { reason, start_date, end_date, notes, Doctor {
+      image_name, User { first_name, last_name }, DoctorDepartment { name } } } }`
+      )
+
+    props = {
+      ...props,
       appointments: appointments?.getAppointmentsByPatientId || [],
       appointmentsErrors: getAppointmentsErrors || null,
-    },
+    }
   }
+
+  return { props }
 }
 
 export default Dashboard

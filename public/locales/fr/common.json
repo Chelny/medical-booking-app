@@ -32,7 +32,8 @@
     "CLOSE": "Fermer",
     "RESET": "Reset",
     "APPLY": "Appliquer",
-    "SAVE": "Sauvegarder"
+    "SAVE": "Sauvegarder",
+    "DELETE": "Supprimer"
   },
   "FORM": {
     "LABEL": {
@@ -59,6 +60,10 @@
       "POST_CODE": "Code postal",
       "PHONE_NUMBER": "Numéro de téléphone",
       "PHONE_NUMBER_EXT": "Ext.",
+      "DEPARTMENT_ID": "Département",
+      "IMAGE_NAME": "Photo de profil",
+      "START_DATE": "Date de début",
+      "END_DATE": "Date de fin",
       "MEDICAL_ID": "Numéro de carte médicale",
       "HEIGHT": "Taille (m)",
       "WEIGHT": "Poids (kg)",
@@ -75,6 +80,7 @@
       "PHONE_NUMBER_FORMAT": "Veuillez entrer uniquement des chiffres."
     },
     "ERROR": {
+      "INVALID_FIELDS_MESSAGE": "Les champs suivants sont invalides : {{fields}}.",
       "FIRST_NAME_REQUIRED": "Le prénom est requis.",
       "FIRST_NAME_PATTERN": "Le prénom est invalide.",
       "LAST_NAME_REQUIRED": "Le nom est requis.",
@@ -102,6 +108,10 @@
       "PHONE_NUMBER_REQUIRED": "Le numéro de téléphone est requis.",
       "PHONE_NUMBER_PATTERN": "Le numéro de téléphone est invalide.",
       "PHONE_NUMBER_EXT_PATTERN": "L'extension du numéro de téléphone est invalide.",
+      "DEPARTMENT_ID_REQUIRED": "Le département est requis.",
+      "IMAGE_NAME_FORMAT": "Les formats acceptés sont JPEG, JPG, PNG et l'image ne doit pas dépasser 1Mo.",
+      "START_DATE_REQUIRED": "La date de début est requise.",
+      "END_DATE_MINIMUM": "La date de fin doit être antérieure ou égale à la date de début.",
       "MEDICAL_ID_REQUIRED": "Le numéro de carte médicale est requis.",
       "MEDICAL_ID_PATTERN": "Le numéro de carte médicale est invalide.",
       "HEIGHT_MIN": "La taille est invalide.",
@@ -115,13 +125,6 @@
         "2": "Faible",
         "3": "Bien",
         "4": "Robuste"
-      }
-    },
-    "LIST": {
-      "GENDERS": {
-        "MALE": "Homme",
-        "FEMALE": "Femme",
-        "OTHER": "Autre"
       }
     }
   },
@@ -139,7 +142,7 @@
     "F": "Femme",
     "O": "Autre"
   },
-  "ROLES": {
+  "USER_ROLES": {
     "1": "Admin",
     "2": "Médecin",
     "3": "Patient"
@@ -149,7 +152,7 @@
     "FR": "Français"
   },
   "COUNTRIES": {
-    "CAN": {
+    "CA": {
       "COUNTRY": "Canada",
       "REGIONS": {
         "AB": "Alberta",
@@ -167,7 +170,7 @@
         "YT": "Yukon"
       }
     },
-    "USA": {
+    "US": {
       "COUNTRY": "États-Unis",
       "REGIONS": {
         "AL": "Alabama",
@@ -229,7 +232,7 @@
       }
     }
   },
-  "DOCTOR_DEPARTMENT": {
+  "DOCTOR_DEPARTMENTS": {
     "FAMILY_MEDICINE": "Docteur de famille",
     "CARDIOLOGY": "Cardiologie",
     "DERMATOLOGY": "Dermatologie",

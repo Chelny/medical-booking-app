@@ -4,6 +4,5 @@
   "LOGIN_INFORMATION": "Login Information",
   "CONTACT_INFORMATION": "Contact Information",
   "MEDICAL_INFORMATION": "Medical Information",
-  "SIGN_UP_BUTTON": "Sign Up",
-  "INVALID_FIELDS_MESSAGE": "The following fields are invalid: {{fields}}."
+  "SIGN_UP_BUTTON": "Sign Up"
 }

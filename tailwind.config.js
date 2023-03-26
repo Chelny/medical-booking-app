@@ -54,10 +54,10 @@ module.exports = {
       },
     },
     screens: {
-      sm: '640px', // => @media (min-width: 640px) { ... }
-      md: '768px', // => @media (min-width: 768px) { ... }
-      lg: '1024px', // => @media (min-width: 1024px) { ... }
-      xl: '1280px', // => @media (min-width: 1280px) { ... }
+      sm: '640px', // => @media screen and (min-width: 640px) { ... }
+      md: '768px', // => @media screen and (min-width: 768px) { ... }
+      lg: '1024px', // => @media screen and (min-width: 1024px) { ... }
+      xl: '1280px', // => @media screen and (min-width: 1280px) { ... }
     },
     extend: {
       gridTemplateAreas: {
@@ -72,6 +72,7 @@ module.exports = {
         'layout-auth': '125px auto max-content',
         'layout-auth-lg': 'auto max-content',
         main: 'auto min-content',
+        'dialog-panel-sm': 'max-content auto max-content',
       },
       gridTemplateColumns: {
         'layout-unauth': '100%',
@@ -79,7 +80,8 @@ module.exports = {
         'layout-unauth-lg': '50%',
         'layout-auth-lg': '350px auto',
         listbox: '16px max-content',
-        tab: 'repeat(auto-fit, minmax(100px, 1fr))',
+        'radio-group': '1fr 16px',
+        tab: 'repeat(auto-fit, minmax(50px, 1fr))',
       },
       width: {
         'max-content': 'max-content',

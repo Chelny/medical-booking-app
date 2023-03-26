@@ -50,7 +50,7 @@ input[type='date']::-webkit-date-and-time-value {
 }
 
 .checkbox-radio-group > legend {
-  @apply mb-[13px];
+  @apply mb-[13px] text-sm;
 }
 
 input[type='checkbox']:checked,
@@ -136,6 +136,22 @@ textarea {
   @apply border-error !important;
 }
 
+meter {
+  @apply w-full;
+}
+
+form button {
+  @apply w-full px-4 py-2 shadow-sm my-1 rounded-md disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+form button[type='submit'] {
+  @apply bg-primary-day;
+}
+
+form button[type='reset'] {
+  @apply bg-medium-tint text-black;
+}
+
 @media (prefers-color-scheme: dark) {
   input:not([type='checkbox']):not([type='radio']),
   textarea,
@@ -197,5 +213,13 @@ textarea {
   input[type='checkbox']:focus + label::before,
   input[type='radio']:focus + label::before {
     @apply outline-primary-night;
+  }
+
+  form button[type='submit'] {
+    @apply bg-primary-night;
+  }
+
+  form button[type='reset'] {
+    @apply bg-dark-tint text-white;
   }
 }

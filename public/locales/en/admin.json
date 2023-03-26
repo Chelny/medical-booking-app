@@ -1,8 +1,20 @@
 {
-  "ADMIN_CONSOLE": "Admin Console",
+  "TITLE": "Admin Console",
   "ADD_USER": "Add User",
   "USER_PROFILE_MODAL": {
     "CREATE_TITLE": "Create User",
-    "EDIT_TITLE": "Edit User"
+    "EDIT_TITLE": "Edit User",
+    "CHOOSE_USER_ROLE": "Please choose the user role:"
+  },
+  "DELETE_USER_MODAL": {
+    "TITLE": "Delete User",
+    "MESSAGE": "Are you sure you want to delete the user: \"{{user}}\"?"
+  },
+  "TABLE": {
+    "ACTIONS": {
+      "EDIT_USER": "Edit User",
+      "RESET_PASSWORD": "Reset User Password",
+      "DELETE_USER": "Delete User"
+    }
   }
 }

@@ -1,4 +1,5 @@
 import { addYears, format, subYears } from 'date-fns'
+import { Routes } from 'constants/routes'
 
 export const Common = {
   APP_NAME: 'Medical Booking App',
@@ -16,9 +17,34 @@ export const Common = {
   },
   DATE_FORMAT: 'yyyy-MM-dd',
   ERROR_MESSAGE_ID_PREFIX: 'errorMessage',
+  LOCAL_TZ: Intl.DateTimeFormat().resolvedOptions().timeZone,
   SEARCH: {
     QUERY_MIN_LENGTH: 3,
   },
+  SERVER_SIDE_PROPS: {
+    NO_TOKEN: {
+      redirect: {
+        permanent: false,
+        destination: Routes.HOME,
+      },
+      props: {},
+    },
+    TOKEN: {
+      redirect: {
+        permanent: false,
+        destination: Routes.DASHBOARD,
+      },
+      props: {},
+    },
+    TRANSLATION_NAMESPACES: ['common', 'api'],
+  },
+  UNAUTH_ROUTES: [
+    Routes.HOME,
+    Routes.SIGN_UP,
+    Routes.FORGOT_PASSWORD,
+    Routes.RESET_PASSWORD,
+    Routes.TERMS_AND_CONDITIONS,
+  ],
 
   // USER PROFILE
   BIRTH_DATE: {
@@ -43,6 +69,10 @@ export const Common = {
   },
   POST_CODE: {
     MAX_LENGTH: 10,
+  },
+  PROFILE_PICTURE: {
+    FORMATS: '.jpeg, .jpg, .png',
+    MAX_SIZE: 1024000, // Bytes = 1MB
   },
   WEIGHT: {
     MIN: 1,

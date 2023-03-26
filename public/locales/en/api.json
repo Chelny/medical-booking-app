@@ -3,13 +3,14 @@
     "RESET_PASSWORD_LINK_SEND": "A temporary password reset link has been sent to {{email}}.",
     "PASSWORD_RESET": "The password has been successfully reset!",
     "ACCOUNT_CREATED": "The account has been successfully created!",
+    "ACCOUNT_UPDATED": "The account has been successfully updated!",
     "PASSWORD_UPDATED": "The password has been successfully updated!",
-    "USER_DELETED": "The account has been successfully removed!"
+    "ACCOUNT_DELETED": "The account has been successfully deleted!"
   },
   "ERROR": {
     "GENERAL": "An error has occurred. Please try again later.",
-    "BAD_REQUEST": "Bad request",
     "INTERNAL_SERVER_ERROR": "Internal server error",
+    "BAD_REQUEST": "Bad request",
     "USER_NOT_FOUND": "The user doesn't exists.",
     "INCORRECT_CREDENTIALS": "The email or the password is incorrect.",
     "DUPLICATE_EMAIL": "The email address already exists.",
@@ -20,6 +21,7 @@
     "NO_TOKEN_PROVIDED": "No token provided.",
     "TOKEN_EXPIRED": "Your session has expired. Please login again.",
     "INVALID_TOKEN": "Invalid token.",
+    "RESET_PASSWORD_TOKEN_INVALID": "The password reset link appears to be invalid or has expired.",
     "RESET_PASSWORD_TOKEN_EXPIRED": "The password reset link has expired."
   }
 }

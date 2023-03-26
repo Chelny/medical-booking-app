@@ -4,7 +4,7 @@ import styles from 'styles/modules/Button.module.css'
 type ButtonType = 'button' | 'submit' | 'reset' | undefined
 
 type ButtonProps = {
-  children: ReactElement | ReactElement
+  children: ReactElement | ReactElement[]
   type?: ButtonType
   className?: string
   disabled?: boolean

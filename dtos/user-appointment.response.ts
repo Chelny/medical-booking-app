@@ -1,4 +1,4 @@
-import { User, Appointment, Patient, Department, Doctor } from '@prisma/client'
+import { User, Appointment, Patient, DoctorDepartment, Doctor } from '@prisma/client'
 
 export interface IDoctorPatientAppointement extends IDoctorAppointement {
   User: User
@@ -10,7 +10,7 @@ export interface IDoctorAppointement extends Appointment {
 
 export interface IPatientDoctorAppointement extends IPatientAppointement {
   User: User
-  Department: Department
+  DoctorDepartment: DoctorDepartment
 }
 
 export interface IPatientAppointement extends Appointment {

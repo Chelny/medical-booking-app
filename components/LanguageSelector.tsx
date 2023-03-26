@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { Locales } from 'configs/locales'
+import { LanguagesMap, Locales } from 'configs/locales'
 
 const LanguageSelector = (): JSX.Element => {
   const router = useRouter()
@@ -15,7 +15,7 @@ const LanguageSelector = (): JSX.Element => {
       value={router.locale?.toUpperCase()}
       onChange={handleLocaleChange}
     >
-      {Object.keys(Locales).map((code: string) => (
+      {LanguagesMap.map((code: string) => (
         <option key={code} value={code}>
           {Locales[code].label}
         </option>

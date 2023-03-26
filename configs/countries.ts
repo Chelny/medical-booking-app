@@ -1,18 +1,19 @@
+interface ICountries {
+  [key: string]: ICountry
+}
+
 interface ICountry {
-  id: number
-  abbr: string
+  label: string
   regions: string[]
 }
 
-export const Countries: ICountry[] = [
-  {
-    id: 1,
-    abbr: 'CAN',
+export const Countries: ICountries = {
+  CA: {
+    label: 'Canada',
     regions: ['AB', 'BC', 'MB', 'NB', 'NL', 'NT', 'NS', 'NU', 'ON', 'PE', 'QC', 'SK', 'YT'],
   },
-  {
-    id: 2,
-    abbr: 'USA',
+  US: {
+    label: 'United States of America',
     regions: [
       'AK',
       'AL',
@@ -72,4 +73,6 @@ export const Countries: ICountry[] = [
       'WY',
     ],
   },
-]
+}
+
+export const CountriesMap = Object.keys(Countries)

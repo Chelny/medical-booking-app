@@ -25,3 +25,5 @@ export const Locales: ILocales = {
     hourFormat: 'H:mm',
   },
 }
+
+export const LanguagesMap = Object.keys(Locales)

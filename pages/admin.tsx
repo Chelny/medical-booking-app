@@ -7,18 +7,19 @@ import { GraphQLError } from 'graphql'
 import jwt_decode from 'jwt-decode'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { toast } from 'react-toastify'
 import Button from 'components/Button'
+import Modal, { ModalSize } from 'components/Modal'
 import ColumnSort from 'components/table/ColumnSort'
 import TableColFilterPopover from 'components/table/TableColFilterPopover'
-import UserProfileModal from 'components/UserProfileModal'
-import { Genders } from 'configs/genders'
-import { Locales } from 'configs/locales'
+import UserProfile from 'components/UserProfile'
+import { GendersMap } from 'configs/genders.enum'
+import { LanguagesMap } from 'configs/locales'
 import { Common } from 'constants/common'
-import { Routes } from 'constants/routes'
 import { IGetUsersParams } from 'dtos/get-users.params'
 import { IGetUsersResponse } from 'dtos/get-users.response'
 import { UserContact } from 'dtos/user-contact.response'
-import { UserRole } from 'enums/user-role.enum'
+import { UserRolesMap } from 'enums/user-role.enum'
 import { useRequest } from 'hooks/useRequest'
 import { getAuthCookie } from 'utils/auth-cookies'
 import { TextFormatUtil } from 'utils/text-format'
@@ -28,13 +29,12 @@ type AdminProps = {
 }
 
 type GetUsersGQLResponse = GQLResponse<{ getUsers: IGetUsersResponse }>
+type ForgotPasswordGQLResponse = GQLResponse<{ forgotPassword: { message: string } }>
+type DeleteUserGQLResponse = GQLResponse<{ deleteUser: { message: string } }>
 
-const Admin: NextPage<AdminProps> = (): JSX.Element => {
+const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
   const { t } = useTranslation()
   const router = useRouter()
-  const GendersMap = Genders.map(({ value }) => value as User_gender)
-  const RolesMap = Object.values(UserRole).filter((roleId) => typeof roleId === 'number') as number[]
-  const LanguagesMap = Object.keys(Locales)
   const [users, setUsers] = useState<UserContact[]>([])
   const [usersErrors, setUsersErrors] = useState<GraphQLError[]>([])
   const [getUsersParams, setGetUsersParams] = useState<IGetUsersParams>({
@@ -42,14 +42,15 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
     limit: Common.PAGINATION.LIMIT,
     query: '',
     genders: GendersMap,
-    roles: RolesMap,
+    roles: UserRolesMap,
     languages: LanguagesMap,
     orderBy: 'id',
     sort: Prisma.SortOrder.asc,
   })
   const [getUsersCount, setGetUsersCount] = useState<number>(0)
   const [isUserProfileModalOpen, setIsUserProfileModalOpen] = useState<boolean>(false)
-  const [viewUser, setViewUser] = useState<UserContact>({} as UserContact)
+  const [isDeleteUserModalOpen, setIsDeleteUserModalOpen] = useState<boolean>(false)
+  const [selectedUser, setSelectedUser] = useState<UserContact>({} as UserContact)
 
   useEffect(
     () => {
@@ -123,7 +124,7 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
   }
 
   const addUser = () => {
-    setViewUser({} as UserContact)
+    setSelectedUser({} as UserContact)
     setIsUserProfileModalOpen(true)
   }
 
@@ -175,9 +176,35 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
     setGetUsersParams({ ...getUsersParams, offset: getUsersParams.offset + getUsersParams.limit })
   }
 
+  const sendResetPasswordLink = async (user: User) => {
+    const { data, errors } = await useRequest<ForgotPasswordGQLResponse>(
+      `{ forgotPassword(email: "${user.email}") { message } }`
+    )
+
+    if (data) {
+      toast.success<string>(t(`SUCCESS.${data.forgotPassword.message}`, { ns: 'api', email: user.email }))
+    }
+
+    if (errors) toast.error<string>(t(`ERROR.${errors[0].extensions.code}`, { ns: 'api' }))
+  }
+
+  const deleteUser = async () => {
+    const { data, errors } = await useRequest<DeleteUserGQLResponse>(
+      `{ deleteUser(id: ${selectedUser.id}) { message } }`
+    )
+
+    if (data) {
+      toast.success<string>(t(`SUCCESS.${data.deleteUser.message}`, { ns: 'api' }))
+      setIsDeleteUserModalOpen(false)
+      getUsers()
+    }
+
+    if (errors) toast.error<string>(t(`ERROR.${errors[0].extensions.code}`, { ns: 'api' }))
+  }
+
   return (
     <>
-      <h2>{t('ADMIN_CONSOLE', { ns: 'admin' })}</h2>
+      <h2>{t('TITLE', { ns: 'admin' })}</h2>
 
       <div className="w-fit">
         <Button type="button" className="bg-success" handleClick={() => addUser()}>
@@ -275,9 +302,9 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
                 <div className="table-column-wrapper">
                   {t('FORM.LABEL.ROLE')}
                   <TableColFilterPopover
-                    list={RolesMap}
+                    list={UserRolesMap}
                     selectedValues={getUsersParams.roles}
-                    translationPrefix="ROLES"
+                    translationPrefix="USER_ROLES"
                     handleChange={(roles: number[]) => setGetUsersParams({ ...getUsersParams, roles })}
                   />
                 </div>
@@ -328,11 +355,11 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
                   <td className="column-first-name sticky-start">{user.first_name}</td>
                   <td className="column-last-name sticky-start">{user.last_name}</td>
                   <td>{t(`GENDERS.${user.gender}`)}</td>
-                  <td>{TextFormatUtil.dateFormat(user.birth_date, router)}</td>
+                  <td>{TextFormatUtil.formatISOToStringDate(user.birth_date)}</td>
                   <td>{user.email}</td>
                   <td>{user.username ?? '--'}</td>
-                  <td>{t(`ROLES.${user.role_id}`)}</td>
-                  <td>{user.language?.toUpperCase()}</td>
+                  <td>{t(`USER_ROLES.${user.role_id}`)}</td>
+                  <td>{user.language}</td>
                   <td>{user.created_at && TextFormatUtil.dateFormat(user.created_at, router, 'PPpp')}</td>
                   <td>{TextFormatUtil.dateFormat(user.updated_at, router, 'PPpp')}</td>
                   <td className="sticky-end">
@@ -341,17 +368,50 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
                         type="button"
                         className="text-secondary"
                         handleClick={() => {
-                          setViewUser(user)
+                          setSelectedUser(user)
                           setIsUserProfileModalOpen(true)
                         }}
                       >
-                        <FontAwesomeIcon icon="user-pen" aria-label={t('ROUTES.DASHBOARD')} />
+                        <FontAwesomeIcon icon="user-pen" aria-label={t('TABLE.ACTIONS.EDIT_USER', { ns: 'admin' })} />
                       </Button>
-                      {user.id != 1 && (
-                        <Button type="button" className="text-error">
-                          <FontAwesomeIcon icon="user-minus" aria-label={t('ROUTES.DASHBOARD')} />
-                        </Button>
-                      )}
+                      <Button
+                        type="button"
+                        className="text-secondary"
+                        disabled={user.id == 1 || user.id == userToken.id}
+                        handleClick={() => {
+                          if (user.id != 1 && user.id != userToken.id) sendResetPasswordLink(user)
+                        }}
+                      >
+                        <span className="fa-layers fa-fw">
+                          <FontAwesomeIcon
+                            icon="rotate"
+                            size="xl"
+                            aria-label={t('TABLE.ACTIONS.RESET_PASSWORD', { ns: 'admin' })}
+                          />
+                          <FontAwesomeIcon
+                            icon="lock"
+                            transform="shrink-8 right-1.5"
+                            inverse
+                            aria-label={t('TABLE.ACTIONS.RESET_PASSWORD', { ns: 'admin' })}
+                          />
+                        </span>
+                      </Button>
+                      <Button
+                        type="button"
+                        className="text-error"
+                        disabled={user.id == 1}
+                        handleClick={() => {
+                          if (user.id != 1) {
+                            setSelectedUser(user)
+                            setIsDeleteUserModalOpen(true)
+                          }
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon="user-minus"
+                          aria-label={t('TABLE.ACTIONS.DELETE_USER', { ns: 'admin' })}
+                        />
+                      </Button>
                     </div>
                   </td>
                 </tr>
@@ -393,7 +453,36 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
       </div>
 
       {/* User Profile Modal */}
-      <UserProfileModal user={viewUser} isOpen={isUserProfileModalOpen} setModalState={setIsUserProfileModalOpen} />
+      {isUserProfileModalOpen && (
+        <UserProfile
+          isModal
+          user={selectedUser}
+          setIsUserProfileModalOpen={setIsUserProfileModalOpen}
+          isFormSubmitted={(isSubmitted: boolean) => {
+            if (isSubmitted) getUsers()
+          }}
+        />
+      )}
+
+      {/* Delete Profile Modal */}
+      <Modal
+        modalSize={ModalSize.SM}
+        title={t('DELETE_USER_MODAL.TITLE', { ns: 'admin' })}
+        isOpen={isDeleteUserModalOpen}
+        confirmButton={{
+          label: t('BUTTON.DELETE'),
+          type: 'DANGER',
+        }}
+        setIsOpen={setIsDeleteUserModalOpen}
+        handleSubmit={deleteUser}
+      >
+        <>
+          {t('DELETE_USER_MODAL.MESSAGE', {
+            ns: 'admin',
+            user: `${selectedUser.first_name} ${selectedUser.last_name}`,
+          })}
+        </>
+      </Modal>
     </>
   )
 }
@@ -401,21 +490,17 @@ const Admin: NextPage<AdminProps> = (): JSX.Element => {
 export const getServerSideProps = async (context: IContext & ILocale) => {
   const token = getAuthCookie(context.req) || null
 
-  if (!token) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: Routes.HOME,
-      },
-      props: {},
-    }
-  }
+  if (!token) return Common.SERVER_SIDE_PROPS.NO_TOKEN
 
   const decodedToken = token && jwt_decode(token)
 
   return {
     props: {
-      ...(await serverSideTranslations(context.locale, ['common', 'api', 'admin', 'account'])),
+      ...(await serverSideTranslations(context.locale, [
+        ...Common.SERVER_SIDE_PROPS.TRANSLATION_NAMESPACES,
+        'admin',
+        'account',
+      ])),
       userToken: decodedToken?.user,
     },
   }

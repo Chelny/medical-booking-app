@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { FormEvent, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Listbox, Popover } from '@headlessui/react'
 import { useTranslation } from 'next-i18next'
@@ -34,7 +34,9 @@ const TableColFilterPopover = <T,>({
 
       <Popover.Panel
         as="form"
-        className="absolute left-[50%] z-10 translate-x-[-50%] w-max-content p-2 border border-light-shade rounded-md drop-shadow-2xl bg-white dark:border-dark-tint dark:bg-dark-shade"
+        className="absolute left-[50%] z-10 translate-x-[-50%] min-w-[150px] p-2 border border-light-shade rounded-md drop-shadow-2xl bg-white dark:border-dark-tint dark:bg-dark-shade"
+        noValidate
+        onSubmit={(event: FormEvent<HTMLFormElement>) => event.preventDefault()}
       >
         <Listbox multiple value={selectedItems} onChange={selectItems}>
           <Listbox.Options static>
@@ -53,14 +55,9 @@ const TableColFilterPopover = <T,>({
             ))}
           </Listbox.Options>
         </Listbox>
-        <div className="flex flex-cols gap-1">
-          <Popover.Button type="reset" onClick={() => setSelectedItems(list)}>
-            {t('BUTTON.RESET')}
-          </Popover.Button>
-          <Popover.Button type="submit" onClick={() => handleChange(selectedItems)}>
-            {t('BUTTON.APPLY')}
-          </Popover.Button>
-        </div>
+        <Popover.Button type="submit" onClick={() => handleChange(selectedItems)}>
+          {t('BUTTON.APPLY')}
+        </Popover.Button>
       </Popover.Panel>
     </Popover>
   )

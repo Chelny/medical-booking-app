@@ -32,7 +32,8 @@
     "CLOSE": "Close",
     "RESET": "Réinitialiser",
     "APPLY": "Apply",
-    "SAVE": "Save"
+    "SAVE": "Save",
+    "DELETE": "Delete"
   },
   "FORM": {
     "LABEL": {
@@ -59,6 +60,10 @@
       "POST_CODE": "ZIP Code/Postal Code",
       "PHONE_NUMBER": "Phone Number",
       "PHONE_NUMBER_EXT": "Ext.",
+      "DEPARTMENT_ID": "Department",
+      "IMAGE_NAME": "Profile Picture",
+      "START_DATE": "Start Date",
+      "END_DATE": "End Date",
       "MEDICAL_ID": "Medical ID",
       "HEIGHT": "Height (m)",
       "WEIGHT": "Weight (kg)",
@@ -75,6 +80,7 @@
       "PHONE_NUMBER_FORMAT": "Enter numbers only."
     },
     "ERROR": {
+      "INVALID_FIELDS_MESSAGE": "The following fields are invalid: {{fields}}.",
       "FIRST_NAME_REQUIRED": "The first name is required.",
       "FIRST_NAME_PATTERN": "The first name is invalid.",
       "LAST_NAME_REQUIRED": "The last name is required.",
@@ -102,6 +108,10 @@
       "PHONE_NUMBER_REQUIRED": "The phone number is required.",
       "PHONE_NUMBER_PATTERN": "The phone number is invalid.",
       "PHONE_NUMBER_EXT_PATTERN": "The phone number extension is invalid.",
+      "DEPARTMENT_ID_REQUIRED": "The department is required.",
+      "IMAGE_NAME_FORMAT": "Accepted formats are JPEG, JPG, PNG and the image must not exceed 1MB.",
+      "START_DATE_REQUIRED": "The start date is required.",
+      "END_DATE_MINIMUM": "The end date should be before or the same as the start date.",
       "MEDICAL_ID_REQUIRED": "The medical ID is required.",
       "MEDICAL_ID_PATTERN": "The medical ID is invalid.",
       "HEIGHT_MIN": "The height is invalid.",
@@ -115,13 +125,6 @@
         "2": "Weak",
         "3": "Good",
         "4": "Strong"
-      }
-    },
-    "LIST": {
-      "GENDERS": {
-        "MALE": "Male",
-        "FEMALE": "Female",
-        "OTHER": "Other"
       }
     }
   },
@@ -139,7 +142,7 @@
     "F": "Female",
     "O": "Other"
   },
-  "ROLES": {
+  "USER_ROLES": {
     "1": "Admin",
     "2": "Doctor",
     "3": "Patient"
@@ -149,7 +152,7 @@
     "FR": "French"
   },
   "COUNTRIES": {
-    "CAN": {
+    "CA": {
       "COUNTRY": "Canada",
       "REGIONS": {
         "AB": "Alberta",
@@ -167,7 +170,7 @@
         "YT": "Yukon"
       }
     },
-    "USA": {
+    "US": {
       "COUNTRY": "United States of America",
       "REGIONS": {
         "AL": "Alabama",
@@ -229,7 +232,7 @@
       }
     }
   },
-  "DOCTOR_DEPARTMENT": {
+  "DOCTOR_DEPARTMENTS": {
     "FAMILY_MEDICINE": "Family Medicine",
     "CARDIOLOGY": "Cardiology",
     "DERMATOLOGY": "Dermatology",

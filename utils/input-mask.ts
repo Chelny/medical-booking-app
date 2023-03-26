@@ -28,7 +28,7 @@ export const InputMaskUtil = {
   },
   maskPostCode: (
     event: FormEvent<HTMLInputElement>,
-    values: { [key: string]: string },
+    values: { [key: string]: number | string },
     setPostCode: Dispatch<string>,
     setPostCodeMaxLength: Dispatch<SetStateAction<number>>,
     handleChange: (event: FormEvent<HTMLElement>) => void

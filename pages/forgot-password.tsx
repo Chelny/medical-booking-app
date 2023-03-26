@@ -4,8 +4,8 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { toast } from 'react-toastify'
 import Button from 'components/Button'
 import FormElement from 'components/form/FormElement'
+import { Common } from 'constants/common'
 import { Regex } from 'constants/regex'
-import { Routes } from 'constants/routes'
 import { useForm } from 'hooks/useForm'
 import { useRequest } from 'hooks/useRequest'
 import { getAuthCookie } from 'utils/auth-cookies'
@@ -58,19 +58,14 @@ const ForgotPassword: NextPage = () => {
 export const getServerSideProps = async (context: IContext & ILocale) => {
   const token = getAuthCookie(context.req) || null
 
-  if (token) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: Routes.DASHBOARD,
-      },
-      props: {},
-    }
-  }
+  if (token) return Common.SERVER_SIDE_PROPS.TOKEN
 
   return {
     props: {
-      ...(await serverSideTranslations(context.locale, ['common', 'api', 'forgot-password'])),
+      ...(await serverSideTranslations(context.locale, [
+        ...Common.SERVER_SIDE_PROPS.TRANSLATION_NAMESPACES,
+        'forgot-password',
+      ])),
     },
   }
 }

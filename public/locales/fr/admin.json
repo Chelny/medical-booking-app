@@ -1,8 +1,20 @@
 {
-  "ADMIN_CONSOLE": "Console d'administration",
+  "TITLE": "Console d'administration",
   "ADD_USER": "Ajouter un utilisateur",
   "USER_PROFILE_MODAL": {
     "CREATE_TITLE": "Création d'un utilisateur",
-    "EDIT_TITLE": "Modification d'un utilisateur"
+    "EDIT_TITLE": "Modification d'un utilisateur",
+    "CHOOSE_USER_ROLE": "Veuillez choisir le rôle de l'utilisateur :"
+  },
+  "DELETE_USER_MODAL": {
+    "TITLE": "Supprimer l'utilisateur",
+    "MESSAGE": "Êtes-vous sûr de vouloir supprimer l'utilisateur : « {{user}} » ?"
+  },
+  "TABLE": {
+    "ACTIONS": {
+      "EDIT_USER": "Modifier l'utilisateur",
+      "RESET_PASSWORD": "Réinitialiser le mot de passe de l'utilisateur",
+      "DELETE_USER": "Supprimer l'utilisateur"
+    }
   }
 }
