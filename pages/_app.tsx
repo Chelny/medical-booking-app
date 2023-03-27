@@ -7,7 +7,7 @@ import { config, library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { isEqual } from 'lodash-es'
 import { appWithTranslation } from 'next-i18next'
-import { ToastContainer, Flip } from 'react-toastify'
+import { ToastContainer, Flip, Slide } from 'react-toastify'
 import Footer from 'components/layout/Footer'
 import Header from 'components/layout/Header'
 import Nav from 'components/layout/Nav'
@@ -84,16 +84,15 @@ function MyApp({ Component, pageProps }: AppProps) {
             <Component {...pageProps} />
           </PageLayout>
           <ToastContainer
-            position="top-center"
-            autoClose={5000}
+            position={width < Common.BREAKPOINT.MD ? 'top-center' : 'top-right'}
+            autoClose={3000}
             hideProgressBar={false}
-            newestOnTop
             closeOnClick
             rtl={false}
             draggable={false}
             pauseOnFocusLoss
             pauseOnHover
-            transition={Flip}
+            transition={width < Common.BREAKPOINT.MD ? Flip : Slide}
             theme="colored"
           />
         </main>

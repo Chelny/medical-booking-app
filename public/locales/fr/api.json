@@ -5,7 +5,8 @@
     "ACCOUNT_CREATED": "Le compte a été créé avec succès !",
     "ACCOUNT_UPDATED": "Le compte a été modifié avec succès !",
     "PASSWORD_UPDATED": "Le mot de passe a été modifié avec succès !",
-    "ACCOUNT_DELETED": "Le compte a été supprimé avec succès !"
+    "ACCOUNT_DELETED": "Le compte a été supprimé avec succès !",
+    "LOGOUT": "Vous vous êtes déconnecté(e) avec succès !"
   },
   "ERROR": {
     "GENERAL": "Une erreur est survenue. Veuillez réessayer plus tard.",

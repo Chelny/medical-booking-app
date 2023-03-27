@@ -25,7 +25,7 @@ const TermsAndConditions: NextPage = () => {
   )
 }
 
-export const getServerSideProps = async (context: IContext & ILocale) => {
+export const getServerSideProps = async (context: ServerSideContext) => {
   return {
     props: {
       ...(await serverSideTranslations(context.locale, [

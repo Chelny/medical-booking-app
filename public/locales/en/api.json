@@ -5,7 +5,8 @@
     "ACCOUNT_CREATED": "The account has been successfully created!",
     "ACCOUNT_UPDATED": "The account has been successfully updated!",
     "PASSWORD_UPDATED": "The password has been successfully updated!",
-    "ACCOUNT_DELETED": "The account has been successfully deleted!"
+    "ACCOUNT_DELETED": "The account has been successfully deleted!",
+    "LOGOUT": "You have successfully logged out!"
   },
   "ERROR": {
     "GENERAL": "An error has occurred. Please try again later.",

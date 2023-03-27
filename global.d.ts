@@ -21,4 +21,6 @@ export declare global {
   }
 
   type GQLResponse<T> = { data: T | null; errors?: GraphQLError[] }
+
+  type ServerSideContext = IContext & ILocale
 }

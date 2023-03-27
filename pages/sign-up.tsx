@@ -223,7 +223,7 @@ const SignUp: NextPage = (): JSX.Element => {
   )
 }
 
-export const getServerSideProps = async (context: IContext & ILocale) => {
+export const getServerSideProps = async (context: ServerSideContext) => {
   const token = getAuthCookie(context.req) || null
 
   if (token) return Common.SERVER_SIDE_PROPS.TOKEN

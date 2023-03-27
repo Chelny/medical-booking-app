@@ -2,9 +2,11 @@ import { useRouter } from 'next/router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { User } from '@prisma/client'
 import { useTranslation } from 'next-i18next'
+import { toast } from 'react-toastify'
 import ActiveLink from 'components/ActiveLink'
 import { Routes } from 'constants/routes'
 import { UserRole } from 'enums/user-role.enum'
+import { useRequest } from 'hooks/useRequest'
 import styles from 'styles/modules/Nav.module.css'
 
 type NavProps = {
@@ -12,9 +14,17 @@ type NavProps = {
   isAuthRoute?: boolean
 }
 
+type LogoutGQLResponse = GQLResponse<{ logout: { message: string } }>
+
 const Nav = ({ user }: NavProps): JSX.Element => {
   const router = useRouter()
   const { t } = useTranslation()
+
+  const logout = async () => {
+    const { data, errors } = await useRequest<LogoutGQLResponse>(`{ logout { message } }`)
+    if (data) toast.success<string>(t('SUCCESS.LOGOUT', { ns: 'api' }))
+    if (errors) toast.error<string>(t(`ERROR.${errors[0].extensions.code}`, { ns: 'api' }))
+  }
 
   return (
     <nav className={styles.nav}>
@@ -39,7 +49,7 @@ const Nav = ({ user }: NavProps): JSX.Element => {
             </ActiveLink>
           </li>
         )}
-        {user && user.role_id !== UserRole.ADMIN && (
+        {/* {user && user.role_id !== UserRole.ADMIN && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.APPOINTMENTS}>
               <a>
@@ -52,7 +62,7 @@ const Nav = ({ user }: NavProps): JSX.Element => {
               </a>
             </ActiveLink>
           </li>
-        )}
+        )} */}
         {user && user.role_id === UserRole.ADMIN && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.ADMIN}>
@@ -87,16 +97,16 @@ const Nav = ({ user }: NavProps): JSX.Element => {
             </ActiveLink>
           </li>
         )} */}
-        {/* {user && (
+        {user && (
           <li>
-            <ActiveLink activeClassName={styles.active} href={Routes.LOGOUT}>
-              <a>
+            <ActiveLink activeClassName={styles.active} href={Routes.HOME}>
+              <a onClick={logout}>
                 <FontAwesomeIcon icon="right-from-bracket" title={t('ROUTES.LOGOUT')} aria-label={t('ROUTES.LOGOUT')} />
                 {t('ROUTES.LOGOUT')}
               </a>
             </ActiveLink>
           </li>
-        )} */}
+        )}
       </ul>
       {/* <FontAwesomeIcon icon="sun" /> */}
       {/* <FontAwesomeIcon icon="moon" /> */}
