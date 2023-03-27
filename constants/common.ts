@@ -4,6 +4,8 @@ import { Routes } from 'constants/routes'
 export const Common = {
   APP_NAME: 'Medical Booking App',
   API_URL: 'http://localhost:3000/api/graphql',
+  CONTACT_EMAIL: 'contact@medical-booking.app',
+  REPO_URL: 'https://github.com/Chelny/medical-booking-app',
   BREAKPOINT: {
     XS: 480,
     SM: 640,
@@ -38,13 +40,7 @@ export const Common = {
     },
     TRANSLATION_NAMESPACES: ['common', 'api'],
   },
-  UNAUTH_ROUTES: [
-    Routes.HOME,
-    Routes.SIGN_UP,
-    Routes.FORGOT_PASSWORD,
-    Routes.RESET_PASSWORD,
-    Routes.TERMS_AND_CONDITIONS,
-  ],
+  UNAUTH_ROUTES: [Routes.HOME, Routes.SIGN_UP, Routes.FORGOT_PASSWORD, Routes.RESET_PASSWORD],
 
   // USER PROFILE
   BIRTH_DATE: {

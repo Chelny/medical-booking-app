@@ -172,16 +172,6 @@ const SignUp: NextPage = (): JSX.Element => {
     },
   })
 
-  const contentClickHandler = (e) => {
-    const targetLink = e.target.closest('a')
-    if (!targetLink) return
-    e.preventDefault()
-
-    console.log(targetLink.href) // this.props.history.push(e.target.href)
-    // router.push(e.target.getAttribute('href'))
-    window.open(e.target.getAttribute('href'))
-  }
-
   return (
     <>
       <h2>{t('SIGN_UP', { ns: 'sign-up' })}</h2>
@@ -218,10 +208,9 @@ const SignUp: NextPage = (): JSX.Element => {
                   htmlFor="termsAndConditions"
                   dangerouslySetInnerHTML={{
                     __html: t('FORM.LABEL.TERMS_AND_CONDITIONS', {
-                      link: `/terms-and-conditions`,
+                      link: Routes.TERMS_AND_CONDITIONS,
                     }),
                   }}
-                  onClick={contentClickHandler}
                 />
               </div>
             </FormElement>

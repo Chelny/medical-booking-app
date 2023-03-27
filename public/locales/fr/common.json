@@ -233,20 +233,13 @@
     }
   },
   "DOCTOR_DEPARTMENTS": {
+    "DENTIST": "Dentiste",
+    "DERMATOLOGY": "Dermatologue",
+    "DIETETICS": "Diététiste",
     "FAMILY_MEDICINE": "Docteur de famille",
-    "CARDIOLOGY": "Cardiologie",
-    "DERMATOLOGY": "Dermatologie",
-    "RADIOLOGY": "Radiologie",
-    "NEUROLOGY": "Neurologie",
-    "GYNECOLOGY": "Gynécologie",
-    "GASTROENTEROLOGY": "Gastroentérologie",
-    "OPHTHALMOLOGY": "Ophtalmologie",
-    "REHABILITATION": "Médecine Physique et Réadaptation",
-    "ONCOLOGY": "Oncologie",
-    "RESPIROLOGY": "Respirologie",
-    "UROLOGY": "Urologie",
-    "RHEUMATOLOGY": "Rhumatologie",
-    "PSYCHIATRY": "Psychiatrie",
-    "PLASTIC_SURGERY": "Chirurgie plastique"
+    "OPTOMETRY": "Optométriste",
+    "PEDIATRICS": "Pédiatre",
+    "PLASTIC_SURGERY": "Chirurgien",
+    "PSYCHOLOGY": "Psychologue"
   }
 }

@@ -1,19 +1,12 @@
 export enum DoctorDepartment {
-  FAMILY_MEDICINE = 1,
-  CARDIOLOGY = 2,
-  DERMATOLOGY = 3,
-  RADIOLOGY = 4,
-  NEUROLOGY = 5,
-  GYNECOLOGY = 6,
-  GASTROENTEROLOGY = 7,
-  OPHTHALMOLOGY = 8,
-  REHABILITATION = 9,
-  ONCOLOGY = 10,
-  RESPIROLOGY = 11,
-  UROLOGY = 12,
-  RHEUMATOLOGY = 13,
-  PSYCHIATRY = 14,
-  PLASTIC_SURGERY = 15,
+  DENTIST = 1,
+  DERMATOLOGY = 2,
+  DIETETICS = 3,
+  FAMILY_MEDICINE = 4,
+  OPTOMETRY = 5,
+  PEDIATRICS = 6,
+  PLASTIC_SURGERY = 7,
+  PSYCHOLOGY = 8,
 }
 
 export const DoctorDepartmentsMap = Object.values(DoctorDepartment).filter(

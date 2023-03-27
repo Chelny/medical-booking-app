@@ -1,8 +1,8 @@
 import type { NextPage } from 'next'
+import { format, getYear } from 'date-fns'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { Common } from 'constants/common'
-import { getAuthCookie } from 'utils/auth-cookies'
 
 const TermsAndConditions: NextPage = () => {
   const { t } = useTranslation()
@@ -10,20 +10,22 @@ const TermsAndConditions: NextPage = () => {
   return (
     <>
       <h2>{t('TITLE', { ns: 'terms-and-conditions' })}</h2>
-      {/* TODO: Complete and figure out why the page is unaccessible */}
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero nobis doloribus quidem? Libero voluptas totam
-        culpa qui est officia, illo labore obcaecati deleniti fugit id impedit aliquam illum voluptatibus reprehenderit?
-      </p>
+      <div
+        dangerouslySetInnerHTML={{
+          __html: t('CONTENT', {
+            ns: 'terms-and-conditions',
+            updatedDate: format(new Date(), 'PPP'),
+            companyUrl: Common.REPO_URL,
+            companyAddress: `${Common.REPO_URL}<br /><br />12345 Test<br /><br />Montreal, QC<br /><br />H0H 0H0<br /><br />${Common.CONTACT_EMAIL}`,
+            copyrightYear: getYear(new Date()),
+          }),
+        }}
+      />
     </>
   )
 }
 
 export const getServerSideProps = async (context: IContext & ILocale) => {
-  const token = getAuthCookie(context.req) || null
-
-  if (!token) return Common.SERVER_SIDE_PROPS.NO_TOKEN
-
   return {
     props: {
       ...(await serverSideTranslations(context.locale, [

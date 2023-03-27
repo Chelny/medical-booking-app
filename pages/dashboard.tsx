@@ -77,6 +77,7 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
         minDate={Common.CALENDAR.MIN_DATE}
         maxDate={Common.CALENDAR.MAX_DATE}
         showDoubleView={width >= Common.BREAKPOINT.MD}
+        className="max-w-[768px]"
         tileClassName={({ date }: CalendarTileProperties) =>
           appointments.find((appointment: IPatientAppointement) =>
             isEqual(new Date(appointment.start_date).setHours(0, 0, 0, 0), date)
@@ -86,7 +87,7 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
         }
         onChange={handleSelectDate}
       />
-      <section id="appointmentDetails" className="p-4 mt-6 bg-light dark:bg-dark-shade dark:text-white">
+      <section id="appointmentDetails" className="max-w-[768px] p-4 mt-6 bg-light dark:bg-dark-shade dark:text-white">
         <h3>
           {t('APPOINTMENTS', {
             ns: 'dashboard',

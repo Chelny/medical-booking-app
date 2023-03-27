@@ -7,6 +7,7 @@ import { IAuthResponse } from 'dtos/auth.response'
 import { IGetUsersParams } from 'dtos/get-users.params'
 import { IGetUsersResponse } from 'dtos/get-users.response'
 import { ISuccessResponse } from 'dtos/success.response'
+import { UserRole } from 'enums/user-role.enum'
 import { prisma } from 'pages/api/db'
 import { EmailService } from 'pages/api/email.service'
 import {
@@ -255,7 +256,6 @@ const typeDefs = `
   type DoctorDepartment {
     id: ID!
     name: String!
-    appointment_time: Int!
     created_at: Timestamp!
     updated_at: Timestamp
   }
@@ -585,7 +585,7 @@ const resolvers = {
           email: args.email,
           username: args.username,
           password: await hash(args.password, 12),
-          role_id: args.role_id,
+          role_id: UserRole.ADMIN,
           language: args.language,
           Contact: {
             create: {
@@ -684,7 +684,7 @@ const resolvers = {
           email: args.email,
           username: args.username,
           password: await hash(args.password, 12),
-          role_id: args.role_id,
+          role_id: UserRole.DOCTOR,
           language: args.language,
           Contact: {
             create: {
