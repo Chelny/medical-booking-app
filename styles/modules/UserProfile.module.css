@@ -1,25 +1,25 @@
 .list {
-  @apply grid grid-flow-col grid-cols-tab justify-evenly gap-1 px-1 rounded-lg bg-light;
+  @apply grid grid-flow-col grid-cols-tab justify-evenly gap-1 px-1 rounded-lg bg-light dark:bg-primary-night-shade;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .list {
+  @apply bg-primary-night-shade;
 }
 
 .tab {
-  @apply flex justify-center items-center flex-col py-2.5 rounded-md bg-light font-medium ui-selected:bg-primary-day ui-selected:shadow ui-selected:text-white ui-not-selected:text-medium !important;
+  @apply flex flex-col justify-center items-center py-2.5 rounded-md font-medium ui-not-selected:bg-light ui-not-selected:text-medium ui-selected:shadow ui-selected:bg-primary-day ui-selected:text-white dark:ui-not-selected:bg-primary-night-shade dark:ui-not-selected:text-white dark:ui-selected:bg-primary-night;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .tab {
+  @apply ui-not-selected:bg-primary-night-shade ui-not-selected:text-white ui-selected:bg-primary-night;
 }
 
 .panels {
-  @apply overflow-y-scroll md:min-h-[500px] mt-2;
+  @apply overflow-y-scroll mt-2 md:min-h-[500px];
 }
 
 .panel {
   @apply py-4;
-}
-
-@media (prefers-color-scheme: dark) {
-  .list {
-    @apply bg-primary-night-shade;
-  }
-
-  .tab {
-    @apply bg-primary-night-shade ui-selected:bg-primary-night ui-not-selected:text-white !important;
-  }
 }

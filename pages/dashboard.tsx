@@ -89,7 +89,7 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
       />
       <section
         id="appointmentDetails"
-        className="lg:max-w-[768px] p-4 mt-6 bg-light dark:bg-dark-shade dark:text-white"
+        className="p-4 mt-6 bg-light lg:max-w-[768px] dark:bg-dark-shade dark:text-white"
       >
         <h3>
           {t('APPOINTMENTS', {

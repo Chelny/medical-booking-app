@@ -18,9 +18,7 @@ const PasswordStrengthMeter = ({ password }: PasswordStrengthMeterProps): JSX.El
   return (
     <>
       <meter className={styles.meter} max={4} value={meter} data-testid="password-strength-meter" />
-      <p className="text-medium text-right">
-        &nbsp;{password?.valueOf() && t(`FORM.PASSWORD_STRENGTH.SCALE.${meter}`)}
-      </p>
+      <p className="text-medium text-end">&nbsp;{password?.valueOf() && t(`FORM.PASSWORD_STRENGTH.SCALE.${meter}`)}</p>
     </>
   )
 }

@@ -11,11 +11,16 @@
 }
 
 .dialogPanelContainerChild {
-  @apply flex justify-center items-center md:h-auto min-h-full p-0 md:p-4;
+  @apply flex justify-center items-center min-h-full p-0 md:h-auto md:p-4;
 }
 
 .dialogPanel {
-  @apply overflow-hidden grid grid-rows-dialog-panel-sm w-full md:w-3/4 lg:max-w-screen-md h-screen md:h-full transform overflow-hidden rounded-md bg-light-tint p-4 md:p-6 text-left align-middle shadow-xl transition-all;
+  @apply overflow-hidden grid grid-rows-dialog-panel-sm w-full h-screen transform overflow-hidden rounded-md bg-light-tint p-4 text-start align-middle shadow-xl transition-all md:w-3/4 md:h-full md:p-6 lg:max-w-screen-md dark:bg-dark;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .dialogPanel {
+  @apply bg-dark;
 }
 
 .modalSizeXs {
@@ -35,19 +40,39 @@
 }
 
 .dialogTitle {
-  @apply text-lg font-medium leading-6 text-black;
+  @apply text-lg font-medium leading-6 text-black dark:text-white;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .dialogTitle {
+  @apply text-white;
 }
 
 .dialogContent {
   @apply overflow-y-auto grid auto-rows-max mt-2 text-black dark:text-white;
 }
 
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .dialogContent {
+  @apply text-white;
+}
+
 .actionButtons {
   @apply flex justify-end gap-2 mt-4 bg-light-tint dark:bg-dark;
 }
 
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .actionButtons {
+  @apply bg-dark;
+}
+
 .cancelBtn {
-  @apply w-min border border-medium-tint bg-transparent text-dark-tint !important;
+  @apply w-min border border-medium-tint bg-transparent text-dark-tint dark:border-dark-tint dark:bg-dark-tint dark:text-light-shade !important;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .cancelBtn {
+  @apply border-dark-tint bg-dark-tint text-light-shade !important;
 }
 
 .confirmBtn {
@@ -56,22 +81,4 @@
 
 .btnDanger {
   @apply bg-error !important;
-}
-
-@media (prefers-color-scheme: dark) {
-  .dialogPanel {
-    @apply bg-dark;
-  }
-
-  .dialogTitle {
-    @apply text-white;
-  }
-
-  .dialogContent {
-    @apply text-white;
-  }
-
-  .cancelBtn {
-    @apply border-dark-tint bg-dark-tint text-light-shade !important;
-  }
 }

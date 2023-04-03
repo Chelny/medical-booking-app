@@ -6,7 +6,7 @@ const LanguageSelector = (): JSX.Element => {
 
   const handleLocaleChange = (event: IHTMLElementEvent) => {
     const value = event.target.value
-    router.push(router.route, router.asPath, { locale: value })
+    router.push(router.route, router.asPath, { locale: value.toLowerCase() })
   }
 
   return (

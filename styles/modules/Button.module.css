@@ -7,27 +7,28 @@ form .btn {
 }
 
 form .btn[type='button'] {
-  @apply bg-primary-day-tint;
+  @apply bg-primary-day-tint dark:bg-primary-night-shade;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) form .btn[type='button'] {
+  @apply bg-primary-night-shade;
 }
 
 form .btn[type='submit'] {
-  @apply bg-primary-day;
+  @apply bg-primary-day dark:bg-primary-night;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) form .btn[type='submit'] {
+  @apply bg-primary-night;
 }
 
 form .btn[type='reset'] {
-  @apply bg-medium-tint text-black;
+  @apply bg-medium-tint text-black dark:bg-dark-tint dark:text-white;
 }
 
-@media (prefers-color-scheme: dark) {
-  form .btn[type='button'] {
-    @apply bg-primary-night-shade;
-  }
-
-  form .btn[type='submit'] {
-    @apply bg-primary-night;
-  }
-
-  form .btn[type='reset'] {
-    @apply bg-dark-tint text-white;
-  }
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) form .btn[type='reset'] {
+  @apply bg-dark-tint text-white;
 }

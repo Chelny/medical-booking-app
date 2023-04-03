@@ -1,9 +1,10 @@
 .nav {
   grid-area: nav;
+  @apply grid grid-rows-nav min-h-[inherit] h-full lg:flex-1 lg:grid-rows-none lg:grid-cols-nav-lg lg:justify-end lg:items-center lg:gap-4 lg:h-fit;
 }
 
 .nav ul {
-  @apply flex flex-col justify-evenly gap-1;
+  @apply flex flex-col gap-1 lg:flex-row;
 }
 
 .nav ul li {
@@ -11,23 +12,27 @@
 }
 
 .nav ul li a {
-  @apply grid grid-cols-[32px_auto] justify-start items-center gap-2 py-4 px-2 border-b border-light-shade text-medium no-underline hover:text-primary-day-shade visited:text-medium;
+  @apply grid grid-cols-[32px_auto] justify-start items-center gap-1 py-3 px-2 border-s-4 border-transparent text-medium no-underline hover:border-primary-day hover:bg-primary-day-tint hover:text-light-tint visited:text-medium lg:grid-cols-[max-content] lg:before:overflow-hidden lg:before:absolute lg:before:content-[attr(title)] lg:before:text-dark lg:before:opacity-0 lg:before:transition-all lg:before:duration-300 lg:before:scale-75 lg:before:hover:opacity-100 lg:before:hover:scale-100 lg:hover:border-transparent lg:hover:bg-transparent dark:text-medium-tint dark:hover:border-primary-night-tint dark:hover:bg-primary-night-shade dark:hover:text-light dark:visited:text-medium dark:lg:before:text-white dark:lg:hover:border-transparent dark:lg:hover:bg-transparent;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .nav ul li a {
+  @apply text-medium-tint hover:border-primary-night-tint hover:bg-primary-night-shade hover:text-light visited:text-medium lg:before:text-white lg:hover:border-transparent lg:hover:bg-transparent;
 }
 
 .nav ul li a.active {
-  @apply border-primary-day-shade text-primary-day-shade;
+  @apply border-primary-day bg-primary-day-tint text-light-tint lg:border-transparent lg:bg-transparent lg:text-primary-day-shade dark:border-primary-night-tint dark:bg-primary-night-shade dark:text-light dark:lg:border-transparent dark:lg:bg-transparent dark:lg:text-primary-night-tint;
 }
 
-.nav ul li a .svg-inline--fa {
-  height: 24px;
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .nav ul li a.active {
+  @apply border-primary-night-tint bg-primary-night-shade text-light lg:border-transparent lg:bg-transparent lg:text-primary-night-tint;
 }
 
-@media (prefers-color-scheme: dark) {
-  .nav ul li a {
-    @apply border-dark-tint text-medium-shade hover:text-primary-night-tint visited:text-medium-shade;
-  }
+.nav ul li a svg {
+  @apply h-[24px] lg:hidden;
+}
 
-  .nav ul li a.active {
-    @apply border-primary-night-tint text-primary-night-tint;
-  }
+.nav button {
+  @apply my-2 m-auto;
 }

@@ -20,28 +20,6 @@
   }
 
   a {
-    @apply text-secondary underline underline-offset-2 transition-colors;
-  }
-
-  a:hover {
-    @apply text-secondary-tint;
-  }
-
-  a:visited {
-    @apply text-secondary;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    a {
-      @apply text-secondary-tint;
-    }
-
-    a:hover {
-      @apply text-secondary;
-    }
-
-    a:visited {
-      @apply text-secondary-tint;
-    }
+    @apply text-secondary underline underline-offset-2 transition-colors hover:text-secondary-tint visited:text-secondary dark:text-secondary-tint dark:hover:text-secondary dark:visited:text-secondary-tint;
   }
 }

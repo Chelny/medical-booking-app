@@ -45,7 +45,7 @@ const TableColFilterPopover = <T,>({
                 key={index}
                 value={item}
                 disabled={selectedItems.includes(item) && selectedItems.length === 1}
-                className="grid grid-cols-listbox items-center gap-2 px-1 py-2 rounded-md cursor-pointer hover:bg-light-shade ui-not-selected:text-black ui-selected:text-black ui-selected:font-medium ui-not-selected:text-black ui-disabled:opacity-50 ui-disabled:cursor-not-allowed dark:hover:bg-dark dark:ui-selected:text-white dark:ui-not-selected:text-white"
+                className="grid grid-cols-listbox items-center gap-2 px-1 py-2 rounded-md cursor-pointer hover:bg-light-shade ui-not-selected:text-black ui-selected:text-black ui-selected:font-medium ui-disabled:opacity-50 ui-disabled:cursor-not-allowed dark:hover:bg-dark dark:ui-not-selected:text-white dark:ui-selected:text-white"
               >
                 <>
                   <FontAwesomeIcon icon="check" className="invisible ui-selected:visible ui-selected:text-active" />

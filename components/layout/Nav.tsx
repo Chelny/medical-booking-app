@@ -4,6 +4,7 @@ import { User } from '@prisma/client'
 import { useTranslation } from 'next-i18next'
 import { toast } from 'react-toastify'
 import ActiveLink from 'components/ActiveLink'
+import ThemeSelector from 'components/ThemeSelector'
 import { Routes } from 'constants/routes'
 import { UserRole } from 'enums/user-role.enum'
 import { useRequest } from 'hooks/useRequest'
@@ -11,7 +12,6 @@ import styles from 'styles/modules/Nav.module.css'
 
 type NavProps = {
   user: User | undefined
-  isAuthRoute?: boolean
 }
 
 type LogoutGQLResponse = GQLResponse<{ logout: { message: string } }>
@@ -32,9 +32,9 @@ const Nav = ({ user }: NavProps): JSX.Element => {
         {!user && router.route !== Routes.HOME && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.HOME}>
-              <a>
+              <a title={t('ROUTES.HOME')}>
                 <FontAwesomeIcon icon="house" title={t('ROUTES.HOME')} aria-label={t('ROUTES.HOME')} />
-                {t('ROUTES.HOME')}
+                <span>{t('ROUTES.HOME')}</span>
               </a>
             </ActiveLink>
           </li>
@@ -42,9 +42,9 @@ const Nav = ({ user }: NavProps): JSX.Element => {
         {user && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.DASHBOARD}>
-              <a>
+              <a title={t('ROUTES.DASHBOARD')}>
                 <FontAwesomeIcon icon="house" title={t('ROUTES.DASHBOARD')} aria-label={t('ROUTES.DASHBOARD')} />
-                {t('ROUTES.DASHBOARD')}
+                <span>{t('ROUTES.DASHBOARD')}</span>
               </a>
             </ActiveLink>
           </li>
@@ -52,13 +52,13 @@ const Nav = ({ user }: NavProps): JSX.Element => {
         {/* {user && user.role_id !== UserRole.ADMIN && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.APPOINTMENTS}>
-              <a>
+              <a title={t('ROUTES.APPOINTMENTS')}>
                 <FontAwesomeIcon
                   icon="calendar-check"
                   title={t('ROUTES.APPOINTMENTS')}
                   aria-label={t('ROUTES.APPOINTMENTS')}
                 />
-                {t('ROUTES.APPOINTMENTS')}
+                <span>{t('ROUTES.APPOINTMENTS')}</span>
               </a>
             </ActiveLink>
           </li>
@@ -66,9 +66,9 @@ const Nav = ({ user }: NavProps): JSX.Element => {
         {user && user.role_id === UserRole.ADMIN && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.ADMIN}>
-              <a>
+              <a title={t('ROUTES.ADMIN')}>
                 <FontAwesomeIcon icon="users-gear" title={t('ROUTES.ADMIN')} aria-label={t('ROUTES.ADMIN')} />
-                {t('ROUTES.ADMIN')}
+                <span>{t('ROUTES.ADMIN')}</span>
               </a>
             </ActiveLink>
           </li>
@@ -76,13 +76,13 @@ const Nav = ({ user }: NavProps): JSX.Element => {
         {/* {user && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.ACCOUNT}>
-              <a>
+              <a title={t('ROUTES.ACCOUNT')}>
                 <FontAwesomeIcon
                   icon={user.role_id === UserRole.DOCTOR ? 'user-doctor' : 'user'}
                   title={t('ROUTES.ACCOUNT')}
                   aria-label={t('ROUTES.ACCOUNT')}
                 />
-                {t('ROUTES.ACCOUNT')}
+                <span>{t('ROUTES.ACCOUNT')}</span>
               </a>
             </ActiveLink>
           </li>
@@ -90,9 +90,9 @@ const Nav = ({ user }: NavProps): JSX.Element => {
         {/* {user && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.HELP}>
-              <a>
+              <a title={t('ROUTES.HELP')}>
                 <FontAwesomeIcon icon="circle-question" title={t('ROUTES.HELP')} aria-label={t('ROUTES.HELP')} />
-                {t('ROUTES.HELP')}
+                <span>{t('ROUTES.HELP')}</span>
               </a>
             </ActiveLink>
           </li>
@@ -100,16 +100,15 @@ const Nav = ({ user }: NavProps): JSX.Element => {
         {user && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.HOME}>
-              <a onClick={logout}>
+              <a title={t('ROUTES.LOGOUT')} onClick={logout}>
                 <FontAwesomeIcon icon="right-from-bracket" title={t('ROUTES.LOGOUT')} aria-label={t('ROUTES.LOGOUT')} />
-                {t('ROUTES.LOGOUT')}
+                <span>{t('ROUTES.LOGOUT')}</span>
               </a>
             </ActiveLink>
           </li>
         )}
       </ul>
-      {/* <FontAwesomeIcon icon="sun" /> */}
-      {/* <FontAwesomeIcon icon="moon" /> */}
+      <ThemeSelector />
     </nav>
   )
 }

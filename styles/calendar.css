@@ -1,17 +1,17 @@
 .react-calendar {
-  @apply w-full border-light-shade bg-light text-light;
+  @apply w-full border-light-shade bg-light text-light dark:border-dark-shade dark:bg-dark-shade dark:text-light;
 }
 
 .react-calendar .react-calendar__navigation {
-  @apply bg-primary-day;
+  @apply bg-primary-day dark:bg-primary-night-shade;
 }
 
 .react-calendar .react-calendar__navigation button {
-  @apply focus:bg-primary-day hover:bg-primary-day disabled:bg-transparent disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent;
+  @apply disabled:bg-transparent disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent hover:bg-primary-day focus:bg-primary-day dark:hover:bg-primary-night dark:focus:bg-primary-night;
 }
 
 .react-calendar .react-calendar__viewContainer {
-  @apply text-black;
+  @apply text-black dark:text-white;
 }
 
 .react-calendar .react-calendar__viewContainer .react-calendar__month-view button.react-calendar__tile {
@@ -19,7 +19,7 @@
 }
 
 .react-calendar .react-calendar__viewContainer button.react-calendar__tile {
-  @apply rounded-md focus:bg-light-shade hover:bg-light-shade disabled:bg-transparent disabled:opacity-25 disabled:cursor-not-allowed;
+  @apply rounded-md disabled:bg-transparent disabled:opacity-25 disabled:cursor-not-allowed hover:bg-light-shade focus:bg-light-shade dark:hover:bg-dark dark:focus:bg-dark;
 }
 
 .react-calendar
@@ -27,7 +27,7 @@
   button.react-calendar__tile.react-calendar__month-view__days__day:not(.react-calendar__tile--now):not(
     .react-calendar__tile--active
   ) {
-  @apply text-black;
+  @apply text-black dark:text-white;
 }
 
 .react-calendar
@@ -63,45 +63,11 @@
 }
 
 .react-calendar .react-calendar__viewContainer button.react-calendar__tile.react-calendar__tile--active {
-  @apply bg-primary-day text-white;
+  @apply bg-primary-day text-white dark:bg-primary-night;
 }
 
 .react-calendar
   .react-calendar__viewContainer
   button.react-calendar__tile.react-calendar__tile--active.react-calendar__month-view__days__day.has-appointments {
   @apply after:bg-active;
-}
-
-@media (prefers-color-scheme: dark) {
-  .react-calendar {
-    @apply border-dark-shade bg-dark-shade text-light;
-  }
-
-  .react-calendar .react-calendar__navigation {
-    @apply bg-primary-night-shade;
-  }
-
-  .react-calendar .react-calendar__navigation button {
-    @apply focus:bg-primary-night hover:bg-primary-night;
-  }
-
-  .react-calendar .react-calendar__viewContainer {
-    @apply text-white;
-  }
-
-  .react-calendar .react-calendar__viewContainer button.react-calendar__tile {
-    @apply focus:bg-dark hover:bg-dark;
-  }
-
-  .react-calendar
-    .react-calendar__viewContainer
-    button.react-calendar__tile.react-calendar__month-view__days__day:not(.react-calendar__tile--now):not(
-      .react-calendar__tile--active
-    ) {
-    @apply text-white;
-  }
-
-  .react-calendar .react-calendar__viewContainer button.react-calendar__tile.react-calendar__tile--active {
-    @apply bg-primary-night;
-  }
 }

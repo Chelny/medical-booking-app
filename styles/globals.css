@@ -14,9 +14,7 @@
 
 html,
 body {
-  padding: 0;
-  margin: 0;
-  @apply font-sans;
+  @apply p-0 m-0 font-sans;
 }
 
 html,
@@ -24,12 +22,11 @@ body,
 body > div:first-child,
 div#__next,
 div#__next > div {
-  width: 100%;
-  height: 100%;
+  @apply w-full h-full;
 }
 
 body {
-  @apply bg-light-tint text-black;
+  @apply bg-light-tint text-black dark:bg-dark dark:text-white;
 }
 
 [class*='bg-primary'],
@@ -47,9 +44,5 @@ body {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
-  }
-
-  body {
-    @apply bg-dark text-white;
   }
 }

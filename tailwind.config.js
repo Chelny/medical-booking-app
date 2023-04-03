@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
-  // darkMode: 'class',
+  content: ['./public/index.html', './pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+  darkMode: 'class',
   theme: {
     fontFamily: {
       sans: ['Poppins', 'sans-serif'],
@@ -64,13 +64,16 @@ module.exports = {
         'layout-unauth': ['header', 'main', 'footer'],
         'layout-unauth-lg': ['sidebar main', 'footer footer'],
         'layout-auth': ['header', 'main', 'footer'],
-        'layout-auth-lg': ['sidebar main', 'footer footer'],
+        // 'layout-auth-lg': ['sidebar main', 'footer footer'],
+        'layout-auth-lg': ['header', 'main', 'footer'],
       },
       gridTemplateRows: {
         'layout-unauth': '125px auto max-content',
         'layout-unauth-lg': 'auto max-content',
         'layout-auth': '125px auto max-content',
-        'layout-auth-lg': 'auto max-content',
+        // 'layout-auth-lg': 'auto max-content',
+        'layout-auth-lg': 'max-content auto max-content',
+        nav: 'auto max-content',
         main: 'auto min-content',
         'dialog-panel-sm': 'max-content auto max-content',
       },
@@ -78,13 +81,18 @@ module.exports = {
         'layout-unauth': '100%',
         'layout-auth': '100%',
         'layout-unauth-lg': '50%',
-        'layout-auth-lg': '350px auto',
+        // 'layout-auth-lg': '350px auto',
+        'layout-auth-lg': '100%',
+        'nav-lg': 'auto max-content',
         listbox: '16px max-content',
         'radio-group': '1fr 16px',
         tab: 'repeat(auto-fit, minmax(50px, 1fr))',
       },
       width: {
         'max-content': 'max-content',
+      },
+      minHeight: {
+        'nav-expanded': 'calc(100vh - 125px)',
       },
       backgroundImage: {
         landing: 'linear-gradient(to top, #5C527Fba, #7858A6cc), url(/assets/images/backgrounds/landing.jpg)',

@@ -137,6 +137,14 @@
       "CURRENT_PAGE": "Affichage de {{offset}} à {{lastItem}} sur {{total}} entrées"
     }
   },
+  "THEME_SELECTOR": {
+    "LABEL": "Changer de thème",
+    "THEMES": {
+      "SYSTEM": "Système",
+      "LIGHT": "Foncé",
+      "DARK": "Clair"
+    }
+  },
   "GENDERS": {
     "M": "Homme",
     "F": "Femme",

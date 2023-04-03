@@ -7,10 +7,10 @@ import { config, library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { isEqual } from 'lodash-es'
 import { appWithTranslation } from 'next-i18next'
+import { ThemeProvider } from 'next-themes'
 import { ToastContainer, Flip, Slide } from 'react-toastify'
 import Footer from 'components/layout/Footer'
 import Header from 'components/layout/Header'
-import Nav from 'components/layout/Nav'
 import PageLayout from 'components/layout/PageLayout'
 import { Common } from 'constants/common'
 import { useWindowSize } from 'hooks/useWindowSize'
@@ -50,54 +50,35 @@ function MyApp({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div
-        className={`grid min-h-full ${
-          isAuthRoute
-            ? 'grid-areas-layout-auth lg:grid-areas-layout-auth-lg grid-rows-layout-auth lg:grid-rows-layout-auth-lg grid-cols-layout-auth lg:grid-cols-layout-auth-lg'
-            : 'grid-areas-layout-unauth lg:grid-areas-layout-unauth-lg grid-rows-layout-unauth lg:grid-rows-layout-unauth-lg grid-cols-layout-unauth lg:grid-cols-layout-unauth-lg'
-        }`}
-      >
-        {width < Common.BREAKPOINT.LG ? (
-          <Header
-            user={user}
-            isAuthRoute={isAuthRoute}
-            className={`grid justify-center content-center p-4 ${
-              isAuthRoute
-                ? 'bg-gradient-to-b from-primary-day via-primary-day-tint to-light-tint text-center dark:from-primary-night-shade dark:to-dark'
-                : 'bg-landing bg-primary-day-tint bg-no-repeat bg-center bg-cover dark:bg-primary-night'
-            } `}
-          />
-        ) : (
-          <div
-            className={`grid-in-sidebar ${
-              isAuthRoute
-                ? 'bg-light text-center dark:bg-dark-shade'
-                : 'grid justify-center content-center bg-landing bg-primary-day-tint bg-no-repeat bg-center bg-cover dark:bg-primary-night'
-            } p-4`}
-          >
-            <Header user={user} isAuthRoute={isAuthRoute} />
-            {isAuthRoute && width >= Common.BREAKPOINT.LG && <Nav user={user} isAuthRoute={isAuthRoute} />}
-          </div>
-        )}
-        <main className="grid grid-rows-main overflow-hidden">
-          <PageLayout user={user} isAuthRoute={isAuthRoute}>
-            <Component {...pageProps} />
-          </PageLayout>
-          <ToastContainer
-            position={width < Common.BREAKPOINT.MD ? 'top-center' : 'top-right'}
-            autoClose={3000}
-            hideProgressBar={false}
-            closeOnClick
-            rtl={false}
-            draggable={false}
-            pauseOnFocusLoss
-            pauseOnHover
-            transition={width < Common.BREAKPOINT.MD ? Flip : Slide}
-            theme="colored"
-          />
-        </main>
-        <Footer />
-      </div>
+      <ThemeProvider enableSystem={true} attribute="class">
+        <div
+          className={`grid min-h-full ${
+            isAuthRoute
+              ? 'grid-areas-layout-auth grid-rows-layout-auth grid-cols-layout-auth lg:grid-areas-layout-auth-lg lg:grid-rows-layout-auth-lg lg:grid-cols-layout-auth-lg'
+              : 'grid-areas-layout-unauth grid-rows-layout-unauth grid-cols-layout-unauth lg:grid-areas-layout-unauth-lg lg:grid-rows-layout-unauth-lg lg:grid-cols-layout-unauth-lg'
+          }`}
+        >
+          <Header user={user} isAuthRoute={isAuthRoute} />
+          <main className="grid grid-rows-main overflow-hidden">
+            <PageLayout user={user} isAuthRoute={isAuthRoute}>
+              <Component {...pageProps} />
+            </PageLayout>
+            <ToastContainer
+              position={width < Common.BREAKPOINT.MD ? 'top-center' : 'top-right'}
+              autoClose={3000}
+              hideProgressBar={false}
+              closeOnClick
+              rtl={false}
+              draggable={false}
+              pauseOnFocusLoss
+              pauseOnHover
+              transition={width < Common.BREAKPOINT.MD ? Flip : Slide}
+              theme="colored"
+            />
+          </main>
+          <Footer />
+        </div>
+      </ThemeProvider>
     </>
   )
 }
