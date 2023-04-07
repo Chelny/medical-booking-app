@@ -161,7 +161,14 @@ const SignUp: NextPage = (): JSX.Element => {
         values.weight ? `"${values.weight}"` : null
       }`
 
-      const { data, errors } = await useRequest<SignUpGQLResponse>(`{ signUp(${payload}) { token, message } }`)
+      const { data, errors } = await useRequest<SignUpGQLResponse>(
+        `mutation {
+          signUp(input: {${payload}}) {
+            token
+            message
+          }
+        }`
+      )
 
       if (data) {
         toast.success<string>(t(`SUCCESS.${data.signUp.message}`, { ns: 'api' }))

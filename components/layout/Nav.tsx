@@ -21,7 +21,7 @@ const Nav = ({ user }: NavProps): JSX.Element => {
   const { t } = useTranslation()
 
   const logout = async () => {
-    const { data, errors } = await useRequest<LogoutGQLResponse>(`{ logout { message } }`)
+    const { data, errors } = await useRequest<LogoutGQLResponse>(`mutation { logout { message } }`)
     if (data) toast.success<string>(t('SUCCESS.LOGOUT', { ns: 'api' }))
     if (errors) toast.error<string>(t(`ERROR.${errors[0].extensions.code}`, { ns: 'api' }))
   }
@@ -39,7 +39,7 @@ const Nav = ({ user }: NavProps): JSX.Element => {
             </ActiveLink>
           </li>
         )}
-        {user && (
+        {user && user.role_id !== UserRole.ADMIN && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.DASHBOARD}>
               <a title={t('ROUTES.DASHBOARD')}>
@@ -49,20 +49,6 @@ const Nav = ({ user }: NavProps): JSX.Element => {
             </ActiveLink>
           </li>
         )}
-        {/* {user && user.role_id !== UserRole.ADMIN && (
-          <li>
-            <ActiveLink activeClassName={styles.active} href={Routes.APPOINTMENTS}>
-              <a title={t('ROUTES.APPOINTMENTS')}>
-                <FontAwesomeIcon
-                  icon="calendar-check"
-                  title={t('ROUTES.APPOINTMENTS')}
-                  aria-label={t('ROUTES.APPOINTMENTS')}
-                />
-                <span>{t('ROUTES.APPOINTMENTS')}</span>
-              </a>
-            </ActiveLink>
-          </li>
-        )} */}
         {user && user.role_id === UserRole.ADMIN && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.ADMIN}>

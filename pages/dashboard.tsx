@@ -9,6 +9,7 @@ import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Calendar, { CalendarTileProperties } from 'react-calendar'
 import { toast } from 'react-toastify'
+// import Appointment from 'components/Appointment'
 import Button from 'components/Button'
 import { Common } from 'constants/common'
 import { IPatientAppointement } from 'dtos/user-appointment.response'
@@ -35,24 +36,33 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
   const { width } = useWindowSize()
   const [displayedAppointments, setDisplayedAppointments] = useState<IPatientAppointement[]>([])
   const [selectedDate, setSelectDate] = useState<Date>(new Date())
-  const [timePeriod, setTimePeriod] = useState('NIGHT')
+  const [timePeriod, setTimePeriod] = useState<string>('NIGHT')
+  // const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState<boolean>(false)
+
+  // TODO: Appointment modal
+  // const makeAppointment = () => {
+  //   console.log('makeAppointment')
+  //   setIsAppointmentModalOpen(true)
+  // }
 
   const handleSelectDate = (date: Date) => {
     setSelectDate(date)
     setDisplayedAppointments(
       appointments.filter((appointment: IPatientAppointement) =>
-        isEqual(new Date(appointment.start_date).setHours(0, 0, 0, 0), date)
+        isEqual(new Date(appointment.start_time).setHours(0, 0, 0, 0), date)
       )
     )
   }
 
   useEffect(() => {
     if (appointmentsErrors) {
-      // TODO: User and appointments errors
-      // appointmentsErrors.forEach((error) => {
-      //   toast.error<string>(t(`ERROR.${error.extensions.code}`, { ns: 'api' }))
-      // })
-      toast.error<string>(appointmentsErrors[0].message)
+      appointmentsErrors.map((error: GraphQLError) => {
+        if (error.extensions) {
+          toast.error<string>(t(`ERROR.${error.extensions.code}`, { ns: 'api' }))
+        } else {
+          console.error(error.message)
+        }
+      })
     }
 
     const hour = getHours(new Date())
@@ -71,6 +81,14 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
   return (
     <>
       <h2>{t('WELCOME', { ns: 'dashboard', context: timePeriod, name: user.first_name })}</h2>
+
+      {/* TODO: Appointment modal */}
+      {/* <div className="w-full mb-6 md:w-fit">
+        <Button type="button" className="bg-success" handleClick={() => makeAppointment()}>
+          {t('MAKE_APPOINTMENT', { ns: 'dashboard' })}
+        </Button>
+      </div> */}
+
       <Calendar
         calendarType="US"
         locale={router.locale}
@@ -80,13 +98,14 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
         className="lg:max-w-[768px]"
         tileClassName={({ date }: CalendarTileProperties) =>
           appointments.find((appointment: IPatientAppointement) =>
-            isEqual(new Date(appointment.start_date).setHours(0, 0, 0, 0), date)
+            isEqual(new Date(appointment.start_time).setHours(0, 0, 0, 0), date)
           )
             ? 'has-appointments'
             : null
         }
         onChange={handleSelectDate}
       />
+
       <section
         id="appointmentDetails"
         className="p-4 mt-6 bg-light lg:max-w-[768px] dark:bg-dark-shade dark:text-white"
@@ -107,9 +126,9 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
                     {appointment.Doctor.User.first_name} {appointment.Doctor.User.last_name}
                     {' - '}
                     {t(`DOCTOR_DEPARTMENTS.${appointment.Doctor.DoctorDepartment.name}`)} <br />
-                    {TextFormatUtil.dateFormat(appointment.start_date, router, 'p')}
+                    {TextFormatUtil.dateFormat(appointment.start_time, router, 'p')}
                     {' - '}
-                    {TextFormatUtil.dateFormat(appointment.end_date, router, 'p')} <br />
+                    {TextFormatUtil.dateFormat(appointment.end_time, router, 'p')} <br />
                     {appointment.reason} <br />
                   </div>
                   <div className="sm:flex sm:gap-1">
@@ -128,6 +147,11 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
           <p className="text-medium dark:text-medium-shade">{t('NO_APPOINTMENTS', { ns: 'dashboard' })}</p>
         )}
       </section>
+
+      {/* TODO: Appointment modal */}
+      {/* {isAppointmentModalOpen && (
+        <Appointment isModal isModalOpen={isAppointmentModalOpen} setIsModalOpen={setIsAppointmentModalOpen} />
+      )} */}
     </>
   )
 }
@@ -140,7 +164,7 @@ export const getServerSideProps = async (context: ServerSideContext) => {
 
   const decodedToken = token && jwt_decode(token)
   const { data: user, errors: getUserErrors } = await useRequest<GetUserByIdGQLResponse>(
-    `{ getUserById(id: ${decodedToken?.user?.id}) { first_name, last_name, role_id } }`
+    `query { getUserById(id: ${decodedToken?.user?.id}) { first_name, last_name, role_id } }`
   )
 
   props = {
@@ -159,8 +183,24 @@ export const getServerSideProps = async (context: ServerSideContext) => {
   if (user && user.getUserById.role_id !== UserRole.ADMIN) {
     const { data: appointments, errors: getAppointmentsErrors } =
       await useRequest<GetAppointmentsByPatientIdGQLResponse>(
-        `{ getAppointmentsByPatientId(id: ${decodedToken?.user?.id}) { reason, start_date, end_date, notes, Doctor {
-      image_name, User { first_name, last_name }, DoctorDepartment { name } } } }`
+        `query {
+          getAppointmentsByPatientId(id: ${decodedToken?.user?.id}) {
+            reason,
+            start_time,
+            end_time,
+            notes,
+            Doctor {
+              image_name,
+              User {
+                first_name,
+                last_name
+              },
+              DoctorDepartment {
+                name
+              }
+            }
+          }
+        }`
       )
 
     props = {

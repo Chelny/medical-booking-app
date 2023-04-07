@@ -28,7 +28,7 @@ const ForgotPassword: NextPage = () => {
     },
     onSubmit: async () => {
       const { data, errors } = await useRequest<ForgotPasswordGQLResponse>(
-        `{ forgotPassword(email: "${values.email}") { message } }`
+        `mutation { forgotPassword(input: { email: "${values.email}" }) { message } }`
       )
 
       if (data) toast.success<string>(t(`SUCCESS.${data.forgotPassword.message}`, { ns: 'api', email: values.email }))

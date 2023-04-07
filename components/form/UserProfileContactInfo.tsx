@@ -55,7 +55,7 @@ const UserProfileContactInfo = ({ values, errors, handleChange }: UserProfileCon
           aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_country`}
           onChange={handleChange}
         >
-          <option aria-label={t('FORM.PLACEHOLDER.SELECT')} />
+          <option label={t('FORM.PLACEHOLDER.SELECT')} disabled />
           {CountriesMap.map((code: string, index: number) => (
             <option key={+index} value={code}>
               {t(`COUNTRIES.${code}.COUNTRY`)}

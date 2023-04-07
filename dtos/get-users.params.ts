@@ -7,6 +7,7 @@ export interface IGetUsersParams {
   genders: User_gender[]
   roles: number[]
   languages: string[]
+  active: boolean | null
   orderBy: string
   sort: Prisma.SortOrder
 }

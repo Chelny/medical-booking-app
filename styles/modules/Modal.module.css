@@ -11,11 +11,11 @@
 }
 
 .dialogPanelContainerChild {
-  @apply flex justify-center items-center min-h-full p-0 md:h-auto md:p-4;
+  @apply flex justify-center items-center p-0;
 }
 
 .dialogPanel {
-  @apply overflow-hidden grid grid-rows-dialog-panel-sm w-full h-screen transform overflow-hidden rounded-md bg-light-tint p-4 text-start align-middle shadow-xl transition-all md:w-3/4 md:h-full md:p-6 lg:max-w-screen-md dark:bg-dark;
+  @apply overflow-hidden grid grid-rows-dialog-panel-sm w-full h-screen transform rounded-md bg-light-tint p-4 text-start align-middle shadow-xl transition-all md:w-3/4 md:p-6 lg:max-w-screen-md dark:bg-dark;
 }
 
 /* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
@@ -49,7 +49,7 @@
 }
 
 .dialogContent {
-  @apply overflow-y-auto grid auto-rows-max mt-2 text-black dark:text-white;
+  @apply overflow-y-auto grid grid-rows-[max-content_auto] mt-2 text-black dark:text-white;
 }
 
 /* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */

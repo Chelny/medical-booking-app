@@ -54,11 +54,11 @@ const Header = ({ user, isAuthRoute }: HeaderProps): JSX.Element => {
       <header
         className={`${styles.header} relative grid grid-cols-[1fr_max-content] justify-center content-center p-4 bg-gradient-to-b from-primary-day via-primary-day-tint to-light-tint dark:from-primary-night-shade dark:to-dark`}
       >
-        {/* App name or logo */}
+        {/* App name and/or logo */}
         <h1 className="text-2xl">{Common.APP_NAME}</h1>
         {/* Hamburger icon */}
         <button onClick={() => setIsNavBarExpanded(!isNavBarExpanded)}>
-          <FontAwesomeIcon icon={isNavBarExpanded ? 'xmark' : 'bars'} size="2x" />
+          <FontAwesomeIcon icon={isNavBarExpanded ? 'xmark' : 'bars'} size="2x" className="w-[32px] h-[32px]" />
         </button>
         {/* Navigation */}
         <div

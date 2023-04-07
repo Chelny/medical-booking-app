@@ -19,6 +19,7 @@ import { Common } from 'constants/common'
 import { IGetUsersParams } from 'dtos/get-users.params'
 import { IGetUsersResponse } from 'dtos/get-users.response'
 import { UserContact } from 'dtos/user-contact.response'
+import { UserActiveMap } from 'enums/user-active.enum'
 import { UserRolesMap } from 'enums/user-role.enum'
 import { useRequest } from 'hooks/useRequest'
 import { getAuthCookie } from 'utils/auth-cookies'
@@ -30,7 +31,8 @@ type AdminProps = {
 
 type GetUsersGQLResponse = GQLResponse<{ getUsers: IGetUsersResponse }>
 type ForgotPasswordGQLResponse = GQLResponse<{ forgotPassword: { message: string } }>
-type DeleteUserGQLResponse = GQLResponse<{ deleteUser: { message: string } }>
+type DeactivateAccountGQLResponse = GQLResponse<{ deactivateAccount: { message: string } }>
+type ActivateAccountGQLResponse = GQLResponse<{ activateAccount: { message: string } }>
 
 const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
   const { t } = useTranslation()
@@ -44,21 +46,14 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
     genders: GendersMap,
     roles: UserRolesMap,
     languages: LanguagesMap,
+    active: null,
     orderBy: 'id',
     sort: Prisma.SortOrder.asc,
   })
   const [getUsersCount, setGetUsersCount] = useState<number>(0)
   const [isUserProfileModalOpen, setIsUserProfileModalOpen] = useState<boolean>(false)
-  const [isDeleteUserModalOpen, setIsDeleteUserModalOpen] = useState<boolean>(false)
+  const [isDeactivateAccountModalOpen, setIsDeactivateAccountModalOpen] = useState<boolean>(false)
   const [selectedUser, setSelectedUser] = useState<UserContact>({} as UserContact)
-
-  useEffect(
-    () => {
-      getUsers()
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [getUsersParams]
-  )
 
   const getUsers = async () => {
     setUsers([])
@@ -66,16 +61,19 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
     setUsersErrors([])
 
     await useRequest<GetUsersGQLResponse>(
-      `{
+      `query {
         getUsers(
-          offset: ${getUsersParams.offset},
-          limit: ${getUsersParams.limit},
-          query: "${getUsersParams.query}",
-          genders: ${JSON.stringify(getUsersParams.genders)},
-          roles: ${JSON.stringify(getUsersParams.roles)},
-          languages: ${JSON.stringify(getUsersParams.languages)},
-          orderBy: "${getUsersParams.orderBy}",
-          sort: "${getUsersParams.sort}"
+          params: {
+            offset: ${getUsersParams.offset},
+            limit: ${getUsersParams.limit},
+            query: "${getUsersParams.query}",
+            genders: ${JSON.stringify(getUsersParams.genders)},
+            roles: ${JSON.stringify(getUsersParams.roles)},
+            languages: ${JSON.stringify(getUsersParams.languages)},
+            active: ${getUsersParams.active},
+            orderBy: "${getUsersParams.orderBy}",
+            sort: "${getUsersParams.sort}"
+          }
         ) {
           results {
             id,
@@ -87,6 +85,7 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
             username,
             role_id,
             language,
+            active
             created_at,
             updated_at,
             Contact {
@@ -178,7 +177,7 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
 
   const sendResetPasswordLink = async (user: User) => {
     const { data, errors } = await useRequest<ForgotPasswordGQLResponse>(
-      `{ forgotPassword(email: "${user.email}") { message } }`
+      `mutation { forgotPassword(input: { email: "${user.email}" }) { message } }`
     )
 
     if (data) {
@@ -188,25 +187,46 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
     if (errors) toast.error<string>(t(`ERROR.${errors[0].extensions.code}`, { ns: 'api' }))
   }
 
-  const deleteUser = async () => {
-    const { data, errors } = await useRequest<DeleteUserGQLResponse>(
-      `{ deleteUser(id: ${selectedUser.id}) { message } }`
+  const deactivateAccount = async () => {
+    const { data, errors } = await useRequest<DeactivateAccountGQLResponse>(
+      `mutation { deactivateAccount(id: ${selectedUser?.id}) { message } }`
     )
 
     if (data) {
-      toast.success<string>(t(`SUCCESS.${data.deleteUser.message}`, { ns: 'api' }))
-      setIsDeleteUserModalOpen(false)
+      toast.success<string>(t(`SUCCESS.${data.deactivateAccount.message}`, { ns: 'api' }))
+      setIsDeactivateAccountModalOpen(false)
       getUsers()
     }
 
     if (errors) toast.error<string>(t(`ERROR.${errors[0].extensions.code}`, { ns: 'api' }))
   }
 
+  const activateAccount = async () => {
+    const { data, errors } = await useRequest<ActivateAccountGQLResponse>(
+      `mutation { activateAccount(id: ${selectedUser?.id}) { message } }`
+    )
+
+    if (data) {
+      toast.success<string>(t(`SUCCESS.${data.activateAccount.message}`, { ns: 'api' }))
+      getUsers()
+    }
+
+    if (errors) toast.error<string>(t(`ERROR.${errors[0].extensions.code}`, { ns: 'api' }))
+  }
+
+  useEffect(
+    () => {
+      getUsers()
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [getUsersParams]
+  )
+
   return (
     <>
       <h2>{t('TITLE', { ns: 'admin' })}</h2>
 
-      <div className="w-fit">
+      <div className="w-full md:w-fit">
         <Button type="button" className="bg-success" handleClick={() => addUser()}>
           {t('ADD_USER', { ns: 'admin' })}
         </Button>
@@ -320,6 +340,20 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
                   />
                 </div>
               </th>
+              <th>
+                <div className="table-column-wrapper">
+                  {t('FORM.LABEL.ACTIVE')}
+                  {/* FIXME: Active state */}
+                  <TableColFilterPopover
+                    list={UserActiveMap}
+                    selectedValues={getUsersParams.active === null ? UserActiveMap : [getUsersParams.active]}
+                    translationPrefix="USER_ACTIVE"
+                    handleChange={(active: boolean[]) => {
+                      setGetUsersParams({ ...getUsersParams, active: active.length === 1 ? active[0] : null })
+                    }}
+                  />
+                </div>
+              </th>
               <th className="group" aria-sort={ariaSort('created_at')}>
                 <div className="table-column-wrapper">
                   {t('CREATED_AT')}
@@ -360,6 +394,7 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
                   <td>{user.username ?? '--'}</td>
                   <td>{t(`USER_ROLES.${user.role_id}`)}</td>
                   <td>{user.language}</td>
+                  <td>{t(`USER_ACTIVE.${String(user.active).toUpperCase()}`)}</td>
                   <td>{user.created_at && TextFormatUtil.dateFormat(user.created_at, router, 'PPpp')}</td>
                   <td>{TextFormatUtil.dateFormat(user.updated_at, router, 'PPpp')}</td>
                   <td className="sticky-end">
@@ -382,34 +417,30 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
                           if (user.id != 1 && user.id != userToken.id) sendResetPasswordLink(user)
                         }}
                       >
-                        <span className="fa-layers fa-fw">
-                          <FontAwesomeIcon
-                            icon="rotate"
-                            size="xl"
-                            aria-label={t('TABLE.ACTIONS.RESET_PASSWORD', { ns: 'admin' })}
-                          />
-                          <FontAwesomeIcon
-                            icon="lock"
-                            transform="shrink-8 right-1.5"
-                            inverse
-                            aria-label={t('TABLE.ACTIONS.RESET_PASSWORD', { ns: 'admin' })}
-                          />
+                        <span
+                          className="fa-layers fa-fw"
+                          aria-label={t('TABLE.ACTIONS.RESET_PASSWORD', { ns: 'admin' })}
+                        >
+                          <FontAwesomeIcon icon="rotate" size="xl" />
+                          <FontAwesomeIcon icon="lock" transform="shrink-8 right-1.5" inverse />
                         </span>
                       </Button>
                       <Button
                         type="button"
-                        className="text-error"
                         disabled={user.id == 1}
                         handleClick={() => {
                           if (user.id != 1) {
                             setSelectedUser(user)
-                            setIsDeleteUserModalOpen(true)
+                            user.active ? setIsDeactivateAccountModalOpen(true) : activateAccount()
                           }
                         }}
                       >
                         <FontAwesomeIcon
-                          icon="user-minus"
-                          aria-label={t('TABLE.ACTIONS.DELETE_USER', { ns: 'admin' })}
+                          icon={user.active ? 'lock' : 'lock-open'}
+                          className={user.active ? 'text-error' : 'text-success'}
+                          aria-label={t(`TABLE.ACTIONS.${user.active ? 'DEACTIVATE' : 'ACTIVATE'}_ACCOUNT`, {
+                            ns: 'admin',
+                          })}
                         />
                       </Button>
                     </div>
@@ -457,7 +488,8 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
         <UserProfile
           isModal
           user={selectedUser}
-          setIsUserProfileModalOpen={setIsUserProfileModalOpen}
+          isModalOpen={isUserProfileModalOpen}
+          setIsModalOpen={setIsUserProfileModalOpen}
           isFormSubmitted={(isSubmitted: boolean) => {
             if (isSubmitted) getUsers()
           }}
@@ -466,20 +498,19 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
 
       {/* Delete Profile Modal */}
       <Modal
-        modalSize={ModalSize.SM}
-        title={t('DELETE_USER_MODAL.TITLE', { ns: 'admin' })}
-        isOpen={isDeleteUserModalOpen}
+        title={t('DEACTIVATE_ACCOUNT_MODAL.TITLE', { ns: 'admin' })}
+        isOpen={isDeactivateAccountModalOpen}
+        setIsOpen={setIsDeactivateAccountModalOpen}
         confirmButton={{
-          label: t('BUTTON.DELETE'),
+          label: t('DEACTIVATE_ACCOUNT_MODAL.CONFIRM_BUTTON', { ns: 'admin' }),
           type: 'DANGER',
         }}
-        setIsOpen={setIsDeleteUserModalOpen}
-        handleSubmit={deleteUser}
+        handleSubmit={deactivateAccount}
       >
         <>
-          {t('DELETE_USER_MODAL.MESSAGE', {
+          {t('DEACTIVATE_ACCOUNT_MODAL.MESSAGE', {
             ns: 'admin',
-            user: `${selectedUser.first_name} ${selectedUser.last_name}`,
+            user: `${selectedUser?.first_name} ${selectedUser?.last_name}`,
           })}
         </>
       </Modal>

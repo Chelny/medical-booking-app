@@ -9,15 +9,6 @@ export const CustomApiError = (status = 500, message = 'Internal Server Error', 
   })
 }
 
-export const CustomApiErrorUnauthorized = () => {
-  return new GraphQLError('Unauthorized', {
-    extensions: {
-      code: 'UNAUTHORIZED',
-      http: { ok: false, status: 401 },
-    },
-  })
-}
-
 export const CustomApiBadRequest = (message = 'Bad request', code = 'BAD_REQUEST') => {
   return new GraphQLError(message, {
     extensions: {
@@ -32,6 +23,24 @@ export const CustomApiErrorInvalidToken = () => {
     extensions: {
       code: 'INVALID_TOKEN',
       http: { ok: false, status: 400 },
+    },
+  })
+}
+
+export const CustomApiErrorUnauthorized = () => {
+  return new GraphQLError('Unauthorized', {
+    extensions: {
+      code: 'UNAUTHORIZED',
+      http: { ok: false, status: 401 },
+    },
+  })
+}
+
+export const CustomApiErrorInactiveUser = () => {
+  return new GraphQLError('Inactive user', {
+    extensions: {
+      code: 'INACTIVE_ACCOUNT',
+      http: { ok: false, status: 403 },
     },
   })
 }

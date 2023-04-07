@@ -5,8 +5,12 @@
     "ACCOUNT_CREATED": "Le compte a été créé avec succès !",
     "ACCOUNT_UPDATED": "Le compte a été modifié avec succès !",
     "PASSWORD_UPDATED": "Le mot de passe a été modifié avec succès !",
-    "ACCOUNT_DELETED": "Le compte a été supprimé avec succès !",
-    "LOGOUT": "Vous vous êtes déconnecté(e) avec succès !"
+    "ACCOUNT_DEACTIVATED": "Le compte a été désactivé avec succès !",
+    "ACCOUNT_ACTIVATED": "Le compte a été activé avec succès !",
+    "LOGOUT": "Vous vous êtes déconnecté(e) avec succès !",
+    "DOCTOR_SCHEDULE_CREATED": "L'horaire a été créé avec succès !",
+    "DOCTOR_SCHEDULE_UPDATED": "L'horaire a été modifié avec succès !",
+    "DOCTOR_SCHEDULE_DELETED": "L'horaire a été supprimé avec succès !"
   },
   "ERROR": {
     "GENERAL": "Une erreur est survenue. Veuillez réessayer plus tard.",
@@ -23,6 +27,7 @@
     "TOKEN_EXPIRED": "Votre session est expirée. Veuillez vous reconnecter.",
     "INVALID_TOKEN": "Jeton invalide.",
     "RESET_PASSWORD_TOKEN_INVALID": "Le lien de la réinitialisation du mot de passe semble invalide ou est expiré.",
-    "RESET_PASSWORD_TOKEN_EXPIRED": "Le lien de la réinitialisation du mot de passe est expiré."
+    "RESET_PASSWORD_TOKEN_EXPIRED": "Le lien de la réinitialisation du mot de passe est expiré.",
+    "INACTIVE_ACCOUNT": "Le compte est désactivé. Veuillez contacter le service client pour réactiver votre compte."
   }
 }

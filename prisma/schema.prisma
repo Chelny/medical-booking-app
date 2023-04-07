@@ -12,8 +12,8 @@ model Appointment {
   patient_id Int
   doctor_id  Int
   reason     String?   @db.VarChar(255)
-  start_date DateTime  @db.DateTime(0)
-  end_date   DateTime  @db.DateTime(0)
+  start_time DateTime  @db.DateTime(0)
+  end_time   DateTime  @db.DateTime(0)
   notes      String?   @db.VarChar(255)
   created_at DateTime? @default(now()) @db.DateTime(0)
   updated_at DateTime  @default(now()) @db.Timestamp(0)
@@ -52,6 +52,8 @@ model Doctor {
   Appointment      Appointment[]
   DoctorDepartment DoctorDepartment @relation(fields: [department_id], references: [id], onUpdate: Restrict, map: "doctor_ibfk_1")
   User             User             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "doctor_ibfk_2")
+  DoctorSchedule   DoctorSchedule[]
+  DoctorTimeOff    DoctorTimeOff[]
 
   @@index([department_id], map: "department_id")
 }
@@ -79,6 +81,7 @@ model User {
   password   String      @db.VarChar(255)
   role_id    Int         @default(3)
   language   String      @default("EN") @db.VarChar(255)
+  active     Boolean?    @default(true)
   created_at DateTime?   @default(now()) @db.DateTime(0)
   updated_at DateTime    @default(now()) @db.Timestamp(0)
   Contact    Contact?
@@ -90,12 +93,12 @@ model User {
 }
 
 model DoctorDepartment {
-  id               Int       @id @default(autoincrement())
-  name             String    @db.VarChar(255)
-  appointment_time Int
-  created_at       DateTime? @default(now()) @db.DateTime(0)
-  updated_at       DateTime  @default(now()) @db.Timestamp(0)
-  Doctor           Doctor[]
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(255)
+  duration   Int
+  created_at DateTime? @default(now()) @db.DateTime(0)
+  updated_at DateTime  @default(now()) @db.Timestamp(0)
+  Doctor     Doctor[]
 }
 
 model UserRole {
@@ -104,6 +107,41 @@ model UserRole {
   created_at DateTime? @default(now()) @db.DateTime(0)
   updated_at DateTime  @default(now()) @db.Timestamp(0)
   User       User[]
+}
+
+model DoctorSchedule {
+  id         Int       @id @default(autoincrement())
+  doctor_id  Int
+  weekday    Int
+  created_at DateTime? @default(now()) @db.DateTime(0)
+  updated_at DateTime  @default(now()) @db.Timestamp(0)
+  Doctor     Doctor    @relation(fields: [doctor_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "doctorschedule_ibfk_1")
+
+  @@index([doctor_id], map: "doctor_id")
+}
+
+model DoctorTimeOff {
+  id                  Int                 @id @default(autoincrement())
+  doctor_id           Int
+  start_date          DateTime            @db.DateTime(0)
+  end_date            DateTime            @db.DateTime(0)
+  reason              String?             @db.VarChar(255)
+  status_id           Int                 @default(1)
+  created_at          DateTime?           @default(now()) @db.DateTime(0)
+  updated_at          DateTime            @default(now()) @db.Timestamp(0)
+  Doctor              Doctor              @relation(fields: [doctor_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "doctortimeoff_ibfk_1")
+  DoctorTimeOffStatus DoctorTimeOffStatus @relation(fields: [status_id], references: [id], onUpdate: Restrict, map: "doctortimeoff_ibfk_2")
+
+  @@index([doctor_id], map: "doctor_id")
+  @@index([status_id], map: "status_id")
+}
+
+model DoctorTimeOffStatus {
+  id            Int             @id @default(autoincrement())
+  status        String          @db.VarChar(255)
+  created_at    DateTime?       @default(now()) @db.DateTime(0)
+  updated_at    DateTime        @default(now()) @db.Timestamp(0)
+  DoctorTimeOff DoctorTimeOff[]
 }
 
 enum User_gender {

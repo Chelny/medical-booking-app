@@ -6,15 +6,17 @@
     "EDIT_TITLE": "Modification d'un utilisateur",
     "CHOOSE_USER_ROLE": "Veuillez choisir le rôle de l'utilisateur :"
   },
-  "DELETE_USER_MODAL": {
-    "TITLE": "Supprimer l'utilisateur",
-    "MESSAGE": "Êtes-vous sûr de vouloir supprimer l'utilisateur : « {{user}} » ?"
+  "DEACTIVATE_ACCOUNT_MODAL": {
+    "TITLE": "Désactiver le compte",
+    "MESSAGE": "Êtes-vous sûr de vouloir désactiver le compte de : {{user}} ?",
+    "CONFIRM_BUTTON": "Désactiver"
   },
   "TABLE": {
     "ACTIONS": {
       "EDIT_USER": "Modifier l'utilisateur",
       "RESET_PASSWORD": "Réinitialiser le mot de passe de l'utilisateur",
-      "DELETE_USER": "Supprimer l'utilisateur"
+      "DEACTIVATE_ACCOUNT": "Désactiver le compte",
+      "ACTIVATE_ACCOUNT": "Activer le compte"
     }
   }
 }

@@ -28,7 +28,8 @@ import styles from 'styles/modules/UserProfile.module.css'
 type UserProfileProps = {
   isModal: boolean
   user: UserContact
-  setIsUserProfileModalOpen: Dispatch<SetStateAction<boolean>>
+  isModalOpen: boolean
+  setIsModalOpen: Dispatch<SetStateAction<boolean>>
   isFormSubmitted: (isSubmitted: boolean) => void
 }
 
@@ -44,10 +45,15 @@ enum UserProfileStep {
   USER_PROFILE_FORM = 2,
 }
 
-const UserProfile = ({ user, isModal, setIsUserProfileModalOpen, isFormSubmitted }: UserProfileProps): JSX.Element => {
+const UserProfile = ({
+  user,
+  isModal,
+  isModalOpen,
+  setIsModalOpen,
+  isFormSubmitted,
+}: UserProfileProps): JSX.Element => {
   const { t } = useTranslation()
   const { width } = useWindowSize()
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(true)
   const [userProfileStep, setUserProfileStep] = useState<UserProfileStep | null>(null)
   const [selectedUserRoleId, setSelectedUserRoleId] = useState<number | null>(null)
   const isUserDoctor = (user && 'Doctor' in user && !!user?.Doctor) || selectedUserRoleId === UserRole.DOCTOR
@@ -230,31 +236,43 @@ const UserProfile = ({ user, isModal, setIsUserProfileModalOpen, isFormSubmitted
       if (isUserDoctor) {
         if (user?.id) {
           // eslint-disable-next-line @typescript-eslint/no-extra-semi
-          ;({ data, errors } = await useRequest<UpdateDoctorGQLResponse>(`{ updateDoctor(${payload}) { message } }`))
+          ;({ data, errors } = await useRequest<UpdateDoctorGQLResponse>(
+            `mutation { updateDoctor({ id: ${values.id}, input: ${payload} }) { message } }`
+          ))
           if (data) toast.success<string>(t(`SUCCESS.${data.updateDoctor.message}`, { ns: 'api' }))
         } else {
           // eslint-disable-next-line @typescript-eslint/no-extra-semi
-          ;({ data, errors } = await useRequest<CreateDoctorGQLResponse>(`{ createDoctor(${payload}) { message } }`))
+          ;({ data, errors } = await useRequest<CreateDoctorGQLResponse>(
+            `mutation { createDoctor({ input: ${payload} }) { message } }`
+          ))
           if (data) toast.success<string>(t(`SUCCESS.${data.createDoctor.message}`, { ns: 'api' }))
         }
       } else if (isUserPatient) {
         if (user?.id) {
           // eslint-disable-next-line @typescript-eslint/no-extra-semi
-          ;({ data, errors } = await useRequest<UpdatePatientGQLResponse>(`{ updatePatient(${payload}) { message } }`))
+          ;({ data, errors } = await useRequest<UpdatePatientGQLResponse>(
+            `mutation { updatePatient({ id: ${values.id}, input: ${payload} }) { message } }`
+          ))
           if (data) toast.success<string>(t(`SUCCESS.${data.updatePatient.message}`, { ns: 'api' }))
         } else {
           // eslint-disable-next-line @typescript-eslint/no-extra-semi
-          ;({ data, errors } = await useRequest<CreatePatientGQLResponse>(`{ createPatient(${payload}) { message } }`))
+          ;({ data, errors } = await useRequest<CreatePatientGQLResponse>(
+            `mutation { createPatient({ input: ${payload} }) { message } }`
+          ))
           if (data) toast.success<string>(t(`SUCCESS.${data.createPatient.message}`, { ns: 'api' }))
         }
       } else {
         if (user?.id) {
           // eslint-disable-next-line @typescript-eslint/no-extra-semi
-          ;({ data, errors } = await useRequest<UpdateAdminGQLResponse>(`{ updateAdmin(${payload}) { message } }`))
+          ;({ data, errors } = await useRequest<UpdateAdminGQLResponse>(
+            `mutation { updateAdmin({ id: ${values.id}, input: ${payload} }) { message } }`
+          ))
           if (data) toast.success<string>(t(`SUCCESS.${data.updateAdmin.message}`, { ns: 'api' }))
         } else {
           // eslint-disable-next-line @typescript-eslint/no-extra-semi
-          ;({ data, errors } = await useRequest<CreateAdminGQLResponse>(`{ createAdmin(${payload}) { message } }`))
+          ;({ data, errors } = await useRequest<CreateAdminGQLResponse>(
+            `mutation { createAdmin({ input: ${payload} }) { message } }`
+          ))
           if (data) toast.success<string>(t(`SUCCESS.${data.createAdmin.message}`, { ns: 'api' }))
         }
       }
@@ -278,6 +296,7 @@ const UserProfile = ({ user, isModal, setIsUserProfileModalOpen, isFormSubmitted
 
   const selectUserRole = (userRoleId: number) => {
     setSelectedUserRoleId(userRoleId)
+    setUserProfileStep(UserProfileStep.USER_PROFILE_FORM)
   }
 
   const goBackToUserRoleSelection = () => {
@@ -285,14 +304,12 @@ const UserProfile = ({ user, isModal, setIsUserProfileModalOpen, isFormSubmitted
   }
 
   useEffect(() => {
-    setIsUserProfileModalOpen(isModalOpen)
-
     if (typeof user?.id === 'undefined' && selectedUserRoleId === null) {
       setUserProfileStep(UserProfileStep.CHOOSE_USER_ROLE)
     } else {
       setUserProfileStep(UserProfileStep.USER_PROFILE_FORM)
     }
-  }, [setIsUserProfileModalOpen, user, isModalOpen, selectedUserRoleId])
+  }, [])
 
   return (
     <ConditionalWrap
@@ -323,6 +340,7 @@ const UserProfile = ({ user, isModal, setIsUserProfileModalOpen, isFormSubmitted
                   key={userRoleId}
                   value={userRoleId}
                   className="grid grid-cols-radio-group items-center gap-2 w-full p-4 rounded-md bg-light-shade cursor-pointer dark:bg-dark-shade dark:text-white"
+                  onClick={() => selectUserRole(userRoleId)}
                 >
                   <RadioGroup.Label className="cursor-pointer">{t(`USER_ROLES.${userRoleId}`)}</RadioGroup.Label>
                   <FontAwesomeIcon icon="check" className="invisible ui-checked:visible ui-checked:text-active" />

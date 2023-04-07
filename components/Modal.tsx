@@ -73,7 +73,7 @@ const Modal = ({
             >
               <Dialog.Panel
                 as="form"
-                className={`${styles.dialogPanel} ${modalSize && styles[modalSize]}`}
+                className={`${styles.dialogPanel} ${modalSize ? styles[modalSize] : styles.modalSizeSm}`}
                 noValidate
                 onSubmit={(event: FormEvent<HTMLFormElement>) => {
                   event.preventDefault()

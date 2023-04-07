@@ -1,6 +1,8 @@
 import type { NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { User } from '@prisma/client'
+import jwt_decode from 'jwt-decode'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { toast } from 'react-toastify'
@@ -8,11 +10,12 @@ import Button from 'components/Button'
 import FormElement from 'components/form/FormElement'
 import { Common } from 'constants/common'
 import { Routes } from 'constants/routes'
+import { UserRole } from 'enums/user-role.enum'
 import { useForm } from 'hooks/useForm'
 import { useRequest } from 'hooks/useRequest'
 import { getAuthCookie } from 'utils/auth-cookies'
 
-type LoginGQLResponse = GQLResponse<{ login: { token: string } }>
+type LoginGQLResponse = GQLResponse<{ login: { token: string; user: Omit<User, 'password'> } }>
 
 const Home: NextPage = () => {
   const router = useRouter()
@@ -31,10 +34,17 @@ const Home: NextPage = () => {
     },
     onSubmit: async () => {
       const { data, errors } = await useRequest<LoginGQLResponse>(
-        `{ login(email: "${values.loginId}", username: "${values.loginId}", password: "${values.password}") { token } }`
+        `mutation {
+          login(input: { email: "${values.loginId}", username: "${values.loginId}", password: "${values.password}" }) {
+            token
+            user {
+              role_id
+            }
+          }
+        }`
       )
 
-      if (data) router.push(Routes.DASHBOARD)
+      if (data) data.login.user.role_id === UserRole.ADMIN ? router.push(Routes.ADMIN) : router.push(Routes.DASHBOARD)
       if (errors) toast.error<string>(t(`ERROR.${errors[0].extensions.code}`, { ns: 'api' }))
     },
   })
@@ -83,7 +93,18 @@ const Home: NextPage = () => {
 export const getServerSideProps = async (context: ServerSideContext) => {
   const token = getAuthCookie(context.req) || null
 
-  if (token) return Common.SERVER_SIDE_PROPS.TOKEN
+  if (token) {
+    // TODO: Use library (prefixed by "with") to return the auth user instead of getting the token - "jwt_decode" and "getAuthCookie" "should not be used in pages?
+    const decodedToken = token && jwt_decode(token)
+    if (decodedToken.user.role_id === UserRole.ADMIN) {
+      return {
+        ...Common.SERVER_SIDE_PROPS.TOKEN,
+        redirect: { ...Common.SERVER_SIDE_PROPS.TOKEN.redirect, destination: Routes.ADMIN },
+      }
+    }
+
+    return Common.SERVER_SIDE_PROPS.TOKEN
+  }
 
   return {
     props: {

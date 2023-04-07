@@ -5,8 +5,12 @@
     "ACCOUNT_CREATED": "The account has been successfully created!",
     "ACCOUNT_UPDATED": "The account has been successfully updated!",
     "PASSWORD_UPDATED": "The password has been successfully updated!",
-    "ACCOUNT_DELETED": "The account has been successfully deleted!",
-    "LOGOUT": "You have successfully logged out!"
+    "ACCOUNT_DEACTIVATED": "The account has been successfully deactivated!",
+    "ACCOUNT_ACTIVATED": "The account has been successfully activated!",
+    "LOGOUT": "You have successfully logged out!",
+    "DOCTOR_SCHEDULE_CREATED": "The schedule has been successfully created!",
+    "DOCTOR_SCHEDULE_UPDATED": "The schedule has been successfully updated!",
+    "DOCTOR_SCHEDULE_DELETED": "The schedule has been successfully deleted!"
   },
   "ERROR": {
     "GENERAL": "An error has occurred. Please try again later.",
@@ -23,6 +27,7 @@
     "TOKEN_EXPIRED": "Your session has expired. Please login again.",
     "INVALID_TOKEN": "Invalid token.",
     "RESET_PASSWORD_TOKEN_INVALID": "The password reset link appears to be invalid or has expired.",
-    "RESET_PASSWORD_TOKEN_EXPIRED": "The password reset link has expired."
+    "RESET_PASSWORD_TOKEN_EXPIRED": "The password reset link has expired.",
+    "INACTIVE_ACCOUNT": "The account is inactive. Please contact the customer support to reactivate your account."
   }
 }

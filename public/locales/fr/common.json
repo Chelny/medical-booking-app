@@ -52,6 +52,7 @@
       "NEW_PASSWORD_CONFIRMATION": "Confirmer le nouveau mot de passe",
       "ROLE": "Rôle",
       "LANGUAGE": "Langue",
+      "ACTIVE": "Actif",
       "ADDRESS_LINE1": "Adresse ligne 1",
       "ADDRESS_LINE2": "Adresse ligne 2",
       "CITY": "Ville",
@@ -159,6 +160,10 @@
     "EN": "Anglais",
     "FR": "Français"
   },
+  "USER_ACTIVE": {
+    "FALSE": "Inactif",
+    "TRUE": "Actif"
+  },
   "COUNTRIES": {
     "CA": {
       "COUNTRY": "Canada",
@@ -242,12 +247,12 @@
   },
   "DOCTOR_DEPARTMENTS": {
     "DENTIST": "Dentiste",
-    "DERMATOLOGY": "Dermatologue",
-    "DIETETICS": "Diététiste",
-    "FAMILY_MEDICINE": "Docteur de famille",
-    "OPTOMETRY": "Optométriste",
-    "PEDIATRICS": "Pédiatre",
-    "PLASTIC_SURGERY": "Chirurgien",
-    "PSYCHOLOGY": "Psychologue"
+    "DENTUROLOGIST": "Denturologiste",
+    "DERMATOLOGIST": "Dermatologue",
+    "FAMILY_DOCTOR": "Docteur de famille",
+    "OPTOMETRIST": "Optométriste",
+    "PEDIATRICIAN": "Pédiatre",
+    "PLASTIC_SURGEON": "Chirurgien plastique",
+    "PSYCHOLOGIST": "Psychologue"
   }
 }

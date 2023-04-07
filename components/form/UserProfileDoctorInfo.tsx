@@ -25,7 +25,7 @@ const UserProfileDoctorInfo = ({ values, errors, handleChange }: UserProfileDoct
           aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_departmentId`}
           onChange={handleChange}
         >
-          <option aria-label={t('FORM.PLACEHOLDER.SELECT')} />
+          <option label={t('FORM.PLACEHOLDER.SELECT')} disabled />
           {DoctorDepartmentsMap.map((id: number) => (
             <option key={id} value={id}>
               {t(`DOCTOR_DEPARTMENTS.${DoctorDepartment[id]}`)}

@@ -3,6 +3,7 @@
   "WELCOME_AFTERNOON": "Good afternoon, {{name}}!",
   "WELCOME_EVENING": "Good evening, {{name}}!",
   "WELCOME_NIGHT": "Welcome, {{name}}!",
+  "MAKE_APPOINTMENT": "Make An Apointment",
   "APPOINTMENTS": "Appointments on {{date}}",
   "NO_APPOINTMENTS": "No appointments for the selected date",
   "APPOINTMENT_DETAILS": "View Details",

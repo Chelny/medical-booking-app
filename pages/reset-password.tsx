@@ -46,7 +46,13 @@ const ResetPassword: NextPage = () => {
     },
     onSubmit: async () => {
       const { data, errors } = await useRequest<ResetPasswordGQLResponse>(
-        `{ resetPassword(password: "${values.newPassword}", token: "${router.query.token}") { message } }`
+        `mutation {
+          resetPassword(
+            input: { password: "${values.newPassword}", token: "${router.query.token}" }
+          ) {
+            message
+          }
+        }`
       )
 
       if (data) {
@@ -62,7 +68,7 @@ const ResetPassword: NextPage = () => {
     setIsLoading(true)
 
     const { data, errors } = await useRequest<CheckResetPasswordLinkValidityGQLResponse>(
-      `{ checkResetPasswordLinkValidity(token: "${router.query.token}") { message } }`
+      `query { checkResetPasswordLinkValidity(token: "${router.query.token}") { message } }`
     )
 
     if (data) setIsLoading(false)

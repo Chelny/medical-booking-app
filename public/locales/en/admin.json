@@ -6,15 +6,17 @@
     "EDIT_TITLE": "Edit User",
     "CHOOSE_USER_ROLE": "Please choose the user role:"
   },
-  "DELETE_USER_MODAL": {
-    "TITLE": "Delete User",
-    "MESSAGE": "Are you sure you want to delete the user: \"{{user}}\"?"
+  "DEACTIVATE_ACCOUNT_MODAL": {
+    "TITLE": "Deactivate Account",
+    "MESSAGE": "Are you sure you want to deactivate the account of: {{user}}?",
+    "CONFIRM_BUTTON": "Deactivate"
   },
   "TABLE": {
     "ACTIONS": {
       "EDIT_USER": "Edit User",
       "RESET_PASSWORD": "Reset User Password",
-      "DELETE_USER": "Delete User"
+      "DEACTIVATE_ACCOUNT": "Deactivate Account",
+      "ACTIVATE_ACCOUNT": "Activate Account"
     }
   }
 }
