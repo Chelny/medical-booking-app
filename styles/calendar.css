@@ -1,13 +1,13 @@
 .react-calendar {
-  @apply w-full border-light-shade bg-light text-light dark:border-dark-shade dark:bg-dark-shade dark:text-light;
+  @apply w-full border-light-mode-border bg-light-mode-foreground text-white dark:border-dark-mode-border dark:bg-dark-mode-foreground;
 }
 
 .react-calendar .react-calendar__navigation {
-  @apply bg-primary-day dark:bg-primary-night-shade;
+  @apply bg-light-mode dark:bg-dark-mode;
 }
 
 .react-calendar .react-calendar__navigation button {
-  @apply disabled:bg-transparent disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent hover:bg-primary-day focus:bg-primary-day dark:hover:bg-primary-night dark:focus:bg-primary-night;
+  @apply disabled:bg-transparent disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent hover:bg-light-mode focus:bg-light-mode dark:hover:bg-dark-mode dark:focus:bg-dark-mode;
 }
 
 .react-calendar .react-calendar__viewContainer {
@@ -19,7 +19,7 @@
 }
 
 .react-calendar .react-calendar__viewContainer button.react-calendar__tile {
-  @apply rounded-md disabled:bg-transparent disabled:opacity-25 disabled:cursor-not-allowed hover:bg-light-shade focus:bg-light-shade dark:hover:bg-dark dark:focus:bg-dark;
+  @apply rounded-md disabled:bg-transparent disabled:opacity-25 disabled:cursor-not-allowed hover:bg-light-mode-background focus:bg-light-mode-background dark:hover:bg-dark-mode-background dark:focus:bg-dark-mode-background;
 }
 
 .react-calendar
@@ -49,11 +49,11 @@
 .react-calendar
   .react-calendar__viewContainer
   button.react-calendar__tile.react-calendar__month-view__days__day.has-appointments {
-  @apply after:content-['\A'] after:block after:w-[8px] after:h-[8px] after:rounded-full after:mx-auto after:bg-active;
+  @apply after:content-['\A'] after:block after:w-[8px] after:h-[8px] after:rounded-full after:mx-auto after:bg-highlight;
 }
 
 .react-calendar .react-calendar__viewContainer button.react-calendar__tile.react-calendar__tile--now {
-  @apply text-active font-bold opacity-100;
+  @apply text-highlight font-bold opacity-100;
 }
 
 .react-calendar
@@ -63,11 +63,11 @@
 }
 
 .react-calendar .react-calendar__viewContainer button.react-calendar__tile.react-calendar__tile--active {
-  @apply bg-primary-day text-white dark:bg-primary-night;
+  @apply bg-light-mode text-white dark:bg-dark-mode;
 }
 
 .react-calendar
   .react-calendar__viewContainer
   button.react-calendar__tile.react-calendar__tile--active.react-calendar__month-view__days__day.has-appointments {
-  @apply after:bg-active;
+  @apply after:bg-highlight;
 }

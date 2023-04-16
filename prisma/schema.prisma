@@ -11,14 +11,12 @@ model Appointment {
   id         Int       @id @default(autoincrement())
   patient_id Int
   doctor_id  Int
-  reason     String?   @db.VarChar(255)
-  start_time DateTime  @db.DateTime(0)
-  end_time   DateTime  @db.DateTime(0)
-  notes      String?   @db.VarChar(255)
+  start_date DateTime  @db.DateTime(0)
+  end_date   DateTime  @db.DateTime(0)
   created_at DateTime? @default(now()) @db.DateTime(0)
   updated_at DateTime  @default(now()) @db.Timestamp(0)
-  Patient    Patient   @relation(fields: [patient_id], references: [id], onUpdate: Restrict, map: "appointment_ibfk_1")
-  Doctor     Doctor    @relation(fields: [doctor_id], references: [id], onUpdate: Restrict, map: "appointment_ibfk_2")
+  Doctor     Doctor    @relation(fields: [doctor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "appointment_ibfk_2")
+  Patient    Patient   @relation(fields: [patient_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "appointment_ibfk_1")
 
   @@index([doctor_id], map: "doctor_id")
   @@index([patient_id], map: "patient_id")
@@ -37,7 +35,7 @@ model Contact {
   phone_ext     String?   @db.VarChar(255)
   created_at    DateTime? @default(now()) @db.DateTime(0)
   updated_at    DateTime  @default(now()) @db.Timestamp(0)
-  User          User      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "contact_ibfk_1")
+  User          User      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "contact_ibfk_1")
 }
 
 model Doctor {
@@ -50,10 +48,9 @@ model Doctor {
   created_at       DateTime?        @default(now()) @db.DateTime(0)
   updated_at       DateTime         @default(now()) @db.Timestamp(0)
   Appointment      Appointment[]
-  DoctorDepartment DoctorDepartment @relation(fields: [department_id], references: [id], onUpdate: Restrict, map: "doctor_ibfk_1")
-  User             User             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "doctor_ibfk_2")
+  DoctorDepartment DoctorDepartment @relation(fields: [department_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "doctor_ibfk_1")
+  User             User             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "doctor_ibfk_2")
   DoctorSchedule   DoctorSchedule[]
-  DoctorTimeOff    DoctorTimeOff[]
 
   @@index([department_id], map: "department_id")
 }
@@ -67,7 +64,7 @@ model Patient {
   created_at  DateTime?     @default(now()) @db.DateTime(0)
   updated_at  DateTime      @default(now()) @db.Timestamp(0)
   Appointment Appointment[]
-  User        User          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "patient_ibfk_1")
+  User        User          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "patient_ibfk_1")
 }
 
 model User {
@@ -87,7 +84,7 @@ model User {
   Contact    Contact?
   Doctor     Doctor?
   Patient    Patient?
-  UserRole   UserRole    @relation(fields: [role_id], references: [id], onUpdate: Restrict, map: "user_ibfk_1")
+  UserRole   UserRole    @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_ibfk_1")
 
   @@index([role_id], map: "role_id")
 }
@@ -115,33 +112,9 @@ model DoctorSchedule {
   weekday    Int
   created_at DateTime? @default(now()) @db.DateTime(0)
   updated_at DateTime  @default(now()) @db.Timestamp(0)
-  Doctor     Doctor    @relation(fields: [doctor_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "doctorschedule_ibfk_1")
+  Doctor     Doctor    @relation(fields: [doctor_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "doctorschedule_ibfk_1")
 
   @@index([doctor_id], map: "doctor_id")
-}
-
-model DoctorTimeOff {
-  id                  Int                 @id @default(autoincrement())
-  doctor_id           Int
-  start_date          DateTime            @db.DateTime(0)
-  end_date            DateTime            @db.DateTime(0)
-  reason              String?             @db.VarChar(255)
-  status_id           Int                 @default(1)
-  created_at          DateTime?           @default(now()) @db.DateTime(0)
-  updated_at          DateTime            @default(now()) @db.Timestamp(0)
-  Doctor              Doctor              @relation(fields: [doctor_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "doctortimeoff_ibfk_1")
-  DoctorTimeOffStatus DoctorTimeOffStatus @relation(fields: [status_id], references: [id], onUpdate: Restrict, map: "doctortimeoff_ibfk_2")
-
-  @@index([doctor_id], map: "doctor_id")
-  @@index([status_id], map: "status_id")
-}
-
-model DoctorTimeOffStatus {
-  id            Int             @id @default(autoincrement())
-  status        String          @db.VarChar(255)
-  created_at    DateTime?       @default(now()) @db.DateTime(0)
-  updated_at    DateTime        @default(now()) @db.Timestamp(0)
-  DoctorTimeOff DoctorTimeOff[]
 }
 
 enum User_gender {

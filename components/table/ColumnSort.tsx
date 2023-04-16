@@ -16,7 +16,7 @@ const ColumnSort = <T extends { orderBy: string }>({
     <Button handleClick={() => handleClick(columnName)}>
       <FontAwesomeIcon
         icon={params.orderBy !== columnName ? 'sort' : 'sort-up'}
-        className="text-inactive group-aria-[sort=ascending]:text-active group-aria-[sort=ascending]:rotate-0 group-aria-[sort=descending]:text-active group-aria-[sort=descending]:rotate-180"
+        className="text-white group-aria-[sort=ascending]:text-highlight group-aria-[sort=ascending]:rotate-0 group-aria-[sort=descending]:text-highlight group-aria-[sort=descending]:rotate-180"
       />
     </Button>
   )

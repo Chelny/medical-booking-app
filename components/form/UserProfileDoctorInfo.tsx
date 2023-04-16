@@ -20,12 +20,12 @@ const UserProfileDoctorInfo = ({ values, errors, handleChange }: UserProfileDoct
           data-testid="form-input-department-id"
           id="departmentId"
           value={values.departmentId}
-          aria-required="true"
+          aria-required={true}
           aria-invalid={!!errors.departmentId}
           aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_departmentId`}
           onChange={handleChange}
         >
-          <option label={t('FORM.PLACEHOLDER.SELECT')} disabled />
+          <option label={t('FORM.PLACEHOLDER.SELECT')} disabled={!!values.departmentId} />
           {DoctorDepartmentsMap.map((id: number) => (
             <option key={id} value={id}>
               {t(`DOCTOR_DEPARTMENTS.${DoctorDepartment[id]}`)}
@@ -55,7 +55,7 @@ const UserProfileDoctorInfo = ({ values, errors, handleChange }: UserProfileDoct
           type="date"
           id="startDate"
           value={values.startDate}
-          aria-required="true"
+          aria-required={true}
           aria-invalid={!!errors.startDate}
           aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_startDate`}
           onChange={handleChange}

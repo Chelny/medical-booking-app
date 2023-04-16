@@ -9,55 +9,42 @@ module.exports = {
     },
     colors: {
       transparent: 'transparent',
-      black: '#292929',
-      white: '#FCFCFC',
-      warning: '#C95C28',
-      error: '#D61C4E',
-      success: '#379237',
-      active: '#FC7B54',
-      inactive: '#CFD1D3',
-      'primary-day': {
-        tint: '#AF9CB2',
-        DEFAULT: '#816797',
-        shade: '#5C527F',
+      black: '#000000DE',
+      white: '#FFFFFFDE',
+      backdrop: '#292929BF',
+      highlight: '#FF7A45DE',
+      'light-mode': {
+        DEFAULT: '#2673DD',
+        secondary: '#2673DDBF',
+        tertiary: '#F4F8FD',
+        border: '#C7D0DE',
+        background: { DEFAULT: '#F1F5F9', secondary: '#E2E8F0', tertiary: '#E8E8E8' },
+        foreground: { DEFAULT: '#FFFFFF' },
+        text: { DEFAULT: '#000000DE', secondary: '#00000099', tertiary: '#00000061' },
+        link: { DEFAULT: '#639BF6', target: '#486082' },
+        success: { DEFAULT: '#44CC77', background: '#44CC774D' },
+        warning: { DEFAULT: '#FFBB00', background: '#FFBB004D' },
+        error: { DEFAULT: '#EE2C4A', background: '#EE2C4A33' },
       },
-      'primary-night': {
-        tint: '#7858A6',
-        DEFAULT: '#4C3575',
-        shade: '#291D3D',
-      },
-      secondary: {
-        tint: '#D15555',
-        DEFAULT: '#FC7B54',
-        shade: '#AC2E2E',
-      },
-      light: {
-        tint: '#F9F9F9',
-        DEFAULT: '#F4F4F4',
-        shade: '#DBDBDB',
-      },
-      medium: {
-        tint: '#CFD1D3',
-        DEFAULT: '#898D93',
-        shade: '#7B7E84',
-      },
-      dark: {
-        tint: '#22252a',
-        DEFAULT: '#1B1C22',
-        shade: '#151515',
-      },
-      screens: {
-        sm: '480px',
-        md: '768px',
-        lg: '976px',
-        xl: '1440px',
+      'dark-mode': {
+        DEFAULT: '#2673DD',
+        secondary: '#2673DDB3',
+        tertiary: '#15202E',
+        border: '#E8E8E817',
+        background: { DEFAULT: '#1B1C22', secondary: '#1B1C22E6', tertiary: '#22252A' },
+        foreground: { DEFAULT: '#151515' },
+        text: { DEFAULT: '#FFFFFFDE', secondary: '#FFFFFF99', tertiary: '#FFFFFF61' },
+        link: { DEFAULT: '#639BF6', target: '#486082' },
+        success: { DEFAULT: '#309053', background: '#3090534D' },
+        warning: { DEFAULT: '#B2B400', background: '#B2B4004D' },
+        error: { DEFAULT: '#A82B30', background: '#A82B304D' },
       },
     },
     screens: {
-      sm: '640px', // => @media screen and (min-width: 640px) { ... }
-      md: '768px', // => @media screen and (min-width: 768px) { ... }
-      lg: '1024px', // => @media screen and (min-width: 1024px) { ... }
-      xl: '1280px', // => @media screen and (min-width: 1280px) { ... }
+      sm: '480px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
     },
     extend: {
       gridTemplateAreas: {
@@ -92,8 +79,10 @@ module.exports = {
         'nav-expanded': 'calc(100vh - 125px)',
       },
       backgroundImage: {
-        landing: 'linear-gradient(to top, #5C527Fba, #7858A6cc), url(/assets/images/backgrounds/landing.jpg)',
+        landing: 'linear-gradient(to top, #2673DDBA, #FFFFFFBF), url(/assets/images/backgrounds/landing.jpg)',
+        'landing-dark': 'linear-gradient(to top, #2673DDBA, #000000BF), url(/assets/images/backgrounds/landing.jpg)',
         dropdown: 'url(/assets/images/icons/chevron-down.svg)',
+        calendar: 'url(/assets/images/icons/calendar-regular.svg)',
       },
       backgroundPosition: {
         dropdown: 'calc(100% - 12px) center',

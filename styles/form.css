@@ -1,7 +1,19 @@
+form label span,
+form label + fieldset legend {
+  @apply text-light-mode-text-secondary font-normal uppercase dark:text-dark-mode-text-secondary;
+}
+
 input:not([type='checkbox']):not([type='radio']),
 textarea,
 select {
-  @apply p-3 border border-medium-tint rounded-md shadow-sm mb-1.5 bg-light text-dark placeholder:opacity-[75%] disabled:opacity-50 disabled:cursor-not-allowed focus:outline-primary-day dark:border-dark-shade dark:shadow-md dark:bg-dark-shade dark:text-medium-tint dark:placeholder:opacity-50 dark:disabled:opacity-25 dark:focus:outline-primary-night;
+  @apply p-3 border border-light-mode-border rounded-md shadow-md mb-1.5 bg-light-mode-foreground text-light-mode-text placeholder:text-light-mode-text-tertiary disabled:opacity-50 disabled:cursor-not-allowed focus:shadow-none focus:outline-light-mode-secondary dark:border-dark-mode-border/5 dark:bg-dark-mode-foreground dark:text-dark-mode-text dark:placeholder:text-dark-mode-text-secondary/30 dark:focus:outline-dark-mode-secondary;
+}
+
+/* Change element background colour when its parent's background is the same colour (eg.: modals) */
+*:has(> :is(.bg-dark-mode-foreground, [class*='dialogPanel'])) input:not([type='checkbox']):not([type='radio']),
+*:has(> :is(.bg-dark-mode-foreground, [class*='dialogPanel'])) textarea,
+*:has(> :is(.bg-dark-mode-foreground, [class*='dialogPanel'])) select {
+  @apply dark:bg-dark-mode-background;
 }
 
 /* Fix on mobile devices */
@@ -11,6 +23,14 @@ input[type='date'] {
 
 input[type='date']::-webkit-date-and-time-value {
   @apply p-3 text-start;
+}
+
+input[type='date'][value=''] {
+  @apply text-light-mode-text-tertiary dark:text-dark-mode-text-secondary/30;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+  @apply bg-calendar cursor-pointer;
 }
 
 .checkbox-radio-group {
@@ -32,58 +52,52 @@ input[type='checkbox']:checked + label,
 input[type='checkbox']:not(:checked) + label,
 input[type='radio']:checked + label,
 input[type='radio']:not(:checked) + label {
-  @apply relative inline-block pr-[20px] pl-[30px] mb-[5px] leading-5 cursor-pointer;
+  @apply relative inline-block pr-[20px] pl-[30px] mb-[5px] leading-5 cursor-pointer before:content-[''] before:absolute before:top-0 before:left-0 before:w-[20px] before:h-[20px] before:border before:border-light-mode-border before:bg-light-mode-foreground before:shadow-md before:focus:shadow-none after:content-[''] after:absolute after:top-[0.125rem] after:left-[0.125rem] after:w-[16px] after:h-[16px] after:bg-light-mode dark:before:border-dark-mode-border/10 dark:before:bg-dark-mode-foreground dark:after:bg-dark-mode;
 }
 
-input[type='checkbox']:checked + label::before,
-input[type='checkbox']:not(:checked) + label::before,
-input[type='radio']:checked + label::before,
-input[type='radio']:not(:checked) + label::before {
-  @apply content-[''] absolute top-0 left-0 w-[20px] h-[20px] border border-solid border-light-shade bg-light dark:border-dark-shade dark:shadow-sm dark:bg-dark-shade;
+/* Change element background colour when its parent's background is the same colour (eg.: modals) */
+*:has(> :is(.bg-dark-mode-foreground, [class*='dialogPanel'])) input[type='checkbox']:checked + label,
+*:has(> :is(.bg-dark-mode-foreground, [class*='dialogPanel'])) input[type='checkbox']:not(:checked) + label,
+*:has(> :is(.bg-dark-mode-foreground, [class*='dialogPanel'])) input[type='radio']:checked + label,
+*:has(> :is(.bg-dark-mode-foreground, [class*='dialogPanel'])) input[type='radio']:not(:checked) + label {
+  @apply dark:before:bg-dark-mode-background;
 }
 
-input[type='checkbox']:checked + label::before,
-input[type='checkbox']:not(:checked) + label::before,
-input[type='checkbox']:focus + label::before {
-  @apply rounded-sm;
+input[type='checkbox']:checked + label,
+input[type='checkbox']:not(:checked) + label,
+input[type='checkbox']:focus + label {
+  @apply before:rounded-sm;
 }
 
-input[type='radio']:checked + label::before,
-input[type='radio']:not(:checked) + label::before,
-input[type='radio']:focus + label::before {
-  @apply rounded-full;
+input[type='radio']:checked + label,
+input[type='radio']:not(:checked) + label,
+input[type='radio']:focus + label {
+  @apply before:rounded-full;
 }
 
-input[type='checkbox']:checked + label:after,
-input[type='checkbox']:not(:checked) + label:after,
-input[type='radio']:checked + label:after,
-input[type='radio']:not(:checked) + label:after {
-  @apply content-[''] absolute top-[0.125rem] left-[0.125rem] w-[16px] h-[16px] bg-primary-day dark:bg-primary-night;
+input[type='checkbox']:checked + label,
+input[type='checkbox']:not(:checked) + label {
+  @apply after:rounded-sm;
 }
 
-input[type='checkbox']:checked + label:after,
-input[type='checkbox']:not(:checked) + label:after {
-  @apply rounded-sm;
+input[type='radio']:checked + label,
+input[type='radio']:not(:checked) + label {
+  @apply after:rounded-full;
 }
 
-input[type='radio']:checked + label:after,
-input[type='radio']:not(:checked) + label:after {
-  @apply rounded-full;
+input[type='checkbox']:checked + label,
+input[type='radio']:checked + label {
+  @apply before:border-light-mode before:opacity-100 before:scale-100 dark:before:border-dark-mode;
 }
 
-input[type='checkbox']:not(:checked) + label:after,
-input[type='radio']:not(:checked) + label:after {
-  @apply opacity-0 scale-0;
+input[type='checkbox']:not(:checked) + label,
+input[type='radio']:not(:checked) + label {
+  @apply after:opacity-0 after:scale-0;
 }
 
-input[type='checkbox']:checked + label:before,
-input[type='radio']:checked + label:before {
-  @apply border border-solid border-primary-day opacity-100 scale-100 dark:border-primary-night;
-}
-
-input[type='checkbox']:focus + label::before,
-input[type='radio']:focus + label::before {
-  @apply outline outline-1 outline-primary-day dark:outline-primary-night;
+input[type='checkbox']:focus + label,
+input[type='radio']:focus + label {
+  @apply before:outline outline-1 before:outline-light-mode-secondary dark:before:outline-dark-mode-secondary;
 }
 
 textarea {
@@ -91,31 +105,28 @@ textarea {
 }
 
 @layer base {
+  /* FIXME: Set different color for first option ("--- SELECT ---") */
   select {
     @apply overflow-hidden p-3 pr-[30px] bg-dropdown bg-no-repeat text-[unset] text-ellipsis whitespace-nowrap appearance-none cursor-pointer;
   }
+  /* select {
+    @apply overflow-hidden p-3 pr-[30px] bg-dropdown bg-no-repeat text-light-mode-text text-ellipsis whitespace-nowrap appearance-none cursor-pointer invalid:!text-light-mode-text-tertiary dark:text-dark-mode-text dark:invalid:!text-dark-mode-text-secondary/30;
+  } */
 }
 
+/* TODO: Invalid input border - Use :invalid pseudo-class? */
 .form-validation-failed input,
 .form-validation-failed textarea,
 .form-validation-failed select {
-  @apply border-error !important;
-}
-
-meter {
-  @apply w-full;
+  @apply !border-light-mode-error dark:!border-dark-mode-error;
 }
 
 form button,
 form[id^='headlessui-popover-panel'] button[data-headlessui-state] {
-  @apply w-full px-4 py-2 shadow-sm my-1 rounded-md disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply w-full px-4 py-2 rounded-md shadow-sm my-1 disabled:opacity-50 disabled:cursor-not-allowed;
 }
 
 form button[type='submit'],
 form[id^='headlessui-popover-panel'] button[data-headlessui-state][type='button'] {
-  @apply bg-primary-day dark:bg-primary-night;
-}
-
-form button[type='reset'] {
-  @apply bg-medium-tint text-black dark:bg-dark-tint dark:text-white;
+  @apply bg-light-mode dark:bg-dark-mode;
 }

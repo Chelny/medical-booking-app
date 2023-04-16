@@ -1,0 +1,8 @@
+.btn {
+  @apply flex items-center gap-1 !bg-light-mode-background-secondary !text-light-mode dark:bg-dark-mode-background-tertiary dark:!text-dark-mode-text;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .btn {
+  @apply !bg-dark-mode-background-tertiary !text-dark-mode;
+}

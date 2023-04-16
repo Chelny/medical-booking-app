@@ -11,7 +11,7 @@ const LanguageSelector = (): JSX.Element => {
 
   return (
     <select
-      className="bg-light border-0 py-1 text-dark shadow-none dark:bg-dark-shade dark:text-light"
+      className="bg-light-mode-foreground border-0 py-1 shadow-none dark:bg-dark-mode-foreground"
       value={router.locale?.toUpperCase()}
       onChange={handleLocaleChange}
     >

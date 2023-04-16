@@ -9,7 +9,7 @@ import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Calendar, { CalendarTileProperties } from 'react-calendar'
 import { toast } from 'react-toastify'
-// import Appointment from 'components/Appointment'
+import Appointment from 'components/Appointment'
 import Button from 'components/Button'
 import { Common } from 'constants/common'
 import { IPatientAppointement } from 'dtos/user-appointment.response'
@@ -37,19 +37,17 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
   const [displayedAppointments, setDisplayedAppointments] = useState<IPatientAppointement[]>([])
   const [selectedDate, setSelectDate] = useState<Date>(new Date())
   const [timePeriod, setTimePeriod] = useState<string>('NIGHT')
-  // const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState<boolean>(false)
+  const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState<boolean>(false)
 
-  // TODO: Appointment modal
-  // const makeAppointment = () => {
-  //   console.log('makeAppointment')
-  //   setIsAppointmentModalOpen(true)
-  // }
+  const makeAppointment = () => {
+    setIsAppointmentModalOpen(true)
+  }
 
   const handleSelectDate = (date: Date) => {
     setSelectDate(date)
     setDisplayedAppointments(
       appointments.filter((appointment: IPatientAppointement) =>
-        isEqual(new Date(appointment.start_time).setHours(0, 0, 0, 0), date)
+        isEqual(new Date(appointment.start_date).setHours(0, 0, 0, 0), date)
       )
     )
   }
@@ -82,10 +80,14 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
     <>
       <h2>{t('WELCOME', { ns: 'dashboard', context: timePeriod, name: user.first_name })}</h2>
 
-      {/* TODO: Appointment modal */}
+      {/* TODO: */}
       {/* <div className="w-full mb-6 md:w-fit">
-        <Button type="button" className="bg-success" handleClick={() => makeAppointment()}>
-          {t('MAKE_APPOINTMENT', { ns: 'dashboard' })}
+        <Button
+          type="button"
+          className="bg-light-mode-success dark:bg-dark-mode-success"
+          handleClick={() => makeAppointment()}
+        >
+          {t('BOOK_APPOINTMENT', { ns: 'dashboard' })}
         </Button>
       </div> */}
 
@@ -98,7 +100,7 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
         className="lg:max-w-[768px]"
         tileClassName={({ date }: CalendarTileProperties) =>
           appointments.find((appointment: IPatientAppointement) =>
-            isEqual(new Date(appointment.start_time).setHours(0, 0, 0, 0), date)
+            isEqual(new Date(appointment.start_date).setHours(0, 0, 0, 0), date)
           )
             ? 'has-appointments'
             : null
@@ -108,7 +110,7 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
 
       <section
         id="appointmentDetails"
-        className="p-4 mt-6 bg-light lg:max-w-[768px] dark:bg-dark-shade dark:text-white"
+        className="p-4 mt-6 bg-light-mode-foreground lg:max-w-[768px] dark:bg-dark-mode-foreground dark:text-white"
       >
         <h3>
           {t('APPOINTMENTS', {
@@ -120,22 +122,24 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
         {displayedAppointments.length > 0 ? (
           <ul>
             {displayedAppointments.map((appointment, i) => (
-              <li key={i} className="py-4 border-b border-b-medium-tint last:border-b-0 dark:border-b-dark-tint">
+              <li
+                key={i}
+                className="py-4 border-b border-b-light-mode-border last:border-b-0 dark:border-b-dark-mode-border"
+              >
                 <>
                   <div>
                     {appointment.Doctor.User.first_name} {appointment.Doctor.User.last_name}
                     {' - '}
                     {t(`DOCTOR_DEPARTMENTS.${appointment.Doctor.DoctorDepartment.name}`)} <br />
-                    {TextFormatUtil.dateFormat(appointment.start_time, router, 'p')}
+                    {TextFormatUtil.dateFormat(appointment.start_date, router, 'p')}
                     {' - '}
-                    {TextFormatUtil.dateFormat(appointment.end_time, router, 'p')} <br />
-                    {appointment.reason} <br />
+                    {TextFormatUtil.dateFormat(appointment.end_date, router, 'p')} <br />
                   </div>
                   <div className="sm:flex sm:gap-1">
-                    <Button className="bg-primary-day dark:bg-primary-night">
+                    <Button className="bg-light-mode dark:bg-dark-mode">
                       {t('APPOINTMENT_DETAILS', { ns: 'dashboard' })}
                     </Button>
-                    <Button className="bg-primary-day-shade dark:bg-primary-night-shade">
+                    <Button className="bg-light-mode-tertiary dark:bg-dark-mode-tertiary">
                       {t('APPOINTMENT_UPDATE', { ns: 'dashboard' })}
                     </Button>
                   </div>
@@ -144,14 +148,21 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
             ))}
           </ul>
         ) : (
-          <p className="text-medium dark:text-medium-shade">{t('NO_APPOINTMENTS', { ns: 'dashboard' })}</p>
+          <p className="text-light-mode-text-secondary dark:text-dark-mode-text-secondary">
+            {t('NO_APPOINTMENTS', { ns: 'dashboard' })}
+          </p>
         )}
       </section>
 
-      {/* TODO: Appointment modal */}
-      {/* {isAppointmentModalOpen && (
-        <Appointment isModal isModalOpen={isAppointmentModalOpen} setIsModalOpen={setIsAppointmentModalOpen} />
-      )} */}
+      {isAppointmentModalOpen && (
+        <Appointment
+          isModal
+          user={user}
+          selectedDate={selectedDate}
+          isModalOpen={isAppointmentModalOpen}
+          setIsModalOpen={setIsAppointmentModalOpen}
+        />
+      )}
     </>
   )
 }
@@ -185,10 +196,8 @@ export const getServerSideProps = async (context: ServerSideContext) => {
       await useRequest<GetAppointmentsByPatientIdGQLResponse>(
         `query {
           getAppointmentsByPatientId(id: ${decodedToken?.user?.id}) {
-            reason,
-            start_time,
-            end_time,
-            notes,
+            start_date,
+            end_date,
             Doctor {
               image_name,
               User {

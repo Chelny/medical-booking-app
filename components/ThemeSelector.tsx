@@ -46,13 +46,15 @@ const ThemeSelector = (): JSX.Element | null => {
         defaultChecked={theme === AppTheme.DARK}
         checked={theme === AppTheme.DARK}
         onChange={handleChange}
-        className={`${styles.switch} ${theme === AppTheme.DARK ? 'bg-dark-tint' : 'bg-light-shade'}`}
+        className={`${styles.switch} ${
+          theme === AppTheme.DARK ? 'bg-dark-mode-background-tertiary' : 'bg-light-mode-background-tertiary'
+        }`}
       >
         <span className="sr-only">{t('THEME_SELECTOR.LABEL')}</span>
         <span
           aria-hidden="true"
           className={`${styles.button} ${
-            theme === AppTheme.DARK ? 'translate-x-9 bg-primary-night-tint' : 'translate-x-0 bg-primary-day'
+            theme === AppTheme.DARK ? 'translate-x-9 bg-dark-mode' : 'translate-x-0 bg-light-mode'
           }`}
         >
           <FontAwesomeIcon

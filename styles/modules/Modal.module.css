@@ -3,82 +3,78 @@
 }
 
 .backdrop {
-  @apply fixed inset-0 bg-black bg-opacity-75;
+  @apply fixed inset-0 bg-backdrop;
 }
 
 .dialogPanelContainerParent {
-  @apply fixed inset-0;
+  @apply fixed inset-0 md:inset-[unset] md:top-[50%] md:left-[50%] md:translate-x-[-50%] md:translate-y-[-50%];
 }
 
 .dialogPanelContainerChild {
-  @apply flex justify-center items-center p-0;
+  @apply flex justify-center items-center;
 }
 
 .dialogPanel {
-  @apply overflow-hidden grid grid-rows-dialog-panel-sm w-full h-screen transform rounded-md bg-light-tint p-4 text-start align-middle shadow-xl transition-all md:w-3/4 md:p-6 lg:max-w-screen-md dark:bg-dark;
+  @apply overflow-hidden grid grid-rows-dialog-panel-sm w-full h-screen transform rounded-md bg-light-mode-background text-start align-middle shadow-xl transition-all md:w-3/4 md:h-auto md:max-w-screen-md dark:bg-dark-mode-background;
 }
 
 /* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
 :global(.dark) .dialogPanel {
-  @apply bg-dark;
+  @apply bg-dark-mode-background;
 }
 
 .modalSizeXs {
-  @apply w-[480px];
+  @apply md:w-[480px];
 }
 
 .modalSizeSm {
-  @apply w-[640px];
+  @apply md:w-[640px];
 }
 
 .modalSizeMd {
-  @apply w-[768px];
+  @apply md:w-[768px];
 }
 
 .modalSizeLg {
-  @apply w-[1024px];
+  @apply md:w-[1024px];
 }
 
 .dialogTitle {
-  @apply text-lg font-medium leading-6 text-black dark:text-white;
+  @apply p-4 !text-light-mode-text/70 font-medium uppercase first-letter:text-light-mode md:p-6 dark:!text-dark-mode-text;
 }
 
 /* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
 :global(.dark) .dialogTitle {
-  @apply text-white;
+  @apply !text-dark-mode-text;
 }
 
 .dialogContent {
-  @apply overflow-y-auto grid grid-rows-[max-content_auto] mt-2 text-black dark:text-white;
+  @apply overflow-y-auto flex flex-col p-4 bg-light-mode-foreground text-black md:p-6 dark:bg-dark-mode-foreground dark:text-white;
 }
 
 /* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
 :global(.dark) .dialogContent {
-  @apply text-white;
+  @apply bg-dark-mode-foreground text-white;
 }
 
 .actionButtons {
-  @apply flex justify-end gap-2 mt-4 bg-light-tint dark:bg-dark;
+  @apply flex justify-end gap-2 px-4 pb-4 mt-4;
+}
+
+.btnCancel {
+  @apply !w-min !border !border-light-mode-border/50 !bg-light-mode-background-tertiary !text-light-mode-text-secondary dark:!border-dark-mode-border dark:!bg-dark-mode-background-tertiary dark:!text-dark-mode-text;
 }
 
 /* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
-:global(.dark) .actionButtons {
-  @apply bg-dark;
-}
-
-.cancelBtn {
-  @apply w-min border border-medium-tint bg-transparent text-dark-tint dark:border-dark-tint dark:bg-dark-tint dark:text-light-shade !important;
-}
-
-/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
-:global(.dark) .cancelBtn {
-  @apply border-dark-tint bg-dark-tint text-light-shade !important;
-}
-
-.confirmBtn {
-  @apply w-min;
+:global(.dark) .btnCancel {
+  @apply !border-dark-mode-border !bg-dark-mode-background-tertiary !text-dark-mode-text;
 }
 
 .btnDanger {
-  @apply bg-error !important;
+  @apply !bg-light-mode-error !text-white dark:!bg-dark-mode-error;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .btnDanger {
+  @apply !bg-dark-mode-error;
 }

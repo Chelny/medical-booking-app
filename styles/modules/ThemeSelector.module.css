@@ -1,10 +1,10 @@
 .themeSelector {
-  @apply relative grid grid-cols-[1fr_min-content] justify-start items-center px-4 py-2 border-t border-light-shade lg:px-0 lg:py-0 lg:border-t-0 dark:border-primary-night dark:text-light;
+  @apply relative grid grid-cols-[1fr_min-content] justify-start items-center px-4 py-2 border-t border-light-mode-border lg:px-0 lg:py-0 lg:border-t-0 dark:border-dark-mode-border;
 }
 
 /* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
 :global(.dark) .themeSelector {
-  @apply border-primary-night text-light;
+  @apply border-dark-mode-border;
 }
 
 .label {

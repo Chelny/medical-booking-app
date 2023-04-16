@@ -6,6 +6,8 @@ import { GraphQLError } from 'graphql'
 import { isEmpty, omit } from 'lodash-es'
 import { useTranslation } from 'next-i18next'
 import { toast } from 'react-toastify'
+import BackButton from 'components/BackButton'
+import Button from 'components/Button'
 import ConditionalWrap from 'components/ConditionalWrap'
 import UserProfileContactInfo from 'components/form/UserProfileContactInfo'
 import UserProfileDoctorInfo from 'components/form/UserProfileDoctorInfo'
@@ -328,7 +330,7 @@ const UserProfile = ({
       )}
     >
       {typeof user?.id === 'undefined' && isChooseUserRoleStep ? (
-        <div>
+        <>
           <h4>{t('USER_PROFILE_MODAL.CHOOSE_USER_ROLE', { ns: 'admin' })}</h4>
           <RadioGroup value={selectedUserRoleId} onChange={selectUserRole}>
             <RadioGroup.Label className="sr-only">
@@ -339,27 +341,21 @@ const UserProfile = ({
                 <RadioGroup.Option
                   key={userRoleId}
                   value={userRoleId}
-                  className="grid grid-cols-radio-group items-center gap-2 w-full p-4 rounded-md bg-light-shade cursor-pointer dark:bg-dark-shade dark:text-white"
+                  className="grid grid-cols-radio-group items-center gap-2 w-full p-4 rounded-md cursor-pointer bg-light-mode-background-secondary dark:bg-dark-mode-background-secondary"
                   onClick={() => selectUserRole(userRoleId)}
                 >
-                  <RadioGroup.Label className="cursor-pointer">{t(`USER_ROLES.${userRoleId}`)}</RadioGroup.Label>
-                  <FontAwesomeIcon icon="check" className="invisible ui-checked:visible ui-checked:text-active" />
+                  <RadioGroup.Label className="text-light-mode-text cursor-pointer dark:text-dark-mode-text">
+                    {t(`USER_ROLES.${userRoleId}`)}
+                  </RadioGroup.Label>
+                  <FontAwesomeIcon icon="check" className="invisible ui-checked:visible ui-checked:text-highlight" />
                 </RadioGroup.Option>
               ))}
             </div>
           </RadioGroup>
-        </div>
+        </>
       ) : (
         <>
-          {typeof user?.id === 'undefined' && (
-            <div
-              className="mb-4 text-secondary uppercase no-underline cursor-pointer hover:text-black dark:hover:text-white"
-              role="link"
-              onClick={goBackToUserRoleSelection}
-            >
-              <FontAwesomeIcon icon="long-arrow-left" /> {t('BUTTON.BACK')}
-            </div>
-          )}
+          {typeof user?.id === 'undefined' && <BackButton handleClick={goBackToUserRoleSelection} />}
           <Tab.Group>
             <Tab.List className={styles.list}>
               <Tab className={styles.tab}>

@@ -22,7 +22,7 @@ const UserProfilePatientInfo = ({ values, errors, handleChange }: UserProfilePat
           placeholder={Common.MEDICAL_ID.PLACEHOLDER}
           maxLength={Common.MEDICAL_ID.MAX_LENGTH}
           value={maskMedicalId}
-          aria-required="true"
+          aria-required={true}
           aria-invalid={!!errors.medicalId}
           aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_medicalId`}
           onChange={(e) => InputMaskUtil.maskMedicalId(e, setMaskMedicalId, handleChange)}

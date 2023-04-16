@@ -71,7 +71,7 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
             roles: ${JSON.stringify(getUsersParams.roles)},
             languages: ${JSON.stringify(getUsersParams.languages)},
             active: ${getUsersParams.active},
-            orderBy: "${getUsersParams.orderBy}",
+            order_by: "${getUsersParams.orderBy}",
             sort: "${getUsersParams.sort}"
           }
         ) {
@@ -227,7 +227,7 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
       <h2>{t('TITLE', { ns: 'admin' })}</h2>
 
       <div className="w-full md:w-fit">
-        <Button type="button" className="bg-success" handleClick={() => addUser()}>
+        <Button type="button" className="bg-light-mode-success dark:bg-dark-mode-success" handleClick={() => addUser()}>
           {t('ADD_USER', { ns: 'admin' })}
         </Button>
       </div>
@@ -343,7 +343,6 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
               <th>
                 <div className="table-column-wrapper">
                   {t('FORM.LABEL.ACTIVE')}
-                  {/* FIXME: Active state */}
                   <TableColFilterPopover
                     list={UserActiveMap}
                     selectedValues={getUsersParams.active === null ? UserActiveMap : [getUsersParams.active]}
@@ -401,7 +400,7 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
                     <div className="admin-console__user-actions">
                       <Button
                         type="button"
-                        className="text-secondary"
+                        className="text-highlight"
                         handleClick={() => {
                           setSelectedUser(user)
                           setIsUserProfileModalOpen(true)
@@ -411,7 +410,7 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
                       </Button>
                       <Button
                         type="button"
-                        className="text-secondary"
+                        className="text-highlight"
                         disabled={user.id == 1 || user.id == userToken.id}
                         handleClick={() => {
                           if (user.id != 1 && user.id != userToken.id) sendResetPasswordLink(user)
@@ -437,7 +436,11 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
                       >
                         <FontAwesomeIcon
                           icon={user.active ? 'lock' : 'lock-open'}
-                          className={user.active ? 'text-error' : 'text-success'}
+                          className={
+                            user.active
+                              ? 'text-light-mode-error dark:text-dark-mode-error'
+                              : 'text-light-mode-success dark:text-dark-mode-success'
+                          }
                           aria-label={t(`TABLE.ACTIONS.${user.active ? 'DEACTIVATE' : 'ACTIVATE'}_ACCOUNT`, {
                             ns: 'admin',
                           })}

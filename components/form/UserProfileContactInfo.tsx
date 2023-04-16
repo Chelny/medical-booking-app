@@ -26,7 +26,7 @@ const UserProfileContactInfo = ({ values, errors, handleChange }: UserProfileCon
           type="text"
           id="addressLine1"
           value={values.addressLine1}
-          aria-required="true"
+          aria-required={true}
           aria-invalid={!!errors.addressLine1}
           aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_addressLine1`}
           onChange={handleChange}
@@ -50,12 +50,12 @@ const UserProfileContactInfo = ({ values, errors, handleChange }: UserProfileCon
           data-testid="form-input-country"
           id="country"
           value={values.country}
-          aria-required="true"
+          aria-required={true}
           aria-invalid={!!errors.country}
           aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_country`}
           onChange={handleChange}
         >
-          <option label={t('FORM.PLACEHOLDER.SELECT')} disabled />
+          <option label={t('FORM.PLACEHOLDER.SELECT')} disabled={!!values.country} />
           {CountriesMap.map((code: string, index: number) => (
             <option key={+index} value={code}>
               {t(`COUNTRIES.${code}.COUNTRY`)}
@@ -69,7 +69,7 @@ const UserProfileContactInfo = ({ values, errors, handleChange }: UserProfileCon
           id="region"
           disabled={!values.country}
           value={values.region}
-          aria-required="true"
+          aria-required={true}
           aria-invalid={!!errors.region}
           aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_region`}
           onChange={handleChange}
@@ -95,7 +95,7 @@ const UserProfileContactInfo = ({ values, errors, handleChange }: UserProfileCon
           type="text"
           id="city"
           value={values.city}
-          aria-required="true"
+          aria-required={true}
           aria-invalid={!!errors.city}
           aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_city`}
           onChange={handleChange}
@@ -108,7 +108,7 @@ const UserProfileContactInfo = ({ values, errors, handleChange }: UserProfileCon
           id="post-code"
           maxLength={postCodeMaxLength}
           value={postCode}
-          aria-required="true"
+          aria-required={true}
           aria-invalid={!!errors.postCode}
           aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_postCode`}
           onChange={(e) => InputMaskUtil.maskPostCode(e, values, setPostCode, setPostCodeMaxLength, handleChange)}
@@ -123,7 +123,7 @@ const UserProfileContactInfo = ({ values, errors, handleChange }: UserProfileCon
             placeholder={Common.PHONE_NUMBER.PLACEHOLDER}
             maxLength={Common.PHONE_NUMBER.MAX_LENGTH}
             value={phoneNumber}
-            aria-required="true"
+            aria-required={true}
             aria-invalid={!!errors.phoneNumber}
             aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_phoneNumber`}
             onChange={(e) => InputMaskUtil.maskPhoneNumber(e, setPhoneNumber, handleChange)}

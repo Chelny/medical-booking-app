@@ -26,18 +26,31 @@ div#__next > div {
 }
 
 body {
-  @apply bg-light-tint text-black dark:bg-dark dark:text-white;
+  @apply bg-light-mode-background text-light-mode-text dark:bg-dark-mode-background dark:text-dark-mode-text;
 }
 
-[class*='bg-primary'],
-[class*='bg-dark'],
-[class*='bg-success'] {
+/* [class~='bg-light-mode'],
+[class~='bg-dark-mode'] {
+  @apply text-white;
+} */
+
+/* [class*='bg-light-mode-foreground'] {
+  @apply text-light-mode-text-secondary;
+} */
+
+/* [class*='bg-dark-mode-foreground'] {
+  @apply dark:text-dark-mode-text-secondary;
+} */
+
+[class*='bg-light-mode-success'],
+[class*='bg-light-mode-error'],
+[class*='bg-dark-mode-success'],
+[class*='bg-dark-mode-error'] {
   @apply text-white;
 }
 
-[class*='bg-secondary'],
-[class*='bg-medium'],
-[class*='bg-light'] {
+[class*='bg-light-mode-warning'],
+[class*='bg-dark-mode-warning'] {
   @apply text-black;
 }
 

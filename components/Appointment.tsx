@@ -1,14 +1,13 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { differenceInYears, parse } from 'date-fns'
-import { GraphQLError } from 'graphql'
-import { isEmpty, omit } from 'lodash-es'
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Appointment, User } from '@prisma/client'
+import { add, addMinutes, isEqual, set } from 'date-fns'
 import { useTranslation } from 'next-i18next'
 import { toast } from 'react-toastify'
 import ConditionalWrap from 'components/ConditionalWrap'
 import Modal, { ModalSize } from 'components/Modal'
 import { Common } from 'constants/common'
 import { Regex } from 'constants/regex'
-import { UserContact } from 'dtos/user-contact.response'
+import { DoctorDepartmentsMap, DoctorDepartment } from 'enums/department.enum'
 import { useForm } from 'hooks/useForm'
 import { useRequest } from 'hooks/useRequest'
 import { TextFormatUtil } from 'utils/text-format'
@@ -16,178 +15,143 @@ import { TextFormatUtil } from 'utils/text-format'
 
 type AppointmentProps = {
   isModal: boolean
-  user?: UserContact
+  user: User
+  appointment?: Appointment
+  selectedDate: Date
   isModalOpen: boolean
   setIsModalOpen: Dispatch<SetStateAction<boolean>>
   isFormSubmitted?: (isSubmitted: boolean) => void
 }
 
-type CreateAdminGQLResponse = GQLResponse<{ createAdmin: { message: string } }>
-type UpdateAdminGQLResponse = GQLResponse<{ updateAdmin: { message: string } }>
+type CreateAppointmentGQLResponse = GQLResponse<{ createAppointment: { message: string } }>
+type UpdateAppointmentGQLResponse = GQLResponse<{ updateAppointment: { message: string } }>
+type DeleteAppointmentGQLResponse = GQLResponse<{ deleteAppointment: { message: string } }>
 
 const Appointment = ({
   user,
+  appointment,
+  selectedDate,
   isModal,
   isModalOpen,
   setIsModalOpen,
   isFormSubmitted,
 }: AppointmentProps): JSX.Element => {
   const { t } = useTranslation()
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState<number>(0)
 
   const { values, errors, handleChange, handleSubmit } = useForm({
     initialValues: {
-      firstName: user?.first_name ?? '',
-      lastName: user?.last_name ?? '',
-      gender: user?.gender ?? '',
-      birthDate: TextFormatUtil.formatISOToStringDate(user?.birth_date) ?? '',
-      email: user?.email ?? '',
-      username: user?.username ?? '',
-      password: '',
-      passwordConfirmation: '',
-      roleId: user?.role_id ?? '',
-      language: user?.language ?? '',
-      addressLine1: user?.Contact?.address ?? '',
-      addressLine2: user?.Contact?.address_line2 ?? '',
-      city: user?.Contact?.city ?? '',
-      region: user?.Contact?.region ?? '',
-      country: user?.Contact?.country ?? '',
-      postCode: user?.Contact?.postal_code ?? '',
-      phoneNumber: user?.Contact?.phone_number ?? '',
-      phoneNumberExt: user?.Contact?.phone_ext ?? '',
+      patientId: '',
+      doctorId: '',
+      startDate: '',
+      endDate: '',
     },
     onValidate: (v) => {
       const e: IStringMap = {}
 
-      if (!v.firstName) {
-        e.firstName = 'FIRST_NAME_REQUIRED'
-      } else if (!Regex.NAME_PATTERN.test(v.firstName.trim())) {
-        e.firstName = 'FIRST_NAME_PATTERN'
-      }
-      if (!v.lastName) {
-        e.lastName = 'LAST_NAME_REQUIRED'
-      } else if (!Regex.NAME_PATTERN.test(v.lastName.trim())) {
-        e.lastName = 'LAST_NAME_PATTERN'
-      }
-      if (!v.gender) {
-        e.gender = 'GENDER_REQUIRED'
-      }
-      const birthDate = parse(v.birthDate, Common.DATE_FORMAT, new Date())
-      if (!v.birthDate) {
-        e.birthDate = 'BIRTHDATE_REQUIRED'
-      } else if (differenceInYears(new Date(), birthDate) < 18) {
-        e.birthDate = 'BIRTHDATE_MINIMUM_AGE'
-      }
-
-      if (!v.email) {
-        e.email = 'EMAIL_REQUIRED'
-      } else if (!Regex.EMAIL_PATTERN.test(v.email.trim())) {
-        e.email = 'EMAIL_PATTERN'
-      }
-      if (v.username && !Regex.USERNAME_PATTERN.test(v.username)) {
-        e.username = 'USERNAME_PATTERN'
-      }
-      if (!user?.id || (user.id && v.password)) {
-        if (!Regex.PASSWORD_PATTERN.test(v.password)) {
-          e.password = 'PASSWORD_PATTERN'
-        }
-        if (!Regex.PASSWORD_PATTERN.test(v.passwordConfirmation)) {
-          e.passwordConfirmation = 'PASSWORD_PATTERN'
-        } else if (v.passwordConfirmation !== v.password) {
-          e.passwordConfirmation = 'PASSWORD_CONFIRMATION_MATCH'
-        }
-      }
-
-      if (!v.addressLine1) {
-        e.addressLine1 = 'ADDRESS_LINE1_REQUIRED'
-      }
-      if (!v.city) {
-        e.city = 'CITY_REQUIRED'
-      }
-      if (!v.region) {
-        e.region = 'REGION_REQUIRED'
-      }
-      if (!v.country) {
-        e.country = 'COUNTRY_REQUIRED'
-      }
-      if (!v.postCode) {
-        e.postCode = 'POST_CODE_REQUIRED'
-      } else if (
-        (v.country === 'CAN' && !Regex.ZIP_CODE_CAN_PATTERN.test(v.postCode)) ||
-        (v.country === 'USA' && !Regex.ZIP_CODE_USA_PATTERN.test(v.postCode))
-      ) {
-        e.postCode = 'POST_CODE_PATTERN'
-      }
-      if (!v.phoneNumber) {
-        e.phoneNumber = 'PHONE_NUMBER_REQUIRED'
-      } else if (!Regex.PHONE_PATTERN.test(v.phoneNumber)) {
-        e.phoneNumber = 'PHONE_NUMBER_PATTERN'
-      }
-      if (v.phoneNumberExt && !Regex.PHONE_EXT_PATTERN.test(v.phoneNumberExt)) {
-        e.phoneNumberExt = 'PHONE_NUMBER_EXT_PATTERN'
-      }
-
-      if (!isEmpty(e)) {
-        const fields = Object.keys(omit(e, 'termsAndConditions')).map((field) =>
-          t(`FORM.LABEL.${TextFormatUtil.camelCaseToSnakeCase(field).toUpperCase()}`)
-        )
-        toast.error<string>(t('FORM.ERROR.INVALID_FIELDS_MESSAGE', { fields: fields.join(', ') }))
-      }
+      // if (!isEmpty(e)) {
+      //   const fields = Object.keys(omit(e, 'termsAndConditions')).map((field) =>
+      //     t(`FORM.LABEL.${TextFormatUtil.camelCaseToSnakeCase(field).toUpperCase()}`)
+      //   )
+      //   toast.error<string>(t('FORM.ERROR.INVALID_FIELDS_MESSAGE', { fields: fields.join(', ') }))
+      // }
 
       return e
     },
     onSubmit: async () => {
-      let payload = ''
+      // let payload = ''
 
-      if (user?.id) payload += `id: ${user.id}, `
-
-      payload += `first_name: "${values.firstName}", last_name: "${values.lastName}", gender: "${
-        values.gender
-      }", birth_date: "${values.birthDate}", email: "${values.email}", username: ${
-        values.username ? `"${values.username}"` : null
-      }, language: ${values.language ? `"${values.language}"` : `"${'EN'}"`}, address: "${
-        values.addressLine1
-      }", address_line2: ${values.addressLine2 ? `"${values.addressLine2}"` : null}, city: "${values.city}", region: "${
-        values.region
-      }", country: "${values.country}", postal_code: "${values.postCode}", phone_number: "${
-        values.phoneNumber
-      }", phone_ext: ${values.phoneNumberExt ? `"${values.phoneNumberExt}"` : null}`
-
-      if (values.password) {
-        payload += `, password: "${values.password}"`
-      }
+      // payload += `first_name: "${values.firstName}", last_name: "${values.lastName}", gender: "${
+      //   values.gender
+      // }", birth_date: "${values.birthDate}", email: "${values.email}", username: ${
+      //   values.username ? `"${values.username}"` : null
+      // }, language: ${values.language ? `"${values.language}"` : `"${'EN'}"`}, address: "${
+      //   values.addressLine1
+      // }", address_line2: ${values.addressLine2 ? `"${values.addressLine2}"` : null}, city: "${values.city}", region: "${
+      //   values.region
+      // }", country: "${values.country}", postal_code: "${values.postCode}", phone_number: "${
+      //   values.phoneNumber
+      // }", phone_ext: ${values.phoneNumberExt ? `"${values.phoneNumberExt}"` : null}`
 
       let data, errors
 
-      if (user?.id) {
-        // eslint-disable-next-line @typescript-eslint/no-extra-semi
-        ;({ data, errors } = await useRequest<UpdateAdminGQLResponse>(
-          `mutation { updateAdmin(${payload}) { message } }`
-        ))
-        if (data) toast.success<string>(t(`SUCCESS.${data.updateAdmin.message}`, { ns: 'api' }))
-      } else {
-        // eslint-disable-next-line @typescript-eslint/no-extra-semi
-        ;({ data, errors } = await useRequest<CreateAdminGQLResponse>(
-          `mutation { createAdmin(${payload}) { message } }`
-        ))
-        if (data) toast.success<string>(t(`SUCCESS.${data.createAdmin.message}`, { ns: 'api' }))
-      }
+      // if (user?.id) {
+      //   // eslint-disable-next-line @typescript-eslint/no-extra-semi
+      //   ;({ data, errors } = await useRequest<UpdateAdminGQLResponse>(
+      //     `mutation { updateAdmin(${payload}) { message } }`
+      //   ))
+      //   if (data) toast.success<string>(t(`SUCCESS.${data.updateAdmin.message}`, { ns: 'api' }))
+      // } else {
+      //   // eslint-disable-next-line @typescript-eslint/no-extra-semi
+      //   ;({ data, errors } = await useRequest<CreateAdminGQLResponse>(
+      //     `mutation { createAdmin(${payload}) { message } }`
+      //   ))
+      //   if (data) toast.success<string>(t(`SUCCESS.${data.createAdmin.message}`, { ns: 'api' }))
+      // }
 
       if (data) {
         setIsModalOpen(false)
         // isFormSubmitted(true)
       }
 
-      if (errors) {
-        errors.map((error: GraphQLError) => {
-          if (error.extensions) {
-            toast.error<string>(t(`ERROR.${error.extensions.code}`, { ns: 'api' }))
-          } else {
-            console.error(error.message)
-          }
-        })
-      }
+      // if (errors) {
+      //   errors.map((error: GraphQLError) => {
+      //     if (error.extensions) {
+      //       toast.error<string>(t(`ERROR.${error.extensions.code}`, { ns: 'api' }))
+      //     } else {
+      //       console.error(error.message)
+      //     }
+      //   })
+      // }
     },
   })
+
+  // TODO: Get appointments
+  // const getAppointmentsByPatientId = async () => {
+  //   const { data, errors } = await useRequest<any>(
+  //     `query {
+  //       getAppointmentsByPatientId(id: ${1}) {
+  //         first_name
+  //         last_name
+  //       }
+  //     }`
+  //   )
+  // }
+
+  const handleDepartmentChange = async (event: ChangeEvent<HTMLSelectElement>) => {
+    const value = +event.target.value
+    setSelectedDepartmentId(value)
+    // console.log(value, selectedDepartmentId)
+    const { data, errors } = await useRequest<any>(
+      `query {
+        getDoctorDepartmentById(id: ${value}) {
+          name
+          duration
+        }
+      }`
+    )
+    // console.log(data, errors)
+
+    const firstHour = set(selectedDate, { hours: 9, minutes: 0, seconds: 0, milliseconds: 0 })
+    const lastHour = set(selectedDate, { hours: 17, minutes: 0, seconds: 0, milliseconds: 0 })
+    const appointmentTime = [firstHour]
+    // let currentAppointmentTime = firstHour
+    // const lastAppointmentTime = appointmentTime[appointmentTime.length - 1]
+
+    // while (!isEqual(appointmentTime[appointmentTime.length - 1], lastHour)) {
+    //   // const nextAppointmentTime = addMinutes(currentAppointmentTime, data.getDoctorDepartmentById.duration)
+    //   console.log(
+    //     currentAppointmentTime,
+    //     appointmentTime[appointmentTime.length - 1],
+    //     !isEqual(currentAppointmentTime, lastHour)
+    //   )
+    //   // if (!isEqual(nextAppointmentTime, lastHour)) {
+    //   appointmentTime.push(addMinutes(currentAppointmentTime, data.getDoctorDepartmentById.duration))
+    //   currentAppointmentTime = appointmentTime[appointmentTime.length - 1]
+    //   // }
+    // }
+    // console.log(selectedDate, firstHour, lastHour, appointmentTime)
+  }
 
   useEffect(() => {
     setIsModalOpen(isModalOpen)
@@ -198,7 +162,7 @@ const Appointment = ({
       condition={isModal}
       wrap={(wrappedChildren) => (
         <Modal
-          // modalSize={isChooseUserRoleStep ? ModalSize.XS : ModalSize.MD}
+          modalSize={ModalSize.MD}
           title={t(`APPOINTMENT_MODAL.${user?.id ? 'EDIT' : 'CREATE'}_TITLE`, { ns: 'admin' })}
           isOpen={isModalOpen}
           confirmButton={{ label: t('BUTTON.SAVE') }}
@@ -210,9 +174,28 @@ const Appointment = ({
       )}
     >
       <>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum, laborum deleniti maiores vel alias doloremque
-        illo ratione omnis laudantium suscipit dolore ducimus voluptates! Atque aut temporibus voluptatum suscipit
-        debitis iure!
+        - Select Department <br />
+        {/* <FormElement fieldName="departmentId" error={errors.departmentId}> */}
+        <select
+          data-testid="form-input-department-id"
+          id="departmentId"
+          value={selectedDepartmentId}
+          aria-required={true}
+          // aria-invalid={!!errors.departmentId}
+          // aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_departmentId`}
+          onChange={(event: ChangeEvent<HTMLSelectElement>) => handleDepartmentChange(event)}
+        >
+          <option label={t('FORM.PLACEHOLDER.SELECT')} />
+          {DoctorDepartmentsMap.map((id: number) => (
+            <option key={id} value={id}>
+              {t(`DOCTOR_DEPARTMENTS.${DoctorDepartment[id]}`)}
+            </option>
+          ))}
+        </select>
+        {/* </FormElement> */}
+        - Select Date & Time <br />
+        - Select Doctor <br />
+        - Confirm Appointment <br />
       </>
     </ConditionalWrap>
   )

@@ -10,12 +10,17 @@
     "LOGOUT": "Vous vous êtes déconnecté(e) avec succès !",
     "DOCTOR_SCHEDULE_CREATED": "L'horaire a été créé avec succès !",
     "DOCTOR_SCHEDULE_UPDATED": "L'horaire a été modifié avec succès !",
-    "DOCTOR_SCHEDULE_DELETED": "L'horaire a été supprimé avec succès !"
+    "DOCTOR_SCHEDULE_DELETED": "L'horaire a été supprimé avec succès !",
+    "DOCTOR_TIME_OFF_REQUESTED": "Les dates de congé ont été demandées avec succès !",
+    "DOCTOR_TIME_OFF_CREATED": "Les dates de congé ont été créées avec succès !",
+    "DOCTOR_TIME_OFF_UPDATED": "Les dates de congé ont été modifiées avec succès !",
+    "DOCTOR_TIME_OF_DELETED": "Les dates de congé ont été supprimées avec succès !"
   },
   "ERROR": {
     "GENERAL": "Une erreur est survenue. Veuillez réessayer plus tard.",
     "INTERNAL_SERVER_ERROR": "Erreur interne du serveur",
     "BAD_REQUEST": "Erreur dans la requête",
+    "NOT_FOUND": "Non trouvé",
     "USER_NOT_FOUND": "L'utilisateur n'existe pas.",
     "INCORRECT_CREDENTIALS": "Le courriel ou le mot de passe est incorrect.",
     "DUPLICATE_EMAIL": "L'adresse courriel existe déjà.",

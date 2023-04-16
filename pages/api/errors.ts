@@ -45,6 +45,15 @@ export const CustomApiErrorInactiveUser = () => {
   })
 }
 
+export const CustomApiErrorNotFound = (message = 'Not found', code = 'NOT_FOUND') => {
+  return new GraphQLError(message, {
+    extensions: {
+      code,
+      http: { ok: false, status: 404 },
+    },
+  })
+}
+
 export const CustomApiErrorUserNotFound = () => {
   return new GraphQLError('User not found', {
     extensions: {

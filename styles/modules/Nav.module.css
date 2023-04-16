@@ -12,21 +12,21 @@
 }
 
 .nav ul li a {
-  @apply grid grid-cols-[32px_auto] justify-start items-center gap-1 py-3 px-2 border-s-4 border-transparent text-medium no-underline hover:border-primary-day hover:bg-primary-day-tint hover:text-light-tint visited:text-medium lg:grid-cols-[max-content] lg:before:overflow-hidden lg:before:absolute lg:before:content-[attr(title)] lg:before:text-dark lg:before:opacity-0 lg:before:transition-all lg:before:duration-300 lg:before:scale-75 lg:before:hover:opacity-100 lg:before:hover:scale-100 lg:hover:border-transparent lg:hover:bg-transparent dark:text-medium-tint dark:hover:border-primary-night-tint dark:hover:bg-primary-night-shade dark:hover:text-light dark:visited:text-medium dark:lg:before:text-white dark:lg:hover:border-transparent dark:lg:hover:bg-transparent;
+  @apply grid grid-cols-[32px_auto] justify-start items-center gap-1 py-3 px-2 border-s-4 border-transparent text-light-mode-text-secondary no-underline transition duration-700 ease-in-out hover:border-light-mode hover:bg-light-mode-tertiary hover:text-light-mode-link visited:text-light-mode-text-secondary lg:grid-cols-[max-content] lg:before:overflow-hidden lg:before:absolute lg:before:content-[attr(title)] lg:before:text-light-mode-text lg:before:opacity-0 lg:before:transition-all lg:before:duration-300 lg:before:scale-75 lg:before:hover:opacity-100 lg:before:hover:scale-100 lg:hover:border-transparent lg:hover:bg-transparent lg:hover:text-light-mode-link-target dark:text-dark-mode-text-secondary dark:hover:border-dark-mode-secondary dark:hover:bg-dark-mode-tertiary dark:hover:text-dark-mode-link dark:visited:text-dark-mode-text-secondary dark:lg:before:text-dark-mode-text dark:lg:hover:border-transparent dark:lg:hover:bg-transparent dark:lg:hover:text-dark-mode-link-target;
 }
 
 /* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
 :global(.dark) .nav ul li a {
-  @apply text-medium-tint hover:border-primary-night-tint hover:bg-primary-night-shade hover:text-light visited:text-medium lg:before:text-white lg:hover:border-transparent lg:hover:bg-transparent;
+  @apply text-dark-mode-text-secondary hover:border-dark-mode-secondary hover:bg-dark-mode-tertiary hover:text-dark-mode-link visited:text-dark-mode-text-secondary lg:before:text-dark-mode-text lg:hover:border-transparent lg:hover:bg-transparent lg:hover:text-dark-mode-link-target;
 }
 
 .nav ul li a.active {
-  @apply border-primary-day bg-primary-day-tint text-light-tint lg:border-transparent lg:bg-transparent lg:text-primary-day-shade dark:border-primary-night-tint dark:bg-primary-night-shade dark:text-light dark:lg:border-transparent dark:lg:bg-transparent dark:lg:text-primary-night-tint;
+  @apply border-light-mode bg-light-mode-tertiary text-light-mode-link lg:border-transparent lg:bg-transparent lg:text-light-mode dark:border-dark-mode-secondary dark:bg-dark-mode-tertiary dark:text-dark-mode-link dark:lg:border-transparent dark:lg:bg-transparent dark:lg:text-dark-mode;
 }
 
 /* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
 :global(.dark) .nav ul li a.active {
-  @apply border-primary-night-tint bg-primary-night-shade text-light lg:border-transparent lg:bg-transparent lg:text-primary-night-tint;
+  @apply border-dark-mode-secondary bg-dark-mode-tertiary text-dark-mode-link lg:border-transparent lg:bg-transparent lg:text-dark-mode;
 }
 
 .nav ul li a svg {

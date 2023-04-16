@@ -21,12 +21,12 @@ table {
   @apply grid grid-flow-col justify-center items-center gap-2;
 }
 
-.table-column-wrapper button[type='button'] {
+.table-column-wrapper > button {
   @apply p-0;
 }
 
 .table-pagination {
-  @apply items-center p-2;
+  @apply items-center py-2;
 }
 
 .table-pagination__items-displayed,
@@ -39,7 +39,7 @@ table {
 }
 
 .table-pagination__navigation ol li {
-  @apply grid justify-center items-center min-w-[36px] min-h-[36px] bg-light-shade;
+  @apply grid justify-center items-center min-w-[36px] min-h-[36px];
 }
 
 .table-pagination__navigation ol li button {
@@ -48,36 +48,36 @@ table {
 
 /* Admin Console */
 table.admin-console {
-  @apply table-auto border-separate border-spacing-0 bg-light-shade text-dark dark:bg-dark-shade dark:text-light;
+  @apply table-auto border-separate border-spacing-0 bg-light-mode-foreground dark:bg-dark-mode-foreground;
 }
 
 table.admin-console thead {
-  @apply bg-primary-day text-light dark:bg-primary-night-shade;
+  @apply bg-light-mode text-white dark:bg-dark-mode;
 }
 
-table.admin-console th,
-table.admin-console td {
+table.admin-console thead tr th,
+table.admin-console tbody tr td {
   @apply p-2 border;
 }
 
-table.admin-console th {
-  @apply min-w-[150px] border-light-shade bg-primary-day font-normal whitespace-nowrap dark:border-dark-shade dark:bg-primary-night-shade;
+table.admin-console thead th {
+  @apply min-w-[150px] border-light-mode-border/25 font-normal whitespace-nowrap dark:border-dark-mode-border/5;
 }
 
 table.admin-console tbody tr {
-  @apply hover:bg-light-shade dark:hover:bg-dark-tint;
+  @apply hover:text-light-mode-secondary hover:font-medium dark:hover:text-dark-mode-secondary;
 }
 
-table.admin-console tbody tr:nth-child(odd) td {
-  @apply bg-light dark:bg-dark;
+table.admin-console tbody tr:nth-child(odd) {
+  @apply bg-light-mode-background dark:bg-dark-mode-background;
 }
 
-table.admin-console td {
-  @apply border-light-tint bg-light-shade text-center dark:bg-dark-shade dark:border-dark-tint;
+table.admin-console tbody tr td {
+  @apply border-light-mode-border/25 text-center dark:border-dark-mode-border/5;
 }
 
 .table-pagination__navigation ol li {
-  @apply dark:bg-dark-shade;
+  @apply dark:bg-dark-mode-background-secondary;
 }
 
 table.admin-console .admin-console__user-actions {

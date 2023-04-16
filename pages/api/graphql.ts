@@ -1,4 +1,4 @@
-import { Appointment, Contact, Doctor, DoctorSchedule, Patient, Prisma, User } from '@prisma/client'
+import { Appointment, Contact, Doctor, DoctorDepartment, DoctorSchedule, Patient, Prisma, User } from '@prisma/client'
 import { compare, hash } from 'bcrypt'
 import { createSchema, createYoga } from 'graphql-yoga'
 import { omit } from 'lodash-es'
@@ -18,6 +18,7 @@ import {
   CustomApiErrorDuplicateUsername,
   CustomApiErrorInactiveUser,
   CustomApiErrorInvalidToken,
+  CustomApiErrorNotFound,
   CustomApiErrorUserNotFound,
 } from 'pages/api/errors'
 import { Helpers } from 'pages/api/helpers'
@@ -46,8 +47,13 @@ const typeDefs = `
     roles: [Int]
     languages: [String]
     active: Boolean
-    orderBy: String
+    order_by: String
     sort: String
+  }
+
+  input GetAvailableDoctorsParams {
+    department_id: Int
+    start_date: Timestamp
   }
 
   input UserInput {
@@ -121,7 +127,6 @@ const typeDefs = `
   }
 
   input DoctorScheduleInput {
-    id: ID
     doctor_id: Int
     weekday: Int
   }
@@ -191,7 +196,8 @@ const typeDefs = `
     created_at: Timestamp!
     updated_at: Timestamp
     User: User
-    Department: DoctorDepartment
+    DoctorDepartment: DoctorDepartment
+    DoctorSchedule: [DoctorSchedule]
   }
 
   type DoctorDepartment {
@@ -211,26 +217,6 @@ const typeDefs = `
     Doctor: Doctor
   }
 
-  type DoctorTimeOff {
-    id: ID!
-    doctor_id: Int!
-    start_date: Timestamp!
-    end_date: Timestamp!
-    reason: String
-    status_id: Int!
-    created_at: Timestamp!
-    updated_at: Timestamp
-    Doctor: Doctor
-    Status: DoctorTimeOffStatus
-  }
-
-  type DoctorTimeOffStatus {
-    id: ID!
-    status: String!
-    created_at: Timestamp!
-    updated_at: Timestamp
-  }
-
   type Patient {
     id: ID!
     user_id: Int!
@@ -246,10 +232,8 @@ const typeDefs = `
     id: ID!
     patient_id: Int!
     doctor_id: Int!
-    reason: String
-    start_time: Timestamp!
-    end_time: Timestamp!
-    notes: String
+    start_date: Timestamp!
+    end_date: Timestamp!
     created_at: Timestamp!
     updated_at: Timestamp
     Doctor: Doctor
@@ -277,10 +261,13 @@ const typeDefs = `
     getUsers(params: GetUsersParams): GetUsersResponse!
     getUserById(id: Int!): User!
 
-    getDoctorScheduleByDoctorId(id: Int): [DoctorSchedule]
+    getDoctorsByDepartmentId(id: Int!): [Doctor]
+    getAvailableDoctors(params: GetAvailableDoctorsParams): [Doctor]
+    getDoctorDepartmentById(id: Int!): DoctorDepartment
+    getDoctorScheduleByDoctorId(id: Int!): [DoctorSchedule]
 
-    getAppointmentsByDoctorId(id: Int): [Appointment]
-    getAppointmentsByPatientId(id: Int): [Appointment]
+    getAppointmentsByDoctorId(id: Int!): [Appointment]
+    getAppointmentsByPatientId(id: Int!): [Appointment]
   }
 
   type Mutation {
@@ -370,7 +357,7 @@ const resolvers = {
 
       if (args.params?.orderBy) {
         orderByClause = {
-          orderBy: {
+          order_by: {
             [args.params?.orderBy]: args.params?.sort ?? Prisma.SortOrder.asc,
           },
         }
@@ -418,6 +405,45 @@ const resolvers = {
     /******************************
      *  Doctor
      ******************************/
+    getDoctorsByDepartmentId: async (parent: unknown, args: GQLGetByIdParams): Promise<Doctor[]> => {
+      const doctors = await prisma.doctor.findMany({
+        where: { department_id: args.id },
+        include: {
+          User: true,
+          DoctorDepartment: true,
+          DoctorSchedule: true,
+        },
+      })
+      if (!doctors) throw CustomApiErrorNotFound()
+
+      return doctors
+    },
+    getAvailableDoctors: async (
+      parent: unknown,
+      args: GQLGetParams<{ department_id: number; start_date: Date }>
+    ): Promise<Doctor[]> => {
+      const doctors = await prisma.doctor.findMany({
+        where: {
+          department_id: args.params.department_id,
+          DoctorSchedule: { some: { weekday: { equals: new Date(args.params.start_date).getDay() } } },
+        },
+        include: {
+          User: true,
+          DoctorDepartment: true,
+          DoctorSchedule: true,
+        },
+      })
+
+      if (!doctors) throw CustomApiErrorNotFound()
+
+      return doctors
+    },
+    getDoctorDepartmentById: async (parent: unknown, args: GQLGetByIdParams): Promise<DoctorDepartment> => {
+      const doctorDepartment = await prisma.doctorDepartment.findFirst({ where: { id: args.id } })
+      if (!doctorDepartment) throw CustomApiErrorNotFound()
+
+      return doctorDepartment
+    },
     getDoctorScheduleByDoctorId: async (parent: unknown, args: GQLGetByIdParams): Promise<DoctorSchedule[]> => {
       return await prisma.doctorSchedule.findMany({
         where: { doctor_id: args.id },
@@ -439,7 +465,7 @@ const resolvers = {
       return await prisma.appointment.findMany({
         where: { patient_id: args.id },
         include: { Doctor: { include: { User: true, DoctorDepartment: true } } },
-        orderBy: { start_time: Prisma.SortOrder.asc },
+        orderBy: { start_date: Prisma.SortOrder.asc },
       })
     },
   },
@@ -875,7 +901,7 @@ const resolvers = {
     },
     createDoctorSchedule: async (parent: unknown, args: GQLPostInput<DoctorSchedule[]>): Promise<ISuccessResponse> => {
       const doctorSchedule = await prisma.$transaction(
-        args.input.map((schedule) =>
+        args.input.map((schedule: DoctorSchedule) =>
           prisma.doctorSchedule.create({
             data: {
               doctor_id: schedule.doctor_id,
@@ -1035,6 +1061,11 @@ const resolvers = {
 
       return { message: 'ACCOUNT_UPDATED' }
     },
+
+    /******************************
+     *  Appointment
+     ******************************/
+    // createAppointment: async (parent: unknown, args: GQLPostInput<Appointment>): Promise<ISuccessResponse> => {},
   },
 }
 

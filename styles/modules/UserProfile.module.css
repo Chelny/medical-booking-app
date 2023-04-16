@@ -1,19 +1,19 @@
 .list {
-  @apply grid grid-flow-col grid-cols-tab justify-evenly gap-1 px-1 rounded-lg bg-light dark:bg-primary-night-shade;
+  @apply grid grid-flow-col grid-cols-tab justify-evenly gap-1 px-1 rounded-lg bg-gradient-to-r from-light-mode/75 to-75% to-light-mode dark:from-dark-mode/75 dark:to-dark-mode;
 }
 
 /* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
 :global(.dark) .list {
-  @apply bg-primary-night-shade;
+  @apply from-dark-mode/75 to-dark-mode;
 }
 
 .tab {
-  @apply flex flex-col justify-center items-center py-2.5 rounded-md font-medium ui-not-selected:bg-light ui-not-selected:text-medium ui-selected:shadow ui-selected:bg-primary-day ui-selected:text-white dark:ui-not-selected:bg-primary-night-shade dark:ui-not-selected:text-white dark:ui-selected:bg-primary-night;
+  @apply flex flex-col justify-center items-center py-2.5 rounded-md font-medium text-light-mode ui-selected:shadow ui-selected:bg-white ui-not-selected:text-white ui-not-selected:hover:bg-white/[0.12] dark:text-white dark:ui-selected:bg-black/[0.30] dark:ui-not-selected:text-white dark:ui-not-selected:hover:bg-black/[0.12];
 }
 
 /* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
 :global(.dark) .tab {
-  @apply ui-not-selected:bg-primary-night-shade ui-not-selected:text-white ui-selected:bg-primary-night;
+  @apply text-white ui-selected:bg-black/[0.30] ui-not-selected:text-white ui-not-selected:hover:bg-black/[0.12];
 }
 
 .panels {

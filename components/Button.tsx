@@ -13,12 +13,7 @@ type ButtonProps = {
 
 const Button = ({ children, type, className, disabled, handleClick }: ButtonProps): JSX.Element => {
   return (
-    <button
-      type={type ?? 'button'}
-      className={`${styles.btn} ${className ?? ''}`}
-      disabled={disabled}
-      onClick={handleClick}
-    >
+    <button type={type} className={`${styles.btn} ${className ?? ''}`} disabled={disabled} onClick={handleClick}>
       {children}
     </button>
   )

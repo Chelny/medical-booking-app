@@ -27,7 +27,7 @@ const FormElement = ({
   const fieldNameUpperSnakeCase = TextFormatUtil.camelCaseToSnakeCase(fieldName ?? '').toUpperCase()
 
   return (
-    <div className={`flex flex-col mb-4 ${error ? 'form-validation-failed' : ''}`}>
+    <div className={`flex flex-col mb-4 ${error ? 'group form-validation-failed' : ''}`}>
       {fieldName && !isLabelHidden && (
         <label htmlFor={fieldNameKebab} className="flex flex-row justify-between mb-0.5 tracking-wide">
           <span>
@@ -40,12 +40,15 @@ const FormElement = ({
       {children}
       {hints &&
         hints.map((hint) => (
-          <p key={hint} className="text-medium text-sm dark:text-medium-shade dark:opacity-60">
+          <p key={hint} className="text-light-mode-text-tertiary text-sm dark:text-dark-mode-text-tertiary">
             {t(`FORM.HINT.${hint}`)}
           </p>
         ))}
       {error && (
-        <p id={`${Common.ERROR_MESSAGE_ID_PREFIX}_${fieldName}`} className="text-error">
+        <p
+          id={`${Common.ERROR_MESSAGE_ID_PREFIX}_${fieldName}`}
+          className="text-light-mode-error dark:text-dark-mode-error"
+        >
           {t(`FORM.ERROR.${error}`)}
         </p>
       )}

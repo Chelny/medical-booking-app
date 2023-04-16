@@ -87,13 +87,13 @@ const Modal = ({
                 <div className={styles.dialogContent}>{children}</div>
 
                 <div className={styles.actionButtons}>
-                  <Button type="button" className={styles.cancelBtn} handleClick={closeModal}>
+                  <Button type="button" className={styles.btnCancel} handleClick={closeModal}>
                     {(cancelButton && cancelButton.label) ?? t('BUTTON.CANCEL')}
                   </Button>
                   {confirmButton && (
                     <Button
                       type="submit"
-                      className={`${styles.confirmBtn} ${confirmButton.type === 'DANGER' ? styles.btnDanger : ''}`}
+                      className={`${confirmButton.type === 'DANGER' ? styles.btnDanger : ''}`}
                       disabled={confirmButton.disabled}
                     >
                       {confirmButton && confirmButton.label}

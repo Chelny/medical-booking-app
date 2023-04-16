@@ -10,12 +10,17 @@
     "LOGOUT": "You have successfully logged out!",
     "DOCTOR_SCHEDULE_CREATED": "The schedule has been successfully created!",
     "DOCTOR_SCHEDULE_UPDATED": "The schedule has been successfully updated!",
-    "DOCTOR_SCHEDULE_DELETED": "The schedule has been successfully deleted!"
+    "DOCTOR_SCHEDULE_DELETED": "The schedule has been successfully deleted!",
+    "DOCTOR_TIME_OFF_REQUESTED": "The time off dates have been successfully requested!",
+    "DOCTOR_TIME_OFF_CREATED": "The time off dates have been successfully created!",
+    "DOCTOR_TIME_OFF_UPDATED": "The time off dates have been successfully updated!",
+    "DOCTOR_TIME_OFF_DELETED": "The time off dates have been successfully deleted!"
   },
   "ERROR": {
     "GENERAL": "An error has occurred. Please try again later.",
     "INTERNAL_SERVER_ERROR": "Internal server error",
     "BAD_REQUEST": "Bad request",
+    "NOT_FOUND": "Not Found",
     "USER_NOT_FOUND": "The user doesn't exists.",
     "INCORRECT_CREDENTIALS": "The email or the password is incorrect.",
     "DUPLICATE_EMAIL": "The email address already exists.",

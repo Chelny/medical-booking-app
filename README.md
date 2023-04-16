@@ -21,7 +21,7 @@
   <a href="#websites">Websites</a>
 </p>
 
-![screenshot](public/assets/images/github/home-page-desktop.png)
+![screenshot](public/assets/images/github/desktop-home-page.png)
 
 ## How To Use
 
@@ -35,7 +35,7 @@ $ git clone https://github.com/chelny/medical-booking-app
 $ cd medical-booking-app
 ```
 
-First, you must create the "MedicalBookingApp" database. You'll find the .sql file in the root directory of the project (eg.: `MedicalBookingApp_2022-01-01.sql`). Import this file to your local database.
+First, you must create the "MedicalBookingApp" database. You will find the .sql file in the root directory of the project (eg.: _`MedicalBookingApp_[YYYY-MM-DD].sql`_). Import this file to your local database. \*\*\_NOTE_**: The MySQL version must be at **8.0.32.\*\*
 
 Then, set up Prisma:
 
@@ -80,7 +80,7 @@ A sample of the `.env` file is available at `.env.example`.
 
 ### Run the project
 
-Open the terminal and execute the following scripts:
+On the terminal, execute the following scripts:
 
 ```bash
 # Change directory to the root of the project
@@ -95,7 +95,7 @@ $ yarn dev
 
 Open the browser and go to http://localhost:3000/. You should see the login page.
 
-GraphQL playground is accessible at http://localhost:3000/api/graphql.
+GraphQL playground is accessible at http://localhost:3000/api/graphql in case you need it.
 
 <br/>
 
@@ -103,12 +103,16 @@ GraphQL playground is accessible at http://localhost:3000/api/graphql.
 
 A user can either use their `username` or `email` to log in into their account.
 
-| Username  |               Email               |  Password  |  Role   |
-| :-------: | :-------------------------------: | :--------: | :-----: |
-|   admin   |     admin@medical-booking.app     | Admin1234! |  Admin  |
-|    --     | z.donatas+dev@medical-booking.app |    ???     | Doctor  |
-| dr.gputra |    g.putra@medical-booking.app    | Test1234!  | Doctor  |
-| norigami  |     worigami85@hotmail.local      | Test1234!  | Patient |
+|     Username      |              Email              |  Password  |  Role   | Active |
+| :---------------: | :-----------------------------: | :--------: | :-----: | :----: |
+|       admin       |    admin@medical-booking.app    | Admin1234! |  Admin  |  Yes   |
+|    r_marchant     |    r.marchant@example.local     | Test1234!  | Doctor  |  Yes   |
+|      dr.mlb       |  m.lord-bertrand@example.local  | Test1234!  | Doctor  |  Yes   |
+|        --         |     r.norbert@example.local     | Test1234!  | Doctor  |  Yes   |
+|      chelny       |      chelny@example.local       | Test1234!  | Patient |  Yes   |
+| michelle_mcgill85 | michelle_mcgill85@example.local | Test1234!  | Patient |   No   |
+
+There is a total of 10 users in the database: 3 admins, 5 doctors and 2 patients.
 
 <p align="end">(<a href="#readme-top">back to top</a>)</p>
 

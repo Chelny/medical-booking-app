@@ -1,34 +1,25 @@
 .btn {
-  @apply w-full px-4 py-2 shadow-sm my-1 rounded-md disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply w-[inherit] px-4 py-2 my-1 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition duration-700 ease-in-out;
 }
 
 form .btn {
-  @apply text-white;
+  @apply text-white hover:scale-110;
 }
 
 form .btn[type='button'] {
-  @apply bg-primary-day-tint dark:bg-primary-night-shade;
+  @apply shadow-sm bg-light-mode-secondary dark:bg-dark-mode-tertiary;
 }
 
 /* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
 :global(.dark) form .btn[type='button'] {
-  @apply bg-primary-night-shade;
+  @apply bg-dark-mode-tertiary;
 }
 
 form .btn[type='submit'] {
-  @apply bg-primary-day dark:bg-primary-night;
+  @apply shadow-sm bg-light-mode dark:bg-dark-mode;
 }
 
 /* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
 :global(.dark) form .btn[type='submit'] {
-  @apply bg-primary-night;
-}
-
-form .btn[type='reset'] {
-  @apply bg-medium-tint text-black dark:bg-dark-tint dark:text-white;
-}
-
-/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
-:global(.dark) form .btn[type='reset'] {
-  @apply bg-dark-tint text-white;
+  @apply bg-dark-mode;
 }

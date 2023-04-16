@@ -49,7 +49,9 @@ const ForgotPassword: NextPage = () => {
             onChange={handleChange}
           />
         </FormElement>
-        <Button type="submit">{t('SEND_EMAIL', { ns: 'forgot-password' })}</Button>
+        <div className="w-full">
+          <Button type="submit">{t('SEND_EMAIL', { ns: 'forgot-password' })}</Button>
+        </div>
       </form>
     </>
   )

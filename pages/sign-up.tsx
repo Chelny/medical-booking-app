@@ -206,7 +206,7 @@ const SignUp: NextPage = (): JSX.Element => {
                   type="checkbox"
                   id="termsAndConditions"
                   checked={values.termsAndConditions}
-                  aria-required="true"
+                  aria-required={true}
                   aria-invalid={!!errors.termsAndConditions}
                   aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_termsAndConditions`}
                   onChange={handleChange}

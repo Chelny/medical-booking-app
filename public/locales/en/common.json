@@ -138,6 +138,10 @@
       "CURRENT_PAGE": "Showing {{offset}} to {{lastItem}} of {{total}} entries"
     }
   },
+  "ARIA_LABEL": {
+    "CLOSE": "Close",
+    "MENU": "Menu"
+  },
   "THEME_SELECTOR": {
     "LABEL": "Switch Theme",
     "THEMES": {

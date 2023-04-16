@@ -119,7 +119,9 @@ const ResetPassword: NextPage = () => {
             onChange={handleChange}
           />
         </FormElement>
-        <Button type="submit">{t('RESET_PASSWORD', { ns: 'reset-password' })}</Button>
+        <div className="w-full">
+          <Button type="submit">{t('RESET_PASSWORD', { ns: 'reset-password' })}</Button>
+        </div>
       </form>
     </>
   )

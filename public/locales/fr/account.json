@@ -1,9 +1,9 @@
 {
   "PROFILE": {
-    "PERSONAL_INFORMATION": "Informations personnelles",
-    "LOGIN_INFORMATION": "Informations de connexion",
+    "PERSONAL_INFORMATION": "Général",
+    "LOGIN_INFORMATION": "Connexion",
     "CONTACT_INFORMATION": "Coordonnées",
-    "DOCTOR_INFORMATION": "Informations sur l'employé",
-    "PATIENT_INFORMATION": "Informations sur le patient"
+    "DOCTOR_INFORMATION": "Employé",
+    "PATIENT_INFORMATION": "Patient"
   }
 }

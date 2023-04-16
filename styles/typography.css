@@ -1,25 +1,22 @@
 @layer base {
-  h1,
-  h2,
-  h3,
-  fieldset > legend {
-    @apply mb-4;
-  }
-
   h1 {
-    @apply m-0 dark:text-white;
+    @apply m-0;
   }
 
   h2 {
-    @apply text-2xl;
+    @apply mb-4 text-light-mode font-medium uppercase dark:text-dark-mode text-2xl;
+  }
+
+  h3 {
+    @apply text-light-mode-secondary dark:text-dark-mode-secondary;
   }
 
   h3,
-  h2 + fieldset > legend {
-    @apply text-lg;
+  form > fieldset > legend {
+    @apply text-xl;
   }
 
   a {
-    @apply text-secondary underline underline-offset-2 transition-colors hover:text-secondary-tint visited:text-secondary dark:text-secondary-tint dark:hover:text-secondary dark:visited:text-secondary-tint;
+    @apply text-light-mode-link underline underline-offset-2 transition-colors hover:text-light-mode-link-target visited:text-light-mode-link dark:text-dark-mode-link dark:hover:text-dark-mode-link-target dark:visited:text-dark-mode-link;
   }
 }
