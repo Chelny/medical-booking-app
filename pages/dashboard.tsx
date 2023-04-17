@@ -80,8 +80,7 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
     <>
       <h2>{t('WELCOME', { ns: 'dashboard', context: timePeriod, name: user.first_name })}</h2>
 
-      {/* TODO: */}
-      {/* <div className="w-full mb-6 md:w-fit">
+      <div className="w-full mb-6 md:w-fit">
         <Button
           type="button"
           className="bg-light-mode-success dark:bg-dark-mode-success"
@@ -89,7 +88,7 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
         >
           {t('BOOK_APPOINTMENT', { ns: 'dashboard' })}
         </Button>
-      </div> */}
+      </div>
 
       <Calendar
         calendarType="US"

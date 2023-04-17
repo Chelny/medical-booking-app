@@ -71,6 +71,7 @@ module.exports = {
         listbox: '16px max-content',
         'radio-group': '1fr 16px',
         tab: 'repeat(auto-fit, minmax(50px, 1fr))',
+        'phone-number-md': 'auto minmax(100px, max-content)',
       },
       width: {
         'max-content': 'max-content',

@@ -114,7 +114,7 @@ const UserProfileContactInfo = ({ values, errors, handleChange }: UserProfileCon
           onChange={(e) => InputMaskUtil.maskPostCode(e, values, setPostCode, setPostCodeMaxLength, handleChange)}
         />
       </FormElement>
-      <div className="grid md:landscape:grid-cols-[auto_max-content] md:landscape:gap-4">
+      <div className="grid md:grid-cols-phone-number-md md:gap-4">
         <FormElement fieldName="phoneNumber" hints={['PHONE_NUMBER_FORMAT']} error={errors.phoneNumber}>
           <input
             data-testid="form-input-phone-number"

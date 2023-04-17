@@ -34,11 +34,11 @@ input[type='date']::-webkit-calendar-picker-indicator {
 }
 
 .checkbox-radio-group {
-  @apply flex flex-row flex-wrap justify-between mb-[5px];
+  @apply flex flex-row justify-between;
 }
 
 .checkbox-radio-group > legend {
-  @apply mb-[13px] text-sm;
+  @apply mb-1.5 text-sm;
 }
 
 input[type='checkbox']:checked,
@@ -115,10 +115,15 @@ textarea {
 }
 
 /* TODO: Invalid input border - Use :invalid pseudo-class? */
-.form-validation-failed input,
+.form-validation-failed input:not([type='checkbox']):not([type='radio']),
 .form-validation-failed textarea,
 .form-validation-failed select {
   @apply !border-light-mode-error dark:!border-dark-mode-error;
+}
+
+.form-validation-failed input[type='checkbox']:not(:checked) + label,
+.form-validation-failed input[type='radio']:not(:checked) + label {
+  @apply before:!border-light-mode-error dark:before:!border-dark-mode-error;
 }
 
 form button,

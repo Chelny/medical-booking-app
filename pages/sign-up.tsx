@@ -145,7 +145,7 @@ const SignUp: NextPage = (): JSX.Element => {
       return e
     },
     onSubmit: async () => {
-      const payload = `first_name: "${values.firstName}", last_name: "${values.lastName}", gender: "${
+      const payload = `{ first_name: "${values.firstName}", last_name: "${values.lastName}", gender: "${
         values.gender
       }", birth_date: "${values.birthDate}", email: "${values.email}", username: ${
         values.username ? `"${values.username}"` : null
@@ -159,11 +159,11 @@ const SignUp: NextPage = (): JSX.Element => {
         values.phoneNumberExt ? `"${values.phoneNumberExt}"` : null
       }, medical_id: "${values.medicalId}", height: ${values.height ? `"${values.height}"` : null}, weight: ${
         values.weight ? `"${values.weight}"` : null
-      }`
+      } }`
 
       const { data, errors } = await useRequest<SignUpGQLResponse>(
         `mutation {
-          signUp(input: {${payload}}) {
+          signUp(input: ${payload}) {
             token
             message
           }

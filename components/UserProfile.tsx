@@ -7,7 +7,6 @@ import { isEmpty, omit } from 'lodash-es'
 import { useTranslation } from 'next-i18next'
 import { toast } from 'react-toastify'
 import BackButton from 'components/BackButton'
-import Button from 'components/Button'
 import ConditionalWrap from 'components/ConditionalWrap'
 import UserProfileContactInfo from 'components/form/UserProfileContactInfo'
 import UserProfileDoctorInfo from 'components/form/UserProfileDoctorInfo'
@@ -64,6 +63,7 @@ const UserProfile = ({
 
   const { values, errors, handleChange, handleSubmit } = useForm({
     initialValues: {
+      id: user?.id ?? '',
       firstName: user?.first_name ?? '',
       lastName: user?.last_name ?? '',
       gender: user?.gender ?? '',
@@ -201,9 +201,7 @@ const UserProfile = ({
       return e
     },
     onSubmit: async () => {
-      let payload = ''
-
-      if (user?.id) payload += `id: ${user.id}, `
+      let payload = '{'
 
       payload += `first_name: "${values.firstName}", last_name: "${values.lastName}", gender: "${
         values.gender
@@ -233,47 +231,49 @@ const UserProfile = ({
         }, weight: ${values.weight ? `"${values.weight}"` : null}`
       }
 
+      payload += '}'
+
       let data, errors
 
       if (isUserDoctor) {
-        if (user?.id) {
+        if (values?.id) {
           // eslint-disable-next-line @typescript-eslint/no-extra-semi
           ;({ data, errors } = await useRequest<UpdateDoctorGQLResponse>(
-            `mutation { updateDoctor({ id: ${values.id}, input: ${payload} }) { message } }`
+            `mutation { updateDoctor(id: ${values.id}, input: ${payload}) { message } }`
           ))
           if (data) toast.success<string>(t(`SUCCESS.${data.updateDoctor.message}`, { ns: 'api' }))
         } else {
           // eslint-disable-next-line @typescript-eslint/no-extra-semi
           ;({ data, errors } = await useRequest<CreateDoctorGQLResponse>(
-            `mutation { createDoctor({ input: ${payload} }) { message } }`
+            `mutation { createDoctor(input: ${payload}) { message } }`
           ))
           if (data) toast.success<string>(t(`SUCCESS.${data.createDoctor.message}`, { ns: 'api' }))
         }
       } else if (isUserPatient) {
-        if (user?.id) {
+        if (values?.id) {
           // eslint-disable-next-line @typescript-eslint/no-extra-semi
           ;({ data, errors } = await useRequest<UpdatePatientGQLResponse>(
-            `mutation { updatePatient({ id: ${values.id}, input: ${payload} }) { message } }`
+            `mutation { updatePatient(id: ${values.id}, input: ${payload}) { message } }`
           ))
           if (data) toast.success<string>(t(`SUCCESS.${data.updatePatient.message}`, { ns: 'api' }))
         } else {
           // eslint-disable-next-line @typescript-eslint/no-extra-semi
           ;({ data, errors } = await useRequest<CreatePatientGQLResponse>(
-            `mutation { createPatient({ input: ${payload} }) { message } }`
+            `mutation { createPatient(input: ${payload}) { message } }`
           ))
           if (data) toast.success<string>(t(`SUCCESS.${data.createPatient.message}`, { ns: 'api' }))
         }
       } else {
-        if (user?.id) {
+        if (values?.id) {
           // eslint-disable-next-line @typescript-eslint/no-extra-semi
           ;({ data, errors } = await useRequest<UpdateAdminGQLResponse>(
-            `mutation { updateAdmin({ id: ${values.id}, input: ${payload} }) { message } }`
+            `mutation { updateAdmin(id: ${values.id}, input: ${payload}) { message } }`
           ))
           if (data) toast.success<string>(t(`SUCCESS.${data.updateAdmin.message}`, { ns: 'api' }))
         } else {
           // eslint-disable-next-line @typescript-eslint/no-extra-semi
           ;({ data, errors } = await useRequest<CreateAdminGQLResponse>(
-            `mutation { createAdmin({ input: ${payload} }) { message } }`
+            `mutation { createAdmin(input: ${payload}) { message } }`
           ))
           if (data) toast.success<string>(t(`SUCCESS.${data.createAdmin.message}`, { ns: 'api' }))
         }

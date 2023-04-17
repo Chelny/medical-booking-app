@@ -47,7 +47,7 @@ export const Regex = {
    *
    * Source: https://stackoverflow.com/a/12019115
    */
-  USERNAME_PATTERN: /^(?=[a-zA-Z0-9._]{5,16}$)(?!.*[_.]{2})[^_.].*[^_.]$/,
+  USERNAME_PATTERN: /^(?=[a-zA-Z0-9._]{5,16})(?!.*[_.]{2})[^_.].*[^_.]$/,
   /**
    * Zip Code Pattern
    * Canada: A0A 0A0

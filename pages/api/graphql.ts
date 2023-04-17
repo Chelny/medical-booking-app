@@ -885,7 +885,7 @@ const resolvers = {
               department_id: args.input.department_id,
               image_name: args.input.image_name,
               start_date: TextFormatUtil.utcToZonedTime(args.input.start_date),
-              end_date: TextFormatUtil.utcToZonedTime(args.input.end_date),
+              end_date: args.input.end_date ? TextFormatUtil.utcToZonedTime(args.input.end_date) : null,
             },
           },
         },

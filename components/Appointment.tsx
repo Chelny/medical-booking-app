@@ -1,9 +1,12 @@
 import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Disclosure, Transition } from '@headlessui/react'
 import { Appointment, User } from '@prisma/client'
 import { add, addMinutes, isEqual, set } from 'date-fns'
 import { useTranslation } from 'next-i18next'
 import { toast } from 'react-toastify'
 import ConditionalWrap from 'components/ConditionalWrap'
+import FormElement from 'components/form/FormElement'
 import Modal, { ModalSize } from 'components/Modal'
 import { Common } from 'constants/common'
 import { Regex } from 'constants/regex'
@@ -174,6 +177,40 @@ const Appointment = ({
       )}
     >
       <>
+        <Disclosure>
+          <Disclosure.Button className="bg-highlight">
+            Do you offer technical support?
+            <FontAwesomeIcon icon="chevrons-up" className="ui-open:rotate-90 ui-open:transform" />
+          </Disclosure.Button>
+
+          <Transition
+            enter="transition duration-100 ease-out"
+            enterFrom="transform scale-95 opacity-0"
+            enterTo="transform scale-100 opacity-100"
+            leave="transition duration-75 ease-out"
+            leaveFrom="transform scale-100 opacity-100"
+            leaveTo="transform scale-95 opacity-0"
+          >
+            <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">No</Disclosure.Panel>
+          </Transition>
+        </Disclosure>
+        <br />
+        <br />
+        - Change Date <br />
+        <FormElement fieldName="startDate" error={errors.startDate}>
+          <input
+            data-testid="form-input-birth-date"
+            type="date"
+            id="startDate"
+            min={Common.BIRTH_DATE.MIN}
+            max={Common.BIRTH_DATE.MAX}
+            value={values.startDate}
+            aria-required={true}
+            aria-invalid={!!errors.startDate}
+            aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_startDate`}
+            onChange={handleChange}
+          />
+        </FormElement>
         - Select Department <br />
         {/* <FormElement fieldName="departmentId" error={errors.departmentId}> */}
         <select
