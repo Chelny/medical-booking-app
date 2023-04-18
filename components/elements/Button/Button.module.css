@@ -1,0 +1,25 @@
+.button {
+  @apply w-[inherit] px-4 py-2 my-1 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition duration-700 ease-in-out;
+}
+
+form .button {
+  @apply text-white hover:scale-110;
+}
+
+form .button[type='button'] {
+  @apply shadow-sm bg-light-mode-secondary dark:bg-dark-mode-tertiary;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) form .button[type='button'] {
+  @apply bg-dark-mode-tertiary;
+}
+
+form .button[type='submit'] {
+  @apply shadow-sm bg-light-mode dark:bg-dark-mode;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) form .button[type='submit'] {
+  @apply bg-dark-mode;
+}

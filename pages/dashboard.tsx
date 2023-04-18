@@ -7,10 +7,11 @@ import { GraphQLError } from 'graphql'
 import jwt_decode from 'jwt-decode'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import Calendar, { CalendarTileProperties } from 'react-calendar'
+import Calendar from 'react-calendar'
+import CalendarTileProperties from 'react-calendar'
 import { toast } from 'react-toastify'
-import Appointment from 'components/Appointment'
-import Button from 'components/Button'
+import Button from 'components/elements/Button/Button'
+import Appointment from 'components/templates/Appointment/Appointment'
 import { Common } from 'constants/common'
 import { IPatientAppointement } from 'dtos/user-appointment.response'
 import { UserRole } from 'enums/user-role.enum'
@@ -80,7 +81,8 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
     <>
       <h2>{t('WELCOME', { ns: 'dashboard', context: timePeriod, name: user.first_name })}</h2>
 
-      <div className="w-full mb-6 md:w-fit">
+      {/* TODO: Complete */}
+      {/* <div className="w-full mb-6 md:w-fit">
         <Button
           type="button"
           className="bg-light-mode-success dark:bg-dark-mode-success"
@@ -88,7 +90,7 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
         >
           {t('BOOK_APPOINTMENT', { ns: 'dashboard' })}
         </Button>
-      </div>
+      </div> */}
 
       <Calendar
         calendarType="US"
@@ -97,14 +99,15 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
         maxDate={Common.CALENDAR.MAX_DATE}
         showDoubleView={width >= Common.BREAKPOINT.MD}
         className="lg:max-w-[768px]"
-        tileClassName={({ date }: CalendarTileProperties) =>
-          appointments.find((appointment: IPatientAppointement) =>
-            isEqual(new Date(appointment.start_date).setHours(0, 0, 0, 0), date)
-          )
-            ? 'has-appointments'
-            : null
-        }
-        onChange={handleSelectDate}
+        // FIXME: Error since upgrade
+        // tileClassName={({ date }: CalendarTileProperties) =>
+        //   appointments.find((appointment: IPatientAppointement) =>
+        //     isEqual(new Date(appointment.start_date).setHours(0, 0, 0, 0), date)
+        //   )
+        //     ? 'has-appointments'
+        //     : null
+        // }
+        // onChange={handleSelectDate}
       />
 
       <section

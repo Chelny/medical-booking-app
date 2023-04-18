@@ -9,9 +9,9 @@ import { isEqual } from 'lodash-es'
 import { appWithTranslation } from 'next-i18next'
 import { ThemeProvider } from 'next-themes'
 import { ToastContainer, Flip, Slide } from 'react-toastify'
-import Footer from 'components/layout/Footer'
-import Header from 'components/layout/Header'
-import PageLayout from 'components/layout/PageLayout'
+import PageLayout from 'components/layouts/PageLayout/PageLayout'
+import Footer from 'components/modules/Footer/Footer'
+import Header from 'components/modules/Header/Header'
 import { Common } from 'constants/common'
 import { useWindowSize } from 'hooks/useWindowSize'
 // The following import prevents a Font Awesome icon server-side rendering bug,
@@ -38,16 +38,18 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
+        <meta charSet="utf-8" />
         <title>{Common.APP_NAME}</title>
-        <meta name="description" content="Book a medical appointment!" />
+        <meta name="description" content="Book a medical appointment with the doctor of your choice!" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta
           name="viewport"
           content="viewport-fit=cover, initial-scale=1.0, width=device-width, height=device-height, user-scalable=no"
         />
-        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#5B4B8A" />
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#4C3575" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F1F5F9" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1C22" />
         <link rel="icon" href="/favicon.ico" />
+        {/* <link href="styles/styles.css" rel="stylesheet" /> */}
       </Head>
 
       <ThemeProvider enableSystem={true} attribute="class">

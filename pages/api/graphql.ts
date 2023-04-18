@@ -355,10 +355,10 @@ const resolvers = {
         }
       }
 
-      if (args.params?.orderBy) {
+      if (args.params?.order_by) {
         orderByClause = {
-          order_by: {
-            [args.params?.orderBy]: args.params?.sort ?? Prisma.SortOrder.asc,
+          orderBy: {
+            [args.params?.order_by]: args.params?.sort ?? Prisma.SortOrder.asc,
           },
         }
       }
@@ -885,7 +885,7 @@ const resolvers = {
               department_id: args.input.department_id,
               image_name: args.input.image_name,
               start_date: TextFormatUtil.utcToZonedTime(args.input.start_date),
-              end_date: args.input.end_date ? TextFormatUtil.utcToZonedTime(args.input.end_date) : null,
+              end_date: args.input.end_date && TextFormatUtil.utcToZonedTime(args.input.end_date),
             },
           },
         },

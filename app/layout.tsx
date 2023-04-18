@@ -13,8 +13,8 @@ const RootLayout = ({ children }: { children: ReactNode }): JSX.Element => {
           name="viewport"
           content="width=device-width, height=device-height, initial-scale=1.0, viewport-fit=cover, user-scalable=no"
         />
-        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#5B4B8A" />
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#4C3575" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F1F5F9" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1C22" />
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>{children}</body>

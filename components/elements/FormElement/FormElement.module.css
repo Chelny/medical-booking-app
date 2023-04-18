@@ -1,0 +1,41 @@
+.formElement {
+  @apply flex flex-col mb-4;
+}
+
+/* TODO: Invalid input border - Use :invalid pseudo-class? */
+.invalidInput input:not([type='checkbox']):not([type='radio']),
+.invalidInput textarea,
+.invalidInput select {
+  @apply !border-light-mode-error dark:!border-dark-mode-error;
+}
+
+.invalidInput input[type='checkbox']:not(:checked) + label,
+.invalidInput input[type='radio']:not(:checked) + label {
+  @apply before:!border-light-mode-error dark:before:!border-dark-mode-error;
+}
+
+.label {
+  @apply flex flex-row justify-between mb-0.5 tracking-wide;
+}
+
+.optionalText {
+  @apply opacity-50;
+}
+
+.hintText {
+  @apply text-light-mode-text-tertiary text-sm dark:text-dark-mode-text-tertiary;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .hintText {
+  @apply text-dark-mode-text-tertiary;
+}
+
+.errorText {
+  @apply text-light-mode-error dark:text-dark-mode-error;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .errorText {
+  @apply text-dark-mode-error;
+}

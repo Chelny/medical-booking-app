@@ -1,0 +1,57 @@
+.actionButtons {
+  @apply flex flex-row-reverse gap-2;
+}
+
+.prevButton {
+  @apply flex-[0_50%] !bg-light-mode/[0.6] dark:!bg-dark-mode/[0.3];
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .prevButton {
+  @apply !bg-dark-mode/[0.3];
+}
+
+.nextButton {
+  @apply flex-[0_50%] !bg-light-mode/[0.85] dark:!bg-dark-mode/[0.75];
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .nextButton {
+  @apply !bg-dark-mode/[0.75];
+}
+
+.submitButton {
+  @apply flex-[0_50%] bg-light-mode dark:bg-dark-mode;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .submitButton {
+  @apply bg-dark-mode;
+}
+
+.activeStep {
+  @apply rounded-full w-2 h-2 bg-light-mode dark:bg-dark-mode;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .activeStep {
+  @apply bg-dark-mode;
+}
+
+.inactiveStep {
+  @apply rounded-full w-2 h-2 bg-light-mode-border dark:bg-dark-mode-border;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .inactiveStep {
+  @apply bg-dark-mode-border;
+}
+
+.dots {
+  @apply w-full flex items-center justify-center gap-1 py-4;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .hintText {
+  @apply text-dark-mode-text-tertiary;
+}

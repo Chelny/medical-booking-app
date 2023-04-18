@@ -1,0 +1,7 @@
+.layout {
+  @apply p-4 overflow-auto;
+}
+
+.unauthLayout {
+  @apply lg:grid lg:auto-rows-max lg:auto-cols-[500px] lg:justify-center lg:content-center;
+}

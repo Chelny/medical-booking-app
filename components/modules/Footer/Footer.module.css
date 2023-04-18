@@ -1,0 +1,9 @@
+.footer {
+  @apply py-4 bg-light-mode-foreground text-light-mode-text-secondary text-xs text-center dark:bg-dark-mode-foreground dark:text-dark-mode-text-secondary;
+  grid-area: footer;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .footer {
+  @apply bg-dark-mode-foreground text-dark-mode-text-secondary;
+}

@@ -8,6 +8,6 @@ export interface IGetUsersParams {
   roles: number[]
   languages: string[]
   active: boolean | null
-  orderBy: string
+  order_by: string
   sort: Prisma.SortOrder
 }

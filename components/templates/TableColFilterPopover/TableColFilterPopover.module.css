@@ -1,0 +1,33 @@
+.popover {
+  @apply relative;
+}
+
+.filterIcon {
+  @apply text-white;
+}
+
+.filterIconActive {
+  @apply text-highlight;
+}
+
+.panel {
+  @apply absolute left-[50%] z-10 translate-x-[-50%] min-w-[150px] p-2 border border-light-mode-border rounded-md drop-shadow-2xl bg-light-mode-foreground dark:border-dark-mode-border dark:bg-dark-mode-foreground;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .panel {
+  @apply border-dark-mode-border bg-dark-mode-foreground;
+}
+
+.option {
+  @apply grid grid-cols-listbox items-center gap-2 px-1 py-2 rounded-md cursor-pointer hover:bg-light-mode-background ui-selected:text-black ui-selected:font-medium ui-not-selected:text-black ui-disabled:opacity-50 ui-disabled:cursor-not-allowed dark:hover:bg-dark-mode-background dark:ui-selected:text-white dark:ui-not-selected:text-white;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .option {
+  @apply hover:bg-dark-mode-background ui-selected:text-white ui-not-selected:text-white;
+}
+
+.optionCheckedIcon {
+  @apply invisible ui-selected:visible ui-selected:text-highlight;
+}

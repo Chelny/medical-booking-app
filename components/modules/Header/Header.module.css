@@ -1,0 +1,83 @@
+.header {
+  grid-area: header;
+}
+
+.unauthHandheldHeader {
+  @apply grid justify-center content-center p-4 bg-landing bg-light-mode-secondary bg-no-repeat bg-center bg-cover dark:bg-landing-dark dark:bg-dark-mode;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .unauthHandheldHeader {
+  @apply bg-landing-dark bg-dark-mode;
+}
+
+.unauthHandheldTitle {
+  @apply text-white text-3xl;
+}
+
+.unauthDesktopHeader {
+  @apply grid-in-sidebar grid justify-center content-center bg-landing bg-light-mode-secondary bg-no-repeat bg-center bg-cover dark:bg-landing-dark dark:bg-dark-mode;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .unauthDesktopHeader {
+  @apply bg-landing-dark bg-dark-mode;
+}
+
+.unauthDesktopTitle {
+  @apply text-white text-4xl;
+}
+
+.authHandheldHeader {
+  @apply relative grid grid-cols-[1fr_max-content] justify-center content-center p-4 bg-light-mode-foreground dark:bg-dark-mode-foreground;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .authHandheldHeader {
+  @apply bg-dark-mode-foreground;
+}
+
+.authHandheldTitle {
+  @apply text-black/75 text-2xl dark:text-white/95;
+}
+
+:global(.dark) .authHandheldTitle {
+  @apply text-white/95;
+}
+
+.authHandheldNavIcon {
+  @apply w-[32px] h-[32px];
+}
+
+.authHandheldNavWrapper {
+  @apply absolute top-[100%] z-10 overflow-hidden w-full bg-light-mode-foreground dark:bg-dark-mode-foreground;
+}
+
+:global(.dark) .authHandheldNavWrapper {
+  @apply bg-dark-mode-foreground;
+}
+
+.authHandheldNavExpanded {
+  @apply min-h-nav-expanded max-h-full;
+}
+
+.authHandheldNavCollapsed {
+  @apply max-h-0 transition-[max-height] duration-[15000] ease-out;
+}
+
+.authDesktopHeader {
+  @apply flex items-center gap-10 p-4 bg-light-mode-foreground text-center dark:bg-dark-mode-foreground;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .authDesktopHeader {
+  @apply bg-dark-mode-foreground;
+}
+
+.authDesktopTitle {
+  @apply text-black/75 text-2xl mb-8 lg:mb-0 dark:text-white/95;
+}
+
+:global(.dark) .authDesktopTitle {
+  @apply text-white/95;
+}

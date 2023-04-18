@@ -8,17 +8,17 @@ import jwt_decode from 'jwt-decode'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { toast } from 'react-toastify'
-import Button from 'components/Button'
-import Modal, { ModalSize } from 'components/Modal'
-import ColumnSort from 'components/table/ColumnSort'
-import TableColFilterPopover from 'components/table/TableColFilterPopover'
-import UserProfile from 'components/UserProfile'
-import { GendersMap } from 'configs/genders.enum'
+import Button from 'components/elements/Button/Button'
+import ColumnSort from 'components/templates/ColumnSort/ColumnSort'
+import Modal from 'components/templates/Modal/Modal'
+import TableColFilterPopover from 'components/templates/TableColFilterPopover/TableColFilterPopover'
+import UserProfile from 'components/templates/UserProfile/UserProfile'
 import { LanguagesMap } from 'configs/locales'
 import { Common } from 'constants/common'
 import { IGetUsersParams } from 'dtos/get-users.params'
 import { IGetUsersResponse } from 'dtos/get-users.response'
 import { UserContact } from 'dtos/user-contact.response'
+import { GendersMap } from 'enums/gender.enum'
 import { UserActiveMap } from 'enums/user-active.enum'
 import { UserRolesMap } from 'enums/user-role.enum'
 import { useRequest } from 'hooks/useRequest'
@@ -47,7 +47,7 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
     roles: UserRolesMap,
     languages: LanguagesMap,
     active: null,
-    orderBy: 'id',
+    order_by: 'id',
     sort: Prisma.SortOrder.asc,
   })
   const [getUsersCount, setGetUsersCount] = useState<number>(0)
@@ -71,7 +71,7 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
             roles: ${JSON.stringify(getUsersParams.roles)},
             languages: ${JSON.stringify(getUsersParams.languages)},
             active: ${getUsersParams.active},
-            order_by: "${getUsersParams.orderBy}",
+            order_by: "${getUsersParams.order_by}",
             sort: "${getUsersParams.sort}"
           }
         ) {
@@ -141,17 +141,17 @@ const Admin: NextPage<AdminProps> = ({ userToken }): JSX.Element => {
   const orderBy = (field: string) => {
     let sort: Prisma.SortOrder = Prisma.SortOrder.asc
 
-    if (field === getUsersParams.orderBy) {
+    if (field === getUsersParams.order_by) {
       if (getUsersParams.sort === Prisma.SortOrder.asc) {
         sort = Prisma.SortOrder.desc
       }
     }
 
-    setGetUsersParams({ ...getUsersParams, orderBy: field, sort })
+    setGetUsersParams({ ...getUsersParams, order_by: field, sort })
   }
 
   const ariaSort = (field: string) => {
-    return getUsersParams.orderBy !== field
+    return getUsersParams.order_by !== field
       ? 'none'
       : getUsersParams.sort === Prisma.SortOrder.asc
       ? 'ascending'

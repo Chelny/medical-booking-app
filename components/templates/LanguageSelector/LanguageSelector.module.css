@@ -1,0 +1,8 @@
+.dropdown {
+  @apply bg-light-mode-foreground border-0 py-1 shadow-none dark:bg-dark-mode-foreground;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .dropdown {
+  @apply bg-dark-mode-foreground;
+}
