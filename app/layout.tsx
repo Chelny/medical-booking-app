@@ -1,9 +1,9 @@
 import { ReactNode } from 'react'
-import { Common } from 'constants/common'
+import { Common } from 'constantss'
 
-const RootLayout = ({ children }: { children: ReactNode }): JSX.Element => {
+const RootLayout = (props: { children: ReactNode }): JSX.Element => {
   return (
-    <html>
+    <html dir="ltr">
       <head>
         <meta charSet="utf-8" />
         <title>{Common.APP_NAME}</title>
@@ -17,7 +17,7 @@ const RootLayout = ({ children }: { children: ReactNode }): JSX.Element => {
         <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1C22" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body>{children}</body>
+      <body>{props.children}</body>
     </html>
   )
 }

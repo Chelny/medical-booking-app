@@ -1,9 +1,11 @@
 {
   "PROFILE": {
-    "PERSONAL_INFORMATION": "Général",
-    "LOGIN_INFORMATION": "Connexion",
-    "CONTACT_INFORMATION": "Coordonnées",
-    "DOCTOR_INFORMATION": "Employé",
-    "PATIENT_INFORMATION": "Patient"
+    "STEPS": {
+      "GENERAL_INFORMATION": "Information générale",
+      "ACCOUNT_INFORMATION": "Information de connexion",
+      "CONTACT_INFORMATION": "Coordonnées",
+      "DOCTOR_INFORMATION": "Information sur le médecin",
+      "PATIENT_INFORMATION": "Information sur le patient"
+    }
   }
 }

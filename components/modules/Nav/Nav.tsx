@@ -3,11 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { User } from '@prisma/client'
 import { useTranslation } from 'next-i18next'
 import { toast } from 'react-toastify'
-import ActiveLink from 'components/elements/ActiveLink/ActiveLink'
-import ThemeSelector from 'components/templates/ThemeSelector/ThemeSelector'
-import { Routes } from 'constants/routes'
-import { UserRole } from 'enums/user-role.enum'
-import { useRequest } from 'hooks/useRequest'
+import { ActiveLink, ThemeSelector } from 'components'
+import { Routes } from 'constantss'
+import { UserRole } from 'enums'
+import { useRequest } from 'hooks'
 import styles from './Nav.module.css'
 
 type NavProps = {
@@ -16,7 +15,7 @@ type NavProps = {
 
 type LogoutGQLResponse = GQLResponse<{ logout: { message: string } }>
 
-const Nav = ({ user }: NavProps): JSX.Element => {
+export const Nav = (props: NavProps): JSX.Element => {
   const router = useRouter()
   const { t } = useTranslation()
 
@@ -29,7 +28,7 @@ const Nav = ({ user }: NavProps): JSX.Element => {
   return (
     <nav className={styles.nav}>
       <ul>
-        {!user && router.route !== Routes.HOME && (
+        {!props.user && router.route !== Routes.HOME && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.HOME}>
               <a title={t('ROUTES.HOME')}>
@@ -39,7 +38,7 @@ const Nav = ({ user }: NavProps): JSX.Element => {
             </ActiveLink>
           </li>
         )}
-        {user && user.role_id !== UserRole.ADMIN && (
+        {props.user && props.user.role_id !== UserRole.ADMIN && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.DASHBOARD}>
               <a title={t('ROUTES.DASHBOARD')}>
@@ -49,7 +48,7 @@ const Nav = ({ user }: NavProps): JSX.Element => {
             </ActiveLink>
           </li>
         )}
-        {user && user.role_id === UserRole.ADMIN && (
+        {props.user && props.user.role_id === UserRole.ADMIN && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.ADMIN}>
               <a title={t('ROUTES.ADMIN')}>
@@ -59,7 +58,7 @@ const Nav = ({ user }: NavProps): JSX.Element => {
             </ActiveLink>
           </li>
         )}
-        {/* {user && (
+        {/* {props.user && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.ACCOUNT}>
               <a title={t('ROUTES.ACCOUNT')}>
@@ -72,7 +71,7 @@ const Nav = ({ user }: NavProps): JSX.Element => {
             </ActiveLink>
           </li>
         )} */}
-        {/* {user && (
+        {/* {props.user && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.HELP}>
               <a title={t('ROUTES.HELP')}>
@@ -82,7 +81,7 @@ const Nav = ({ user }: NavProps): JSX.Element => {
             </ActiveLink>
           </li>
         )} */}
-        {user && (
+        {props.user && (
           <li>
             <ActiveLink activeClassName={styles.active} href={Routes.HOME}>
               <a title={t('ROUTES.LOGOUT')} onClick={logout}>
@@ -97,5 +96,3 @@ const Nav = ({ user }: NavProps): JSX.Element => {
     </nav>
   )
 }
-
-export default Nav

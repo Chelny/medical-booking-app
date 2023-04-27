@@ -1,8 +1,8 @@
-import { FormEvent, Fragment, JSXElementConstructor, ReactElement } from 'react'
+import { FormEvent, Fragment, ReactNode } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import classNames from 'classnames'
 import { useTranslation } from 'next-i18next'
-import Button from 'components/elements/Button/Button'
+import { Button } from 'components'
 import styles from './Modal.module.css'
 
 export enum ModalSize {
@@ -13,42 +13,34 @@ export enum ModalSize {
 }
 
 type ModalProps = {
-  children: ReactElement
-  modalSize?: ModalSize
+  children: ReactNode
   title: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  cancelButton?: { label: ReactElement<any, string | JSXElementConstructor<any>> }
-  confirmButton: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    label: ReactElement<any, string | JSXElementConstructor<any>>
-    type?: 'DANGER' | 'DEFAULT'
-    disabled?: boolean
-  } | null
   isOpen: boolean
-  setIsOpen: (state: boolean) => void
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  handleSubmit: (value?: any) => void
+  modalSize?: ModalSize
+  confirmButton: {
+    text: string
+    isDanger?: boolean
+    isDisabled?: boolean
+  } | null
+  onCancel: () => void
+  onConfirm: () => void
 }
 
-const Modal = ({
-  children,
-  modalSize,
-  title,
-  cancelButton,
-  confirmButton,
-  isOpen,
-  setIsOpen,
-  handleSubmit,
-}: ModalProps): JSX.Element => {
+export const Modal = (props: ModalProps): JSX.Element => {
   const { t } = useTranslation()
 
-  const closeModal = () => {
-    setIsOpen(false)
+  const handleClose = (): void => {
+    props.onCancel()
+  }
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault()
+    props.onConfirm()
   }
 
   return (
-    <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className={styles.dialog} onClose={closeModal}>
+    <Transition as={Fragment} show={props.isOpen}>
+      <Dialog as="div" className={styles.dialog} onClose={handleClose}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -63,8 +55,7 @@ const Modal = ({
 
         <div className={styles.dialogPanelContainerParent}>
           <div className={styles.dialogPanelContainerChild}>
-            {/* FIXME: Modal opacity = 0 when going from "Admin: Choose user type" to "UserProfile form" */}
-            {/* <Transition.Child
+            <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
               enterFrom="opacity-0 scale-95"
@@ -72,43 +63,37 @@ const Modal = ({
               leave="ease-in duration-200"
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
-            > */}
-            <Dialog.Panel
-              as="form"
-              className={`${styles.dialogPanel} ${modalSize ? styles[modalSize] : [styles.modalSizeSm]}`}
-              noValidate
-              onSubmit={(event: FormEvent<HTMLFormElement>) => {
-                event.preventDefault()
-                handleSubmit(event)
-              }}
             >
-              <Dialog.Title as="h3" className={styles.dialogTitle}>
-                {title}
-              </Dialog.Title>
+              <Dialog.Panel
+                as="form"
+                className={`${styles.dialogPanel} ${props.modalSize ? styles[props.modalSize] : [styles.modalSizeSm]}`}
+                onSubmit={(e: FormEvent<HTMLFormElement>) => handleSubmit(e)}
+              >
+                <Dialog.Title as="h3" className={styles.dialogTitle}>
+                  {props.title}
+                </Dialog.Title>
 
-              <div className={styles.dialogContent}>{children}</div>
+                <div className={styles.dialogContent}>{props.children}</div>
 
-              <div className={styles.actionButtons}>
-                <Button type="button" className={styles.btnCancel} handleClick={closeModal}>
-                  {(cancelButton && cancelButton.label) ?? t('BUTTON.CANCEL')}
-                </Button>
-                {confirmButton && (
-                  <Button
-                    type="submit"
-                    className={`${classNames({ [styles.btnDanger]: confirmButton.type === 'DANGER' })}`}
-                    disabled={confirmButton.disabled}
-                  >
-                    {confirmButton && confirmButton.label}
+                <div className={styles.actionButtons}>
+                  <Button type="button" className={styles.btnCancel} onClick={handleClose}>
+                    {t('BUTTON.CANCEL')}
                   </Button>
-                )}
-              </div>
-            </Dialog.Panel>
-            {/* </Transition.Child> */}
+                  {props.confirmButton && (
+                    <Button
+                      type="submit"
+                      className={`${classNames({ [styles.btnDanger]: props.confirmButton.isDanger })}`}
+                      disabled={props.confirmButton.isDisabled}
+                    >
+                      {props.confirmButton.text}
+                    </Button>
+                  )}
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
           </div>
         </div>
       </Dialog>
     </Transition>
   )
 }
-
-export default Modal

@@ -2,9 +2,9 @@ import type { NextPage } from 'next'
 import { format, getYear } from 'date-fns'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { Common } from 'constants/common'
+import { Common } from 'constantss'
 
-const TermsAndConditions: NextPage = () => {
+const TermsAndConditions: NextPage = (): JSX.Element => {
   const { t } = useTranslation()
 
   return (

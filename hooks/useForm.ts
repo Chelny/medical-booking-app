@@ -1,73 +1,47 @@
-import { useState, useEffect, FormEvent } from 'react'
-import { TextFormatUtil } from 'utils/text-format'
+import { JSXElementConstructor, ReactElement, useState } from 'react'
 
-interface IOptions<T> {
-  initialValues?: Values<T>
-  onValidate: (values: Values<T>) => Validations<T>
-  onSubmit: () => void
+interface IForm {
+  steps: ReactElement[]
+  currentStepIndex: number
+  step: ReactElement
+  isFirstStep: boolean
+  isLastStep: boolean
+  back: () => void
+  next: () => void
+  goTo: (index: number) => void
 }
 
-type EmptyObject = { [K in never]: never }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Values<T> = Record<keyof T, any>
-type Validations<T> = Partial<Record<keyof T, string>>
-type Errors<T> = Partial<Record<keyof T, string>>
+export const useForm = (steps: ReactElement[]): IForm => {
+  const [currentStepIndex, setCurrentStepIndex] = useState<number>(0)
+  const [completedStepsCount, setCompletedStepsCount] = useState<number>(0)
 
-/**
- * Form Validator
- * @param options
- * @returns {Object}
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useForm = <T extends Values<T> = EmptyObject>(options: IOptions<T>): any => {
-  const [values, setValues] = useState<Values<T>>((options.initialValues || {}) as T)
-  const [errors, setErrors] = useState<Errors<T>>({})
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (Object.keys(errors).length === 0 && isSubmitting) {
-      options.onSubmit()
-      setIsSubmitting(false)
-    }
-  }, [options, errors, isSubmitting])
-
-  const handleChange = (event: FormEvent<HTMLElement>): void => {
-    let key = ''
-    let value
-
-    // Input
-    if ('currentTarget' in event) {
-      event.persist()
-      const currentTarget = event.currentTarget as HTMLInputElement
-      const isCheckboxInput = currentTarget.type === 'checkbox'
-      const isRadioButtonInput = currentTarget.type === 'radio'
-      key = isRadioButtonInput ? currentTarget.name : TextFormatUtil.kebabCaseToCamelCase(currentTarget.id)
-      value = isCheckboxInput ? (currentTarget as EventTarget & HTMLInputElement).checked : currentTarget.value
-    }
-
-    // Select box
-    else if ('target' in event) {
-      const target = (event as FormEvent<HTMLElement>).target as HTMLSelectElement
-      key = TextFormatUtil.kebabCaseToCamelCase(target.id)
-      value = target.value
-    }
-
-    setValues({
-      ...values,
-      [key]: value,
+  const back = (): void => {
+    setCurrentStepIndex((index: number) => {
+      if (index <= 0) return index
+      return index - 1
     })
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
-    if (event) event.preventDefault()
-    setErrors(options.onValidate(values))
-    setIsSubmitting(true)
+  const next = (): void => {
+    setCurrentStepIndex((index: number) => {
+      if (index >= steps.length - 1) return index
+      setCompletedStepsCount(index + 1)
+      return index + 1
+    })
+  }
+
+  const goTo = (index: number): void => {
+    if (index <= completedStepsCount) setCurrentStepIndex(index)
   }
 
   return {
-    values,
-    errors,
-    handleChange,
-    handleSubmit,
+    steps,
+    currentStepIndex,
+    step: steps[currentStepIndex],
+    isFirstStep: currentStepIndex === 0,
+    isLastStep: currentStepIndex === steps.length - 1,
+    back,
+    next,
+    goTo,
   }
 }

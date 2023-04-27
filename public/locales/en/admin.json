@@ -2,17 +2,26 @@
   "TITLE": "Admin Console",
   "ADD_USER": "Add User",
   "USER_PROFILE_MODAL": {
-    "CREATE_TITLE": "Create User",
-    "EDIT_TITLE": "Edit User",
+    "CREATE_TITLE": "Create Account",
+    "CREATE_TITLE_ADMIN": "Create Administrator Account",
+    "CREATE_TITLE_DOCTOR": "Create Doctor Account",
+    "CREATE_TITLE_PATIENT": "Create Patient Account",
+    "EDIT_TITLE": "Edit Account",
     "CHOOSE_USER_ROLE": "Please choose the user role:"
   },
   "DEACTIVATE_ACCOUNT_MODAL": {
     "TITLE": "Deactivate Account",
-    "MESSAGE": "Are you sure you want to deactivate the account of: {{user}}?",
+    "MESSAGE": "Are you sure you want to deactivate the account of: {{user.first_name}} {{user.last_name}}?",
     "CONFIRM_BUTTON": "Deactivate"
+  },
+  "ACTIVATE_ACCOUNT_MODAL": {
+    "TITLE": "Activate Account",
+    "MESSAGE": "Are you sure you want to activate the account of: {{user.first_name}} {{user.last_name}}?",
+    "CONFIRM_BUTTON": "Activate"
   },
   "TABLE": {
     "ACTIONS": {
+      "TOGGLE_DROPDOWN": "Toggle actions dropdown menu",
       "EDIT_USER": "Edit User",
       "RESET_PASSWORD": "Reset User Password",
       "DEACTIVATE_ACCOUNT": "Deactivate Account",

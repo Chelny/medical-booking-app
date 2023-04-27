@@ -3,14 +3,14 @@ import { User } from '@prisma/client'
 import jwt_decode from 'jwt-decode'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { Common } from 'constants/common'
-import { getAuthCookie } from 'utils/auth-cookies'
+import { Common } from 'constantss'
+import { getAuthCookie } from 'utils'
 
 type AccountProps = {
   userToken: User
 }
 
-const Account: NextPage<AccountProps> = () => {
+const Account: NextPage<AccountProps> = (): JSX.Element => {
   const { t } = useTranslation()
 
   return (

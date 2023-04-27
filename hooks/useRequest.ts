@@ -1,4 +1,4 @@
-import { Common } from 'constants/common'
+import { Common } from 'constantss'
 
 export const useRequest = async <T>(query: string): Promise<T> => {
   const res = await fetch(Common.API_URL, {

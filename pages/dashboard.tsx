@@ -8,17 +8,13 @@ import jwt_decode from 'jwt-decode'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Calendar from 'react-calendar'
-import CalendarTileProperties from 'react-calendar'
 import { toast } from 'react-toastify'
-import Button from 'components/elements/Button/Button'
-import Appointment from 'components/templates/Appointment/Appointment'
-import { Common } from 'constants/common'
-import { IPatientAppointement } from 'dtos/user-appointment.response'
-import { UserRole } from 'enums/user-role.enum'
-import { useRequest } from 'hooks/useRequest'
-import { useWindowSize } from 'hooks/useWindowSize'
-import { getAuthCookie } from 'utils/auth-cookies'
-import { TextFormatUtil } from 'utils/text-format'
+import { Button, UserAppointment } from 'components'
+import { Common } from 'constantss'
+import { UserRole } from 'enums'
+import { useRequest, useWindowSize } from 'hooks'
+import { IPatientAppointement } from 'interfaces'
+import { getAuthCookie, Utilities } from 'utils'
 
 type DashboardProps = {
   userToken: User
@@ -31,7 +27,7 @@ type DashboardProps = {
 type GetUserByIdGQLResponse = GQLResponse<{ getUserById: User }>
 type GetAppointmentsByPatientIdGQLResponse = GQLResponse<{ getAppointmentsByPatientId: IPatientAppointement[] }>
 
-const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsErrors }) => {
+const Dashboard: NextPage<DashboardProps> = (props: DashboardProps): JSX.Element => {
   const router = useRouter()
   const { t } = useTranslation()
   const { width } = useWindowSize()
@@ -40,22 +36,22 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
   const [timePeriod, setTimePeriod] = useState<string>('NIGHT')
   const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState<boolean>(false)
 
-  const makeAppointment = () => {
-    setIsAppointmentModalOpen(true)
-  }
+  // const makeAppointment = () => {
+  //   setIsAppointmentModalOpen(true)
+  // }
 
   const handleSelectDate = (date: Date) => {
     setSelectDate(date)
     setDisplayedAppointments(
-      appointments.filter((appointment: IPatientAppointement) =>
+      props.appointments.filter((appointment: IPatientAppointement) =>
         isEqual(new Date(appointment.start_date).setHours(0, 0, 0, 0), date)
       )
     )
   }
 
   useEffect(() => {
-    if (appointmentsErrors) {
-      appointmentsErrors.map((error: GraphQLError) => {
+    if (props.appointmentsErrors) {
+      props.appointmentsErrors.map((error: GraphQLError) => {
         if (error.extensions) {
           toast.error<string>(t(`ERROR.${error.extensions.code}`, { ns: 'api' }))
         } else {
@@ -75,18 +71,18 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
     } else {
       setTimePeriod('NIGHT')
     }
-  }, [appointmentsErrors])
+  }, [props.appointmentsErrors, t])
 
   return (
     <>
-      <h2>{t('WELCOME', { ns: 'dashboard', context: timePeriod, name: user.first_name })}</h2>
+      <h2>{t('WELCOME', { ns: 'dashboard', context: timePeriod, name: props.user.first_name })}</h2>
 
       {/* TODO: Complete */}
       {/* <div className="w-full mb-6 md:w-fit">
         <Button
           type="button"
           className="bg-light-mode-success dark:bg-dark-mode-success"
-          handleClick={() => makeAppointment()}
+          onClick={() => makeAppointment()}
         >
           {t('BOOK_APPOINTMENT', { ns: 'dashboard' })}
         </Button>
@@ -99,15 +95,14 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
         maxDate={Common.CALENDAR.MAX_DATE}
         showDoubleView={width >= Common.BREAKPOINT.MD}
         className="lg:max-w-[768px]"
-        // FIXME: Error since upgrade
-        // tileClassName={({ date }: CalendarTileProperties) =>
-        //   appointments.find((appointment: IPatientAppointement) =>
-        //     isEqual(new Date(appointment.start_date).setHours(0, 0, 0, 0), date)
-        //   )
-        //     ? 'has-appointments'
-        //     : null
-        // }
-        // onChange={handleSelectDate}
+        tileClassName={({ date }) =>
+          props.appointments.find((appointment: IPatientAppointement) =>
+            isEqual(new Date(appointment.start_date).setHours(0, 0, 0, 0), date)
+          )
+            ? 'has-appointments'
+            : null
+        }
+        onChange={() => handleSelectDate}
       />
 
       <section
@@ -117,7 +112,7 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
         <h3>
           {t('APPOINTMENTS', {
             ns: 'dashboard',
-            date: TextFormatUtil.dateFormat(selectedDate, router, 'PPPP'),
+            date: Utilities.dateFormat(selectedDate, router, 'PPPP'),
           })}
         </h3>
 
@@ -133,9 +128,9 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
                     {appointment.Doctor.User.first_name} {appointment.Doctor.User.last_name}
                     {' - '}
                     {t(`DOCTOR_DEPARTMENTS.${appointment.Doctor.DoctorDepartment.name}`)} <br />
-                    {TextFormatUtil.dateFormat(appointment.start_date, router, 'p')}
+                    {Utilities.dateFormat(appointment.start_date, router, 'p')}
                     {' - '}
-                    {TextFormatUtil.dateFormat(appointment.end_date, router, 'p')} <br />
+                    {Utilities.dateFormat(appointment.end_date, router, 'p')} <br />
                   </div>
                   <div className="sm:flex sm:gap-1">
                     <Button className="bg-light-mode dark:bg-dark-mode">
@@ -157,9 +152,9 @@ const Dashboard: NextPage<DashboardProps> = ({ user, appointments, appointmentsE
       </section>
 
       {isAppointmentModalOpen && (
-        <Appointment
+        <UserAppointment
           isModal
-          user={user}
+          user={props.user}
           selectedDate={selectedDate}
           isModalOpen={isAppointmentModalOpen}
           setIsModalOpen={setIsAppointmentModalOpen}

@@ -1,0 +1,11 @@
+.actionButtons {
+  @apply flex flex-row gap-2 justify-end rtl:flex-row-reverse;
+}
+
+.prevButton {
+  @apply !bg-light-mode/[0.6] dark:!bg-dark-mode/[0.3];
+}
+
+.nextButton {
+  @apply bg-light-mode dark:bg-dark-mode;
+}

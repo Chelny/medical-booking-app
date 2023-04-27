@@ -1,6 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./public/index.html', './pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+  plugins: [
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    require('@headlessui/tailwindcss')({ prefix: 'ui' }),
+    require('@savvywombat/tailwindcss-grid-areas'),
+  ],
   darkMode: 'class',
   theme: {
     fontFamily: {
@@ -20,7 +25,7 @@ module.exports = {
         border: '#C7D0DE',
         background: { DEFAULT: '#F1F5F9', secondary: '#E2E8F0', tertiary: '#E8E8E8' },
         foreground: { DEFAULT: '#FFFFFF' },
-        text: { DEFAULT: '#000000DE', secondary: '#00000099', tertiary: '#00000061' },
+        text: { DEFAULT: '#000000DE', secondary: '#00000099', tertiary: '#00000061', dimmed: '#C7D0DE' },
         link: { DEFAULT: '#639BF6', target: '#486082' },
         success: { DEFAULT: '#44CC77', background: '#44CC774D' },
         warning: { DEFAULT: '#FFBB00', background: '#FFBB004D' },
@@ -33,7 +38,7 @@ module.exports = {
         border: '#E8E8E817',
         background: { DEFAULT: '#1B1C22', secondary: '#1B1C22E6', tertiary: '#22252A' },
         foreground: { DEFAULT: '#151515' },
-        text: { DEFAULT: '#FFFFFFDE', secondary: '#FFFFFF99', tertiary: '#FFFFFF61' },
+        text: { DEFAULT: '#FFFFFFDE', secondary: '#FFFFFF99', tertiary: '#FFFFFF61', dimmed: '#E8E8E817' },
         link: { DEFAULT: '#639BF6', target: '#486082' },
         success: { DEFAULT: '#309053', background: '#3090534D' },
         warning: { DEFAULT: '#B2B400', background: '#B2B4004D' },
@@ -107,6 +112,4 @@ module.exports = {
       },
     },
   },
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  plugins: [require('@headlessui/tailwindcss')({ prefix: 'ui' }), require('@savvywombat/tailwindcss-grid-areas')],
 }

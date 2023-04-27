@@ -7,20 +7,20 @@ type PasswordStrengthMeterProps = {
   password: InputHTMLAttributes<HTMLInputElement>['value']
 }
 
-const PasswordStrengthMeter = ({ password }: PasswordStrengthMeterProps): JSX.Element => {
+export const PasswordStrengthMeter = (props: PasswordStrengthMeterProps): JSX.Element => {
   const { t } = useTranslation()
-  const [meter, setMeter] = useState(0)
+  const [meter, setMeter] = useState<number>(0)
 
   useEffect(() => {
-    if (typeof password === 'string') setMeter(zxcvbn(password).score)
-  }, [password])
+    if (typeof props.password === 'string') setMeter(zxcvbn(props.password).score)
+  }, [props.password])
 
   return (
     <>
       <meter className={styles.meter} max={4} value={meter} data-testid="password-strength-meter" />
-      <p className={styles.strengthText}>&nbsp;{password?.valueOf() && t(`FORM.PASSWORD_STRENGTH.SCALE.${meter}`)}</p>
+      <p className={styles.strengthText}>
+        &nbsp;{props.password?.valueOf() && t(`FORM.PASSWORD_STRENGTH.SCALE.${meter}`)}
+      </p>
     </>
   )
 }
-
-export default PasswordStrengthMeter

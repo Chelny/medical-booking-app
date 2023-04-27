@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { User } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslation } from 'next-i18next'
-import Nav from 'components/modules/Nav/Nav'
-import { Common } from 'constants/common'
-import { useWindowSize } from 'hooks/useWindowSize'
+import { Nav } from 'components'
+import { Common } from 'constantss'
+import { useWindowSize } from 'hooks'
 import styles from './Header.module.css'
 
 type HeaderProps = {
@@ -14,11 +14,11 @@ type HeaderProps = {
   isAuthRoute: boolean
 }
 
-const Header = ({ user, isAuthRoute }: HeaderProps): JSX.Element => {
+export const Header = (props: HeaderProps): JSX.Element => {
   const { t } = useTranslation()
   const { width } = useWindowSize()
   const router = useRouter()
-  const [isNavBarExpanded, setIsNavBarExpanded] = useState(false)
+  const [isNavBarExpanded, setIsNavBarExpanded] = useState<boolean>(false)
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -32,7 +32,7 @@ const Header = ({ user, isAuthRoute }: HeaderProps): JSX.Element => {
     }
   }, [router.events])
 
-  if (!isAuthRoute && width < Common.BREAKPOINT.LG) {
+  if (!props.isAuthRoute && width < Common.BREAKPOINT.LG) {
     return (
       <header className={`${styles.header} ${styles.unauthHandheldHeader}`}>
         <h1 className={styles.unauthHandheldTitle}>{Common.APP_NAME}</h1>
@@ -40,7 +40,7 @@ const Header = ({ user, isAuthRoute }: HeaderProps): JSX.Element => {
     )
   }
 
-  if (!isAuthRoute && width >= Common.BREAKPOINT.LG) {
+  if (!props.isAuthRoute && width >= Common.BREAKPOINT.LG) {
     return (
       <header className={`${styles.header} ${styles.unauthDesktopHeader}`}>
         <h1 className={styles.unauthDesktopTitle}>{Common.APP_NAME}</h1>
@@ -48,7 +48,7 @@ const Header = ({ user, isAuthRoute }: HeaderProps): JSX.Element => {
     )
   }
 
-  if (isAuthRoute && width < Common.BREAKPOINT.LG) {
+  if (props.isAuthRoute && width < Common.BREAKPOINT.LG) {
     return (
       <header className={`${styles.header} ${styles.authHandheldHeader}`}>
         {/* App name and/or logo */}
@@ -69,7 +69,7 @@ const Header = ({ user, isAuthRoute }: HeaderProps): JSX.Element => {
             [styles.authHandheldNavCollapsed]: !isNavBarExpanded,
           })}`}
         >
-          <Nav user={user} />
+          <Nav user={props.user} />
         </div>
       </header>
     )
@@ -79,9 +79,7 @@ const Header = ({ user, isAuthRoute }: HeaderProps): JSX.Element => {
   return (
     <header className={`${styles.header} ${styles.authDesktopHeader}`}>
       <h1 className={styles.authDesktopTitle}>{Common.APP_NAME}</h1>
-      <Nav user={user} />
+      <Nav user={props.user} />
     </header>
   )
 }
-
-export default Header

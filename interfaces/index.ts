@@ -1,0 +1,6 @@
+export * from './dtos'
+export * from './account.interface'
+export * from './contact.interface'
+export * from './doctor.interface'
+export * from './patient.interface'
+export * from './user.interface'

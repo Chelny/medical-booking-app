@@ -120,8 +120,7 @@ There is a total of 10 users in the database: 3 admins, 5 doctors and 2 patients
 
 - Background images: [Unsplash: Beautiful Free Images & Pictures](https://unsplash.com/)
 - User images: [This Person Does Not Exist](https://thispersondoesnotexist.com/)
-- useForm hook: [fgerschau/react-custom-form-validation-example](https://github.com/fgerschau/react-custom-form-validation-example)
-- Multi-step form: [codeempirev/multi-part-form-react-nextjs](https://github.com/codeempirev/multi-part-form-react-nextjs)
+- Multi-step form: [WebDevSimplified/react-multistep-form](https://github.com/WebDevSimplified/react-multistep-form)
 
 <p align="end">(<a href="#readme-top">back to top</a>)</p>
 

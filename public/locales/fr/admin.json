@@ -2,17 +2,26 @@
   "TITLE": "Console d'administration",
   "ADD_USER": "Ajouter un utilisateur",
   "USER_PROFILE_MODAL": {
-    "CREATE_TITLE": "Création d'un utilisateur",
-    "EDIT_TITLE": "Modification d'un utilisateur",
+    "CREATE_TITLE": "Création d'un compte",
+    "CREATE_TITLE_ADMIN": "Création d'un compte administrateur",
+    "CREATE_TITLE_DOCTOR": "Création d'un compte médecin",
+    "CREATE_TITLE_PATIENT": "Création d'un compte patient",
+    "EDIT_TITLE": "Modification d'un compte",
     "CHOOSE_USER_ROLE": "Veuillez choisir le rôle de l'utilisateur :"
   },
   "DEACTIVATE_ACCOUNT_MODAL": {
     "TITLE": "Désactiver le compte",
-    "MESSAGE": "Êtes-vous sûr de vouloir désactiver le compte de : {{user}} ?",
+    "MESSAGE": "Êtes-vous sûr de vouloir désactiver le compte de : {{user.first_name}} {{user.last_name}} ?",
     "CONFIRM_BUTTON": "Désactiver"
+  },
+  "ACTIVATE_ACCOUNT_MODAL": {
+    "TITLE": "Activer le compte",
+    "MESSAGE": "Êtes-vous sûr de vouloir activer le compte de : {{user.first_name}} {{user.last_name}} ?",
+    "CONFIRM_BUTTON": "Activer"
   },
   "TABLE": {
     "ACTIONS": {
+      "TOGGLE_DROPDOWN": "Basculer le menu déroulant des actions",
       "EDIT_USER": "Modifier l'utilisateur",
       "RESET_PASSWORD": "Réinitialiser le mot de passe de l'utilisateur",
       "DEACTIVATE_ACCOUNT": "Désactiver le compte",

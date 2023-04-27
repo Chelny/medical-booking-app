@@ -1,328 +1,194 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { RadioGroup, Tab } from '@headlessui/react'
-import { differenceInYears, parse } from 'date-fns'
 import { GraphQLError } from 'graphql'
-import { isEmpty, omit } from 'lodash-es'
 import { useTranslation } from 'next-i18next'
 import { toast } from 'react-toastify'
-import BackButton from 'components/elements/BackButton/BackButton'
-import ConditionalWrap from 'components/templates/ConditionalWrap/ConditionalWrap'
-import Modal, { ModalSize } from 'components/templates/Modal/Modal'
-import UserProfileContactInfo from 'components/templates/UserProfileContactInfo/UserProfileContactInfo'
-import UserProfileDoctorInfo from 'components/templates/UserProfileDoctorInfo/UserProfileDoctorInfo'
-import UserProfileLoginInfo from 'components/templates/UserProfileLoginInfo/UserProfileLoginInfo'
-import UserProfilePatientInfo from 'components/templates/UserProfilePatientInfo/UserProfilePatientInfo'
-import UserProfilePersonalInfo from 'components/templates/UserProfilePersonalInfo'
-import { Common } from 'constants/common'
-import { Regex } from 'constants/regex'
-import { UserContact } from 'dtos/user-contact.response'
-import { IDoctorContact } from 'dtos/user-contact.response'
-import { IPatientContact } from 'dtos/user-contact.response'
-import { UserRole, UserRolesMap } from 'enums/user-role.enum'
-import { useForm } from 'hooks/useForm'
-import { useRequest } from 'hooks/useRequest'
-import { useWindowSize } from 'hooks/useWindowSize'
-import { TextFormatUtil } from 'utils/text-format'
+import {
+  AccountForm,
+  BackButton,
+  ConditionalWrap,
+  ContactForm,
+  DoctorForm,
+  Modal,
+  ModalSize,
+  PatientForm,
+  UserForm,
+} from 'components'
+import { Common } from 'constantss'
+import { UserRole, UserRolesMap } from 'enums'
+import { useRequest, useWindowSize } from 'hooks'
+import { IContactFormData, IDoctorFormData, IPatientFormData, UserContact } from 'interfaces'
+import { Utilities } from 'utils'
 import styles from './UserProfile.module.css'
 
 type UserProfileProps = {
-  isModal: boolean
   user: UserContact
+  isModal: boolean
   isModalOpen: boolean
-  setIsModalOpen: Dispatch<SetStateAction<boolean>>
-  isFormSubmitted: (isSubmitted: boolean) => void
+  onCancel?: () => void
+  onConfirm?: () => void
 }
 
-type CreateAdminGQLResponse = GQLResponse<{ createAdmin: { message: string } }>
-type CreateDoctorGQLResponse = GQLResponse<{ createDoctor: { message: string } }>
-type CreatePatientGQLResponse = GQLResponse<{ createPatient: { message: string } }>
-type UpdateAdminGQLResponse = GQLResponse<{ updateAdmin: { message: string } }>
-type UpdateDoctorGQLResponse = GQLResponse<{ updateDoctor: { message: string } }>
-type UpdatePatientGQLResponse = GQLResponse<{ updatePatient: { message: string } }>
+type CreateUserGQLResponse = GQLResponse<{ createUser: { message: string } }>
+type UpdateUserGQLResponse = GQLResponse<{ updateUser: { message: string } }>
+
+interface IFormData extends IContactFormData, IDoctorFormData, IPatientFormData {
+  firstName: string
+  lastName: string
+  gender: string
+  birthDate: string
+  language: string
+  email: string
+  username: string
+}
+
+const INITIAL_DATA: IFormData = {
+  firstName: '',
+  lastName: '',
+  gender: '',
+  birthDate: '',
+  language: '',
+  email: '',
+  username: '',
+  addressLine1: '',
+  addressLine2: '',
+  country: '',
+  region: '',
+  city: '',
+  postalCode: '',
+  phoneNumber: '',
+  phoneNumberExt: '',
+  departmentId: '',
+  imageName: '',
+  startDate: '',
+  endDate: '',
+  medicalId: '',
+  height: '',
+  weight: '',
+}
 
 enum UserProfileStep {
   CHOOSE_USER_ROLE = 1,
   USER_PROFILE_FORM = 2,
 }
 
-const UserProfile = ({
-  user,
-  isModal,
-  isModalOpen,
-  setIsModalOpen,
-  isFormSubmitted,
-}: UserProfileProps): JSX.Element => {
+export const UserProfile = (props: UserProfileProps): JSX.Element => {
   const { t } = useTranslation()
   const { width } = useWindowSize()
   const [userProfileStep, setUserProfileStep] = useState<UserProfileStep | null>(null)
   const [selectedUserRoleId, setSelectedUserRoleId] = useState<number | null>(null)
-  const isUserDoctor = (user && 'Doctor' in user && !!user?.Doctor) || selectedUserRoleId === UserRole.DOCTOR
-  const isUserPatient = (user && 'Patient' in user && !!user?.Patient) || selectedUserRoleId === UserRole.PATIENT
+  const [formData, setFormData] = useState<IFormData>(INITIAL_DATA)
   const isChooseUserRoleStep = userProfileStep === UserProfileStep.CHOOSE_USER_ROLE
+  const isUserDoctor =
+    (props.user && 'Doctor' in props.user && !!props.user?.Doctor) || selectedUserRoleId === UserRole.DOCTOR
+  const isUserPatient =
+    (props.user && 'Patient' in props.user && !!props.user?.Patient) || selectedUserRoleId === UserRole.PATIENT
 
-  const { values, errors, handleChange, handleSubmit } = useForm({
-    initialValues: {
-      firstName: user?.first_name ?? '',
-      lastName: user?.last_name ?? '',
-      gender: user?.gender ?? '',
-      birthDate: TextFormatUtil.formatISOToStringDate(user?.birth_date) ?? '',
-      email: user?.email ?? '',
-      username: user?.username ?? '',
-      password: '',
-      passwordConfirmation: '',
-      roleId: user?.role_id ?? '',
-      language: user?.language ?? '',
-      addressLine1: user?.Contact?.address ?? '',
-      addressLine2: user?.Contact?.address_line2 ?? '',
-      city: user?.Contact?.city ?? '',
-      region: user?.Contact?.region ?? '',
-      country: user?.Contact?.country ?? '',
-      postCode: user?.Contact?.postal_code ?? '',
-      phoneNumber: user?.Contact?.phone_number ?? '',
-      phoneNumberExt: user?.Contact?.phone_ext ?? '',
-      departmentId: isUserDoctor ? (user as IDoctorContact).Doctor?.department_id : '',
-      imageName: isUserDoctor ? (user as IDoctorContact).Doctor?.image_name : '',
-      startDate: isUserDoctor ? TextFormatUtil.formatISOToStringDate((user as IDoctorContact).Doctor?.start_date) : '',
-      endDate: isUserDoctor ? TextFormatUtil.formatISOToStringDate((user as IDoctorContact).Doctor?.end_date) : null,
-      medicalId: isUserPatient ? (user as IPatientContact).Patient?.medical_id : '',
-      height: isUserPatient ? (user as IPatientContact).Patient?.height : '',
-      weight: isUserPatient ? (user as IPatientContact).Patient?.weight : '',
-    },
-    onValidate: (v) => {
-      const e: IStringMap = {}
-
-      if (!v.firstName) {
-        e.firstName = 'FIRST_NAME_REQUIRED'
-      } else if (!Regex.NAME_PATTERN.test(v.firstName.trim())) {
-        e.firstName = 'FIRST_NAME_PATTERN'
-      }
-      if (!v.lastName) {
-        e.lastName = 'LAST_NAME_REQUIRED'
-      } else if (!Regex.NAME_PATTERN.test(v.lastName.trim())) {
-        e.lastName = 'LAST_NAME_PATTERN'
-      }
-      if (!v.gender) {
-        e.gender = 'GENDER_REQUIRED'
-      }
-      const birthDate = parse(v.birthDate, Common.DATE_FORMAT, new Date())
-      if (!v.birthDate) {
-        e.birthDate = 'BIRTHDATE_REQUIRED'
-      } else if (differenceInYears(new Date(), birthDate) < 18) {
-        e.birthDate = 'BIRTHDATE_MINIMUM_AGE'
-      }
-
-      if (!v.email) {
-        e.email = 'EMAIL_REQUIRED'
-      } else if (!Regex.EMAIL_PATTERN.test(v.email.trim())) {
-        e.email = 'EMAIL_PATTERN'
-      }
-      if (v.username && !Regex.USERNAME_PATTERN.test(v.username)) {
-        e.username = 'USERNAME_PATTERN'
-      }
-      if (!user?.id || (user.id && v.password)) {
-        if (!Regex.PASSWORD_PATTERN.test(v.password)) {
-          e.password = 'PASSWORD_PATTERN'
-        }
-        if (!Regex.PASSWORD_PATTERN.test(v.passwordConfirmation)) {
-          e.passwordConfirmation = 'PASSWORD_PATTERN'
-        } else if (v.passwordConfirmation !== v.password) {
-          e.passwordConfirmation = 'PASSWORD_CONFIRMATION_MATCH'
-        }
-      }
-
-      if (!v.addressLine1) {
-        e.addressLine1 = 'ADDRESS_LINE1_REQUIRED'
-      }
-      if (!v.city) {
-        e.city = 'CITY_REQUIRED'
-      }
-      if (!v.region) {
-        e.region = 'REGION_REQUIRED'
-      }
-      if (!v.country) {
-        e.country = 'COUNTRY_REQUIRED'
-      }
-      if (!v.postCode) {
-        e.postCode = 'POST_CODE_REQUIRED'
-      } else if (
-        (v.country === 'CAN' && !Regex.ZIP_CODE_CAN_PATTERN.test(v.postCode)) ||
-        (v.country === 'USA' && !Regex.ZIP_CODE_USA_PATTERN.test(v.postCode))
-      ) {
-        e.postCode = 'POST_CODE_PATTERN'
-      }
-      if (!v.phoneNumber) {
-        e.phoneNumber = 'PHONE_NUMBER_REQUIRED'
-      } else if (!Regex.PHONE_PATTERN.test(v.phoneNumber)) {
-        e.phoneNumber = 'PHONE_NUMBER_PATTERN'
-      }
-      if (v.phoneNumberExt && !Regex.PHONE_EXT_PATTERN.test(v.phoneNumberExt)) {
-        e.phoneNumberExt = 'PHONE_NUMBER_EXT_PATTERN'
-      }
-
-      if (isUserDoctor) {
-        if (!v.departmentId) {
-          e.departmentId = 'DEPARTMENT_ID_REQUIRED'
-        }
-        // TODO: Image name validation (format and size)
-        // if (v.imageName) {
-        //   e.imageName = 'IMAGE_NAME_FORMAT'
-        // }
-        if (!v.startDate) {
-          e.startDate = 'START_DATE_REQUIRED'
-        }
-        if (v.endDate && v.endDate < v.startDate) {
-          e.endDate = 'END_DATE_MINIMUM'
-        }
-      }
-
-      if (isUserPatient) {
-        if (!v.medicalId) {
-          e.medicalId = 'MEDICAL_ID_REQUIRED'
-        } else if (!Regex.MEDICAL_ID.test(v.medicalId)) {
-          e.medicalId = 'MEDICAL_ID_PATTERN'
-        }
-        if (v.height && v.height < Common.HEIGHT.MIN) {
-          e.height = 'HEIGHT_MIN'
-        }
-        if (v.weight && v.weight < Common.WEIGHT.MIN) {
-          e.weight = 'WEIGHT_MIN'
-        }
-      }
-
-      if (!isEmpty(e)) {
-        const fields = Object.keys(omit(e, 'termsAndConditions')).map((field) =>
-          t(`FORM.LABEL.${TextFormatUtil.camelCaseToSnakeCase(field).toUpperCase()}`)
-        )
-        toast.error<string>(t('FORM.ERROR.INVALID_FIELDS_MESSAGE', { fields: fields.join(', ') }))
-      }
-
-      return e
-    },
-    onSubmit: async () => {
-      let payload = '{'
-
-      payload += `first_name: "${values.firstName}", last_name: "${values.lastName}", gender: "${
-        values.gender
-      }", birth_date: "${values.birthDate}", email: "${values.email}", username: ${
-        values.username ? `"${values.username}"` : null
-      }, role_id: ${values.roleId ? `${values.roleId}` : `${selectedUserRoleId}`}, language: ${
-        values.language ? `"${values.language}"` : `"${'EN'}"`
-      }, address: "${values.addressLine1}", address_line2: ${
-        values.addressLine2 ? `"${values.addressLine2}"` : null
-      }, city: "${values.city}", region: "${values.region}", country: "${values.country}", postal_code: "${
-        values.postCode
-      }", phone_number: "${values.phoneNumber}", phone_ext: ${
-        values.phoneNumberExt ? `"${values.phoneNumberExt}"` : null
-      }`
-
-      if (values.password) {
-        payload += `, password: "${values.password}"`
-      }
-
-      if (isUserDoctor) {
-        payload += `, department_id: ${values.departmentId}, image_name: ${
-          values.imageName ? `"${values.imageName}"` : null
-        }, start_date: "${values.startDate}", end_date: ${values.endDate ? `"${values.endDate}"` : null}`
-      } else if (isUserPatient) {
-        payload += `, medical_id: "${values.medicalId}", height: ${
-          values.height ? `"${values.height}"` : null
-        }, weight: ${values.weight ? `"${values.weight}"` : null}`
-      }
-
-      payload += '}'
-
-      let data, errors
-
-      if (isUserDoctor) {
-        if (user?.id) {
-          // eslint-disable-next-line @typescript-eslint/no-extra-semi
-          ;({ data, errors } = await useRequest<UpdateDoctorGQLResponse>(
-            `mutation { updateDoctor(id: ${user.id}, input: ${payload}) { message } }`
-          ))
-          if (data) toast.success<string>(t(`SUCCESS.${data.updateDoctor.message}`, { ns: 'api' }))
-        } else {
-          // eslint-disable-next-line @typescript-eslint/no-extra-semi
-          ;({ data, errors } = await useRequest<CreateDoctorGQLResponse>(
-            `mutation { createDoctor(input: ${payload}) { message } }`
-          ))
-          if (data) toast.success<string>(t(`SUCCESS.${data.createDoctor.message}`, { ns: 'api' }))
-        }
-      } else if (isUserPatient) {
-        if (user?.id) {
-          // eslint-disable-next-line @typescript-eslint/no-extra-semi
-          ;({ data, errors } = await useRequest<UpdatePatientGQLResponse>(
-            `mutation { updatePatient(id: ${user.id}, input: ${payload}) { message } }`
-          ))
-          if (data) toast.success<string>(t(`SUCCESS.${data.updatePatient.message}`, { ns: 'api' }))
-        } else {
-          // eslint-disable-next-line @typescript-eslint/no-extra-semi
-          ;({ data, errors } = await useRequest<CreatePatientGQLResponse>(
-            `mutation { createPatient(input: ${payload}) { message } }`
-          ))
-          if (data) toast.success<string>(t(`SUCCESS.${data.createPatient.message}`, { ns: 'api' }))
-        }
-      } else {
-        if (user?.id) {
-          // eslint-disable-next-line @typescript-eslint/no-extra-semi
-          ;({ data, errors } = await useRequest<UpdateAdminGQLResponse>(
-            `mutation { updateAdmin(id: ${user.id}, input: ${payload}) { message } }`
-          ))
-          if (data) toast.success<string>(t(`SUCCESS.${data.updateAdmin.message}`, { ns: 'api' }))
-        } else {
-          // eslint-disable-next-line @typescript-eslint/no-extra-semi
-          ;({ data, errors } = await useRequest<CreateAdminGQLResponse>(
-            `mutation { createAdmin(input: ${payload}) { message } }`
-          ))
-          if (data) toast.success<string>(t(`SUCCESS.${data.createAdmin.message}`, { ns: 'api' }))
-        }
-      }
-
-      if (data) {
-        setIsModalOpen(false)
-        isFormSubmitted(true)
-      }
-
-      if (errors) {
-        errors.map((error: GraphQLError) => {
-          if (error.extensions) {
-            toast.error<string>(t(`ERROR.${error.extensions.code}`, { ns: 'api' }))
-          } else {
-            console.error(error.message)
-          }
-        })
-      }
-    },
-  })
-
-  const selectUserRole = (userRoleId: number) => {
+  const selectUserRole = (userRoleId: number): void => {
     setSelectedUserRoleId(userRoleId)
     setUserProfileStep(UserProfileStep.USER_PROFILE_FORM)
   }
 
-  const goBackToUserRoleSelection = () => {
+  const goBackToUserRoleSelection = (): void => {
+    setSelectedUserRoleId(null)
     setUserProfileStep(UserProfileStep.CHOOSE_USER_ROLE)
   }
 
+  const updateFields = (fields: Partial<IFormData>): void => {
+    setFormData((prev: IFormData) => ({ ...prev, ...fields }))
+  }
+
+  const handleClose = (): void => {
+    props.onCancel && props.onCancel()
+    setSelectedUserRoleId(null)
+  }
+
+  const handleSubmit = async (): Promise<void> => {
+    let payload = '{'
+
+    payload += `first_name: "${formData.firstName}", last_name: "${formData.lastName}", gender: "${
+      formData.gender
+    }", birth_date: "${formData.birthDate}", email: "${formData.email}", username: ${
+      formData.username ? `"${formData.username}"` : null
+    }, role_id: ${props.user?.role_id ? `${props.user.role_id}` : `${selectedUserRoleId}`}, language: ${
+      formData.language ? `"${formData.language}"` : `"${'EN'}"`
+    }, address_line_1: "${formData.addressLine1}", address_line_2: ${
+      formData.addressLine2 ? `"${formData.addressLine2}"` : null
+    }, city: "${formData.city}", region: "${formData.region}", country: "${formData.country}", postal_code: "${
+      formData.postalCode
+    }", phone_number: "${formData.phoneNumber}", phone_number_ext: ${
+      formData.phoneNumberExt ? `"${formData.phoneNumberExt}"` : null
+    }`
+
+    if (isUserDoctor) {
+      payload += `, department_id: ${formData.departmentId}, image_name: ${
+        formData.imageName ? `"${formData.imageName}"` : null
+      }, start_date: "${formData.startDate}", end_date: ${formData.endDate ? `"${formData.endDate}"` : null}`
+    } else if (isUserPatient) {
+      payload += `, medical_id: "${formData.medicalId}", height: ${
+        formData.height ? `"${formData.height}"` : null
+      }, weight: ${formData.weight ? `"${formData.weight}"` : null}`
+    }
+
+    payload += '}'
+
+    let data, errors
+
+    if (props.user?.id) {
+      // eslint-disable-next-line @typescript-eslint/no-extra-semi
+      ;({ data, errors } = await useRequest<UpdateUserGQLResponse>(
+        `mutation { updateUser(id: ${props.user?.id}, input: ${payload}) { message } }`
+      ))
+      if (data) toast.success<string>(t(`SUCCESS.${data.updateUser.message}`, { ns: 'api' }))
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-extra-semi
+      ;({ data, errors } = await useRequest<CreateUserGQLResponse>(
+        `mutation { createUser(input: ${payload}) { message } }`
+      ))
+      if (data) toast.success<string>(t(`SUCCESS.${data.createUser.message}`, { ns: 'api' }))
+    }
+
+    if (data) props.onConfirm && props.onConfirm()
+
+    if (errors) {
+      errors.map((error: GraphQLError) => {
+        if (error.extensions) {
+          toast.error<string>(t(`ERROR.${error.extensions.code}`, { ns: 'api' }))
+        } else {
+          console.error(error.message)
+        }
+      })
+    }
+  }
+
   useEffect(() => {
-    if (typeof user?.id === 'undefined' && selectedUserRoleId === null) {
+    updateFields(INITIAL_DATA)
+
+    if (typeof props.user?.id === 'undefined' && selectedUserRoleId === null) {
       setUserProfileStep(UserProfileStep.CHOOSE_USER_ROLE)
     } else {
       setUserProfileStep(UserProfileStep.USER_PROFILE_FORM)
+
+      const userFormData = Utilities.prefillFormData(props.user)
+      updateFields(userFormData)
     }
-  }, [])
+  }, [props.user, selectedUserRoleId])
 
   return (
     <ConditionalWrap
-      condition={isModal}
-      wrap={(wrappedChildren) => (
+      condition={props.isModal}
+      wrap={(wrappedChildren: ReactElement) => (
         <Modal
+          title={t(`USER_PROFILE_MODAL.${props.user?.id ? 'EDIT' : 'CREATE'}_TITLE`, {
+            ns: 'admin',
+            context: selectedUserRoleId && UserRole[selectedUserRoleId],
+          })}
+          isOpen={props.isModalOpen}
           modalSize={isChooseUserRoleStep ? ModalSize.XS : ModalSize.MD}
-          title={t(`USER_PROFILE_MODAL.${user?.id ? 'EDIT' : 'CREATE'}_TITLE`, { ns: 'admin' })}
-          isOpen={isModalOpen}
-          confirmButton={isChooseUserRoleStep ? null : { label: t('BUTTON.SAVE') }}
-          setIsOpen={setIsModalOpen}
-          handleSubmit={handleSubmit}
+          confirmButton={isChooseUserRoleStep ? null : { text: t('BUTTON.SAVE') }}
+          onCancel={handleClose}
+          onConfirm={handleSubmit}
         >
           {wrappedChildren}
         </Modal>
@@ -330,28 +196,28 @@ const UserProfile = ({
     >
       {!isChooseUserRoleStep ? (
         <>
-          {typeof user?.id === 'undefined' && <BackButton handleClick={goBackToUserRoleSelection} />}
+          {typeof props.user?.id === 'undefined' && <BackButton onClick={goBackToUserRoleSelection} />}
           <Tab.Group>
             <Tab.List className={styles.list}>
               <Tab className={styles.tab}>
                 {width < Common.BREAKPOINT.SM ? (
-                  <FontAwesomeIcon icon="id-card" />
+                  <FontAwesomeIcon icon="user" />
                 ) : (
-                  t('PROFILE.PERSONAL_INFORMATION', { ns: 'account' })
+                  t('PROFILE.STEPS.GENERAL_INFORMATION', { ns: 'account' })
                 )}
               </Tab>
               <Tab className={styles.tab}>
                 {width < Common.BREAKPOINT.SM ? (
                   <FontAwesomeIcon icon="key" />
                 ) : (
-                  t('PROFILE.LOGIN_INFORMATION', { ns: 'account' })
+                  t('PROFILE.STEPS.ACCOUNT_INFORMATION', { ns: 'account' })
                 )}
               </Tab>
               <Tab className={styles.tab}>
                 {width < Common.BREAKPOINT.SM ? (
                   <FontAwesomeIcon icon="location-dot" />
                 ) : (
-                  t('PROFILE.CONTACT_INFORMATION', { ns: 'account' })
+                  t('PROFILE.STEPS.CONTACT_INFORMATION', { ns: 'account' })
                 )}
               </Tab>
               {isUserDoctor && (
@@ -359,7 +225,7 @@ const UserProfile = ({
                   {width < Common.BREAKPOINT.SM ? (
                     <FontAwesomeIcon icon="user-doctor" />
                   ) : (
-                    t('PROFILE.DOCTOR_INFORMATION', { ns: 'account' })
+                    t('PROFILE.STEPS.DOCTOR_INFORMATION', { ns: 'account' })
                   )}
                 </Tab>
               )}
@@ -368,59 +234,52 @@ const UserProfile = ({
                   {width < Common.BREAKPOINT.SM ? (
                     <FontAwesomeIcon icon="hospital-user" />
                   ) : (
-                    t('PROFILE.PATIENT_INFORMATION', { ns: 'account' })
+                    t('PROFILE.STEPS.PATIENT_INFORMATION', { ns: 'account' })
                   )}
                 </Tab>
               )}
             </Tab.List>
             <Tab.Panels className={styles.panels}>
               <Tab.Panel className={styles.panel}>
-                <UserProfilePersonalInfo values={values} errors={errors} handleChange={handleChange} />
+                <UserForm {...formData} updateFields={updateFields} />
               </Tab.Panel>
               <Tab.Panel className={styles.panel}>
-                <UserProfileLoginInfo values={values} errors={errors} handleChange={handleChange} />
+                <AccountForm {...formData} updateFields={updateFields} />
               </Tab.Panel>
               <Tab.Panel className={styles.panel}>
-                <UserProfileContactInfo values={values} errors={errors} handleChange={handleChange} />
+                <ContactForm {...formData} updateFields={updateFields} />
               </Tab.Panel>
               {isUserDoctor && (
                 <Tab.Panel className={styles.panel}>
-                  <UserProfileDoctorInfo values={values} errors={errors} handleChange={handleChange} />
+                  <DoctorForm {...formData} updateFields={updateFields} />
                 </Tab.Panel>
               )}
               {isUserPatient && (
                 <Tab.Panel className={styles.panel}>
-                  <UserProfilePatientInfo values={values} errors={errors} handleChange={handleChange} />
+                  <PatientForm {...formData} updateFields={updateFields} />
                 </Tab.Panel>
               )}
             </Tab.Panels>
           </Tab.Group>
         </>
       ) : (
-        <>
-          <h4>{t('USER_PROFILE_MODAL.CHOOSE_USER_ROLE', { ns: 'admin' })}</h4>
-          <RadioGroup value={selectedUserRoleId} onChange={selectUserRole}>
-            <RadioGroup.Label className="sr-only">
-              {t('USER_PROFILE_MODAL.CHOOSE_USER_ROLE', { ns: 'admin' })}
-            </RadioGroup.Label>
-            <div className={styles.options}>
-              {UserRolesMap.map((userRoleId: number) => (
-                <RadioGroup.Option
-                  key={userRoleId}
-                  value={userRoleId}
-                  className={styles.option}
-                  onClick={() => selectUserRole(userRoleId)}
-                >
-                  <RadioGroup.Label className={styles.optionLabel}>{t(`USER_ROLES.${userRoleId}`)}</RadioGroup.Label>
-                  <FontAwesomeIcon icon="check" className={styles.optionCheckedIcon} />
-                </RadioGroup.Option>
-              ))}
-            </div>
-          </RadioGroup>
-        </>
+        <RadioGroup value={selectedUserRoleId} onChange={selectUserRole}>
+          <RadioGroup.Label>{t('USER_PROFILE_MODAL.CHOOSE_USER_ROLE', { ns: 'admin' })}</RadioGroup.Label>
+          <div className={styles.options}>
+            {UserRolesMap.map((userRoleId: number) => (
+              <RadioGroup.Option
+                key={userRoleId}
+                value={userRoleId}
+                className={styles.option}
+                onClick={() => selectUserRole(userRoleId)}
+              >
+                <RadioGroup.Label className={styles.optionLabel}>{t(`USER_ROLES.${userRoleId}`)}</RadioGroup.Label>
+                <FontAwesomeIcon icon="check" className={styles.optionCheckedIcon} />
+              </RadioGroup.Option>
+            ))}
+          </div>
+        </RadioGroup>
       )}
     </ConditionalWrap>
   )
 }
-
-export default UserProfile

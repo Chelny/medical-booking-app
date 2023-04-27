@@ -16,11 +16,11 @@
 }
 
 .switchLightMode {
-  @apply bg-light-mode-background-tertiary;
+  @apply !bg-light-mode-background-tertiary;
 }
 
 .switchDarkMode {
-  @apply bg-dark-mode-background-tertiary;
+  @apply !bg-dark-mode-background-tertiary;
 }
 
 .button {

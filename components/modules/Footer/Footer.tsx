@@ -1,12 +1,10 @@
-import LanguageSelector from 'components/templates/LanguageSelector/LanguageSelector'
+import { LanguageSelector } from 'components'
 import styles from './Footer.module.css'
 
-const Footer = (): JSX.Element => {
+export const Footer = (): JSX.Element => {
   return (
     <footer className={styles.footer}>
       <LanguageSelector />
     </footer>
   )
 }
-
-export default Footer

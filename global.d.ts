@@ -20,7 +20,11 @@ export declare global {
     [key: string]: string
   }
 
+  type GenericObject = Record<string, unknown>
+
   type GQLResponse<T> = { data: T | null; errors?: GraphQLError[] }
 
   type ServerSideContext = IContext & ILocale
+
+  type StepProgressBarInfo = { translation: { key: string; namespace?: string }; iconName: IconProp }
 }

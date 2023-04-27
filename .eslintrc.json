@@ -20,6 +20,7 @@
         "prefix": ["is", "should", "has", "can", "did", "will"]
       }
     ],
+    "@typescript-eslint/no-unused-vars": ["warn", { "ignoreRestSiblings": true }],
     "import/order": [
       "error",
       {
@@ -52,6 +53,7 @@
         }
       }
     ],
+    "react-hooks/exhaustive-deps": "off",
     "react-hooks/rules-of-hooks": "off"
   }
 }

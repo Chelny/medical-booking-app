@@ -4,16 +4,16 @@ import Head from 'next/head'
 import router from 'next/router'
 // (config) Prevent fontawesome from adding its CSS since we did it manually below:
 import { config, library } from '@fortawesome/fontawesome-svg-core'
+import { far } from '@fortawesome/free-regular-svg-icons'
 import { fas } from '@fortawesome/free-solid-svg-icons'
+import { User } from '@prisma/client'
 import { isEqual } from 'lodash-es'
-import { appWithTranslation } from 'next-i18next'
+import { appWithTranslation, useTranslation } from 'next-i18next'
 import { ThemeProvider } from 'next-themes'
 import { ToastContainer, Flip, Slide } from 'react-toastify'
-import PageLayout from 'components/layouts/PageLayout/PageLayout'
-import Footer from 'components/modules/Footer/Footer'
-import Header from 'components/modules/Header/Header'
-import { Common } from 'constants/common'
-import { useWindowSize } from 'hooks/useWindowSize'
+import { Footer, Header, PageLayout } from 'components'
+import { Common } from 'constantss'
+import { useWindowSize } from 'hooks'
 // The following import prevents a Font Awesome icon server-side rendering bug,
 // where the icons flash from a very large icon down to a properly sized one:
 import '@fortawesome/fontawesome-svg-core/styles.css'
@@ -22,18 +22,22 @@ import 'react-calendar/dist/Calendar.css'
 import 'styles/globals.css'
 
 config.autoAddCss = false
-library.add(fas)
+library.add(far, fas)
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const { i18n } = useTranslation()
   const { width } = useWindowSize()
-  const [isAuthRoute, setIsAuthRoute] = useState(false)
-  const [user, setUser] = useState()
+  const [isAuthRoute, setIsAuthRoute] = useState<boolean>(false)
+  const [user, setUser] = useState<User | undefined>()
 
   useEffect(() => {
+    // Set app's direction according to locale direction
+    document.body.dir = i18n.dir()
+
     const isAuthRoute = !Common.UNAUTH_ROUTES.find((route: string) => isEqual(router.route, route))
     setIsAuthRoute(isAuthRoute)
     setUser(pageProps.userToken)
-  }, [pageProps])
+  }, [i18n, pageProps])
 
   return (
     <>

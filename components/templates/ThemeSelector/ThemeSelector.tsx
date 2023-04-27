@@ -11,7 +11,7 @@ export enum AppTheme {
   DARK = 'dark',
 }
 
-const ThemeSelector = (): JSX.Element | null => {
+export const ThemeSelector = (): JSX.Element | null => {
   const { t } = useTranslation()
   const { theme, setTheme } = useTheme()
 
@@ -43,15 +43,15 @@ const ThemeSelector = (): JSX.Element | null => {
     <div className={styles.themeSelector}>
       <span className={styles.label}>{t('THEME_SELECTOR.LABEL')}</span>
       <Switch
+        className={`${styles.switch} ${theme === AppTheme.DARK ? [styles.switchDarkMode] : [styles.switchLightMode]}`}
         defaultChecked={theme === AppTheme.DARK}
         checked={theme === AppTheme.DARK}
         onChange={handleChange}
-        className={`${styles.switch} ${theme === AppTheme.DARK ? [styles.switchDarkMode] : [styles.switchLightMode]}`}
       >
         <span className="sr-only">{t('THEME_SELECTOR.LABEL')}</span>
         <span
-          aria-hidden="true"
           className={`${styles.button} ${theme === AppTheme.DARK ? [styles.buttonDarkMode] : [styles.buttonLightMode]}`}
+          aria-hidden="true"
         >
           <FontAwesomeIcon
             icon={`${theme === AppTheme.DARK ? 'moon' : 'sun'}`}
@@ -65,5 +65,3 @@ const ThemeSelector = (): JSX.Element | null => {
     </div>
   )
 }
-
-export default ThemeSelector

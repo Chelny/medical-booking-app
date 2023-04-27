@@ -1,18 +1,18 @@
-import { ReactElement } from 'react'
+import { ReactNode } from 'react'
 import { useRouter } from 'next/router'
 import { User } from '@prisma/client'
 import classNames from 'classnames'
-import BackButton from 'components/elements/BackButton/BackButton'
-import { Routes } from 'constants/routes'
+import { BackButton } from 'components'
+import { Routes } from 'constantss'
 import styles from './PageLayout.module.css'
 
 type PageLayoutProps = {
-  children: ReactElement | ReactElement[]
+  children: ReactNode
   user: User | undefined
   isAuthRoute: boolean
 }
 
-const PageLayout = ({ children, user, isAuthRoute }: PageLayoutProps): JSX.Element => {
+export const PageLayout = (props: PageLayoutProps): JSX.Element => {
   const router = useRouter()
 
   const goBackToHome = () => {
@@ -20,13 +20,11 @@ const PageLayout = ({ children, user, isAuthRoute }: PageLayoutProps): JSX.Eleme
   }
 
   return (
-    <section className={`${styles.layout} ${classNames({ [styles.unauthLayout]: !isAuthRoute })}`}>
-      {typeof user === 'undefined' && !isAuthRoute && router.route !== Routes.HOME && (
-        <BackButton handleClick={goBackToHome} />
+    <section className={`${styles.layout} ${classNames({ [styles.unauthLayout]: !props.isAuthRoute })}`}>
+      {typeof props.user === 'undefined' && !props.isAuthRoute && router.route !== Routes.HOME && (
+        <BackButton onClick={goBackToHome} />
       )}
-      {children}
+      {props.children}
     </section>
   )
 }
-
-export default PageLayout

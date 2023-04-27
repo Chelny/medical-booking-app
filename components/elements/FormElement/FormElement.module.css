@@ -2,17 +2,44 @@
   @apply flex flex-col mb-4;
 }
 
-/* TODO: Invalid input border - Use :invalid pseudo-class? */
-.invalidInput input:not([type='checkbox']):not([type='radio']),
-.invalidInput textarea,
-.invalidInput select {
-  @apply !border-light-mode-error dark:!border-dark-mode-error;
+.input,
+.textarea,
+.select {
+  @apply invalid:!border-light-mode-error dark:invalid:!border-dark-mode-error;
 }
 
-.invalidInput input[type='checkbox']:not(:checked) + label,
-.invalidInput input[type='radio']:not(:checked) + label {
-  @apply before:!border-light-mode-error dark:before:!border-dark-mode-error;
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .input,
+:global(.dark) .textarea,
+:global(.dark) .select {
+  @apply invalid:!border-dark-mode-error;
 }
+
+.select {
+  @apply invalid:text-light-mode-text/40 dark:invalid:text-dark-mode-text/30;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .select {
+  @apply invalid:text-dark-mode-text/30;
+}
+
+/* TODO: ":user-invalid" is not available on Tailwind */
+/* .input:not([type='checkbox']):not([type='radio']) {
+  @apply user-invalid:border-light-mode-error dark:user-invalid:border-dark-mode-error;
+} */
+
+/* Styles below applied in template file */
+/* .inputCheckboxRadio + label,
+.inputSingleCheckbox + label {
+  @apply before:invalid:!border-light-mode-error dark:before:invalid:!border-dark-mode-error;
+} */
+
+/* TODO: ":user-invalid" is not available on Tailwind */
+/* .input[type='checkbox']:not(:checked) + label,
+.input[type='radio']:not(:checked) + label {
+  @apply before:user-invalid:!border-light-mode-error dark:before:user-invalid:!border-dark-mode-error;
+} */
 
 .label {
   @apply flex flex-row justify-between mb-0.5 tracking-wide;

@@ -6,7 +6,7 @@ form label + fieldset legend {
 input:not([type='checkbox']):not([type='radio']),
 textarea,
 select {
-  @apply p-3 border border-light-mode-border rounded-md shadow-md mb-1.5 bg-light-mode-foreground text-light-mode-text placeholder:text-light-mode-text-tertiary disabled:opacity-50 disabled:cursor-not-allowed focus:shadow-none focus:outline-light-mode-secondary dark:border-dark-mode-border/5 dark:bg-dark-mode-foreground dark:text-dark-mode-text dark:placeholder:text-dark-mode-text-secondary/30 dark:focus:outline-dark-mode-secondary;
+  @apply p-3 border border-light-mode-border rounded-md shadow-md mb-1.5 bg-light-mode-foreground text-light-mode-text placeholder:text-light-mode-text-tertiary disabled:opacity-50 disabled:cursor-not-allowed focus:border-light-mode-border focus:shadow-none focus:outline-light-mode-secondary dark:border-dark-mode-border/5 dark:bg-dark-mode-foreground dark:text-dark-mode-text dark:placeholder:text-dark-mode-text-secondary/30 dark:focus:border-dark-mode-border/5 dark:focus:outline-dark-mode-secondary;
 }
 
 /* Change element background colour when its parent's background is the same colour (eg.: modals) */
@@ -105,13 +105,9 @@ textarea {
 }
 
 @layer base {
-  /* FIXME: Set different color for first option ("--- SELECT ---") */
   select {
     @apply overflow-hidden p-3 pr-[30px] bg-dropdown bg-no-repeat text-[unset] text-ellipsis whitespace-nowrap appearance-none cursor-pointer;
   }
-  /* select {
-    @apply overflow-hidden p-3 pr-[30px] bg-dropdown bg-no-repeat text-light-mode-text text-ellipsis whitespace-nowrap appearance-none cursor-pointer invalid:!text-light-mode-text-tertiary dark:text-dark-mode-text dark:invalid:!text-dark-mode-text-secondary/30;
-  } */
 }
 
 form button,
@@ -122,4 +118,8 @@ form[id^='headlessui-popover-panel'] button[data-headlessui-state] {
 form button[type='submit'],
 form[id^='headlessui-popover-panel'] button[data-headlessui-state][type='button'] {
   @apply bg-light-mode dark:bg-dark-mode;
+}
+
+.afterMultiStepFormContainer {
+  @apply md:p-4 md:mt-8;
 }

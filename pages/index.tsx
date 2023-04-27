@@ -1,3 +1,4 @@
+import { ChangeEvent, FormEvent, useState } from 'react'
 import type { NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -6,81 +7,75 @@ import jwt_decode from 'jwt-decode'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { toast } from 'react-toastify'
-import Button from 'components/elements/Button/Button'
-import FormElement from 'components/elements/FormElement/FormElement'
-import { Common } from 'constants/common'
-import { Routes } from 'constants/routes'
-import { UserRole } from 'enums/user-role.enum'
-import { useForm } from 'hooks/useForm'
-import { useRequest } from 'hooks/useRequest'
-import { getAuthCookie } from 'utils/auth-cookies'
+import { Button, FormElement } from 'components'
+import { Common, Routes } from 'constantss'
+import { UserRole } from 'enums'
+import { useRequest } from 'hooks'
+import { getAuthCookie } from 'utils'
 
 type LoginGQLResponse = GQLResponse<{ login: { token: string; user: Omit<User, 'password'> } }>
 
-const Home: NextPage = () => {
+interface IFormData {
+  accountId: string
+  password: string
+}
+
+const INITIAL_DATA: IFormData = {
+  accountId: '',
+  password: '',
+}
+
+const Home: NextPage = (): JSX.Element => {
   const router = useRouter()
   const { t } = useTranslation()
+  const [formData, setFormData] = useState<IFormData>(INITIAL_DATA)
 
-  const { values, errors, handleChange, handleSubmit } = useForm({
-    initialValues: {
-      loginId: '',
-      password: '',
-    },
-    onValidate: (v) => {
-      const e: IStringMap = {}
-      if (!v.loginId) e.loginId = 'LOGIN_ID_REQUIRED'
-      if (!v.password) e.password = 'PASSWORD_REQUIRED'
-      return e
-    },
-    onSubmit: async () => {
-      const { data, errors } = await useRequest<LoginGQLResponse>(
-        `mutation {
-          login(input: { email: "${values.loginId}", username: "${values.loginId}", password: "${values.password}" }) {
-            token
-            user {
-              role_id
-            }
+  const updateFields = (fields: Partial<IFormData>): void => {
+    setFormData((prev: IFormData) => ({ ...prev, ...fields }))
+  }
+
+  const handleSubmit = async (e: FormEvent): Promise<void> => {
+    e.preventDefault()
+
+    const { data, errors } = await useRequest<LoginGQLResponse>(
+      `mutation {
+        login(
+          input: {
+            email: "${formData.accountId}",
+            username: "${formData.accountId}",
+            password: "${formData.password}"
           }
-        }`
-      )
+        ) {
+          token
+          user {
+            role_id
+          }
+        }
+      }`
+    )
 
-      if (data) data.login.user.role_id === UserRole.ADMIN ? router.push(Routes.ADMIN) : router.push(Routes.DASHBOARD)
-      if (errors) toast.error<string>(t(`ERROR.${errors[0].extensions.code}`, { ns: 'api' }))
-    },
-  })
+    if (data) data.login.user.role_id === UserRole.ADMIN ? router.push(Routes.ADMIN) : router.push(Routes.DASHBOARD)
+    if (errors) toast.error<string>(t(`ERROR.${errors[0].extensions.code}`, { ns: 'api' }))
+  }
 
   return (
     <>
       <h2>{t('LOGIN', { ns: 'home' })}</h2>
-      <form data-testid="login-form" noValidate onSubmit={handleSubmit}>
-        <FormElement fieldName="loginId" error={errors.loginId}>
-          <input
-            data-testid="form-input-login-id"
-            type="text"
-            id="loginId"
-            value={values.loginId}
-            aria-required={true}
-            aria-invalid={!!errors.loginId}
-            aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_loginId`}
-            onChange={handleChange}
-          />
-        </FormElement>
+      <form data-testid="login-form" onSubmit={handleSubmit}>
+        <FormElement
+          fieldName="accountId"
+          type="text"
+          required={true}
+          value={formData.accountId}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => updateFields({ accountId: e.target.value })}
+        />
         <FormElement
           fieldName="password"
-          link={<Link href={Routes.FORGOT_PASSWORD}>{t('FORGOT_PASSWORD', { ns: 'home' })}</Link>}
-          error={errors.password}
-        >
-          <input
-            data-testid="form-input-password"
-            type="password"
-            id="password"
-            value={values.password}
-            aria-required={true}
-            aria-invalid={!!errors.password}
-            aria-errormessage={`${Common.ERROR_MESSAGE_ID_PREFIX}_password`}
-            onChange={handleChange}
-          />
-        </FormElement>
+          type="password"
+          required={true}
+          value={formData.password}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => updateFields({ password: e.target.value })}
+        />
         <div className="w-full">
           <Button type="submit">{t('LOGIN', { ns: 'home' })}</Button>
         </div>

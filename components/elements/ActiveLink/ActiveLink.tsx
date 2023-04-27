@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactElement, Children } from 'react'
+import React, { useState, useEffect, ReactElement, Children, Dispatch } from 'react'
 import Link, { LinkProps } from 'next/link'
 import { useRouter } from 'next/router'
 
@@ -7,12 +7,12 @@ type ActiveLinkProps = LinkProps & {
   activeClassName?: string
 }
 
-const ActiveLink = ({ children, activeClassName, ...props }: ActiveLinkProps) => {
+export const ActiveLink = (props: ActiveLinkProps): JSX.Element => {
   const { asPath, isReady } = useRouter()
 
-  const child = Children.only(children)
+  const child = Children.only(props.children)
   const childClassName = child.props.className || ''
-  const [className, setClassName] = useState(childClassName)
+  const [className, setClassName] = useState<Dispatch<string>>(childClassName)
 
   useEffect(() => {
     // Check if the router fields are updated client-side
@@ -25,13 +25,13 @@ const ActiveLink = ({ children, activeClassName, ...props }: ActiveLinkProps) =>
       const activePathname = new URL(asPath, location.href).pathname
 
       const newClassName =
-        linkPathname === activePathname ? `${childClassName} ${activeClassName}`.trim() : childClassName
+        linkPathname === activePathname ? `${childClassName} ${props.activeClassName}`.trim() : childClassName
 
       if (newClassName !== className) {
         setClassName(newClassName)
       }
     }
-  }, [asPath, isReady, props.as, props.href, childClassName, activeClassName, setClassName, className])
+  }, [asPath, isReady, props.as, props.href, childClassName, props.activeClassName, setClassName, className])
 
   return (
     <Link {...props} legacyBehavior>
@@ -41,5 +41,3 @@ const ActiveLink = ({ children, activeClassName, ...props }: ActiveLinkProps) =>
     </Link>
   )
 }
-
-export default ActiveLink

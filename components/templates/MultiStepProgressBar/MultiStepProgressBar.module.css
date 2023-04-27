@@ -1,0 +1,93 @@
+.progressBarWrapper {
+  @apply flex items-center mx-4 p-4;
+}
+
+.stepsContainer {
+  @apply contents;
+}
+
+.stepContainer {
+  @apply relative flex items-center;
+}
+
+.stepContainerCompleted {
+  @apply text-light-mode dark:text-dark-mode;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .stepContainerCompleted {
+  @apply text-dark-mode;
+}
+
+.stepContainerActive {
+  @apply text-white;
+}
+
+.stepContainerNotCompleted {
+  @apply text-light-mode-text-dimmed;
+}
+
+.iconWrapper {
+  @apply w-12 h-12 py-3 border-2 rounded-full text-center transition duration-500 ease-in-out;
+}
+
+.iconWrapperCompleted {
+  @apply border-light-mode dark:border-dark-mode;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .iconWrapperCompleted {
+  @apply border-dark-mode;
+}
+
+.iconWrapperActive {
+  @apply bg-light-mode dark:bg-dark-mode;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .iconWrapperActive {
+  @apply bg-dark-mode;
+}
+
+.iconWrapperNotCompleted {
+  @apply border-light-mode-border dark:border-dark-mode-border;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .iconWrapperNotCompleted {
+  @apply border-dark-mode-border;
+}
+
+.title {
+  @apply hidden md:block md:absolute md:top-0 md:w-24 md:mt-16 md:-ml-6 md:text-xs md:font-medium md:uppercase md:text-center;
+}
+
+.titleCompleted {
+  @apply text-light-mode;
+}
+
+.titleNotCompleted {
+  @apply text-light-mode-text-dimmed;
+}
+
+.line {
+  @apply flex-auto border-t-2 transition duration-500 ease-in-out;
+}
+
+.lineCompleted {
+  @apply border-light-mode dark:border-dark-mode;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .lineCompleted {
+  @apply border-dark-mode;
+}
+
+.lineNotCompleted {
+  @apply border-light-mode-border dark:border-dark-mode-border;
+}
+
+/* Dark Theme Workaround: Prefix "dark:" does not apply CSS when used in *.module.css files. */
+:global(.dark) .lineNotCompleted {
+  @apply border-dark-mode-border;
+}

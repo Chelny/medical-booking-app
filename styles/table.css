@@ -65,7 +65,7 @@ table.admin-console thead th {
 }
 
 table.admin-console tbody tr {
-  @apply hover:text-light-mode-secondary hover:font-medium dark:hover:text-dark-mode-secondary;
+  @apply hover:text-light-mode-secondary dark:hover:text-dark-mode-secondary;
 }
 
 table.admin-console tbody tr:nth-child(odd) {
@@ -78,8 +78,4 @@ table.admin-console tbody tr td {
 
 .table-pagination__navigation ol li {
   @apply dark:bg-dark-mode-background-secondary;
-}
-
-table.admin-console .admin-console__user-actions {
-  @apply grid grid-flow-col justify-evenly;
 }

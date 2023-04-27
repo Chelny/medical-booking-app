@@ -2,12 +2,9 @@ import { Appointment, Contact, Doctor, DoctorDepartment, DoctorSchedule, Patient
 import { compare, hash } from 'bcrypt'
 import { createSchema, createYoga } from 'graphql-yoga'
 import { omit } from 'lodash-es'
-import { Common } from 'constants/common'
-import { IAuthResponse } from 'dtos/auth.response'
-import { IGetUsersParams } from 'dtos/get-users.params'
-import { IGetUsersResponse } from 'dtos/get-users.response'
-import { ISuccessResponse } from 'dtos/success.response'
-import { UserRole } from 'enums/user-role.enum'
+import { Common } from 'constantss'
+import { UserRole } from 'enums'
+import { IAuthResponse, IGetUsersParams, IGetUsersResponse, ISuccessResponse } from 'interfaces'
 import { prisma } from 'pages/api/db'
 import { EmailService } from 'pages/api/email.service'
 import {
@@ -23,8 +20,7 @@ import {
 } from 'pages/api/errors'
 import { Helpers } from 'pages/api/helpers'
 import { createTokens } from 'pages/api/tokens'
-import { removeAuthCookie, setAuthCookie } from 'utils/auth-cookies'
-import { TextFormatUtil } from 'utils/text-format'
+import { removeAuthCookie, setAuthCookie } from 'utils'
 
 type GQLGetParams<T> = { params: T }
 type GQLGetByIdParams = { id: number }
@@ -54,6 +50,7 @@ const typeDefs = `
   input GetAvailableDoctorsParams {
     department_id: Int
     start_date: Timestamp
+    end_date: Timestamp
   }
 
   input UserInput {
@@ -67,39 +64,21 @@ const typeDefs = `
     role_id: Int
     language: String
     active: Boolean
-    address: String
-    address_line2: String
+    address_line_1: String
+    address_line_2: String
     city: String
     region: String
     country: String
     postal_code: String
     phone_number: String
-    phone_ext: String
-  }
-
-  input DoctorInput {
-    first_name: String
-    last_name: String
-    gender: String
-    birth_date: Timestamp
-    email: String
-    username: String
-    password: String
-    role_id: Int
-    language: String
-    active: Boolean
-    address: String
-    address_line2: String
-    city: String
-    region: String
-    country: String
-    postal_code: String
-    phone_number: String
-    phone_ext: String
+    phone_number_ext: String
     department_id: Int
     image_name: String
     start_date: Timestamp
     end_date: Timestamp
+    medical_id: String
+    height: String
+    weight: String
   }
 
   input PatientInput {
@@ -113,14 +92,14 @@ const typeDefs = `
     role_id: Int
     language: String
     active: Boolean
-    address: String
-    address_line2: String
+    address_line_1: String
+    address_line_2: String
     city: String
     region: String
     country: String
     postal_code: String
     phone_number: String
-    phone_ext: String
+    phone_number_ext: String
     medical_id: String
     height: String
     weight: String
@@ -174,14 +153,14 @@ const typeDefs = `
   type Contact {
     id: ID!
     user_id: Int!
-    address: String!
-    address_line2: String
+    address_line_1: String!
+    address_line_2: String
     city: String!
     region: String!
     country: String!
     postal_code: String!
     phone_number: String!
-    phone_ext: String
+    phone_number_ext: String
     created_at: Timestamp!
     updated_at: Timestamp
   }
@@ -198,6 +177,7 @@ const typeDefs = `
     User: User
     DoctorDepartment: DoctorDepartment
     DoctorSchedule: [DoctorSchedule]
+    Appointment: [Appointment]
   }
 
   type DoctorDepartment {
@@ -226,6 +206,7 @@ const typeDefs = `
     created_at: Timestamp!
     updated_at: Timestamp
     User: User
+    Appointment: [Appointment]
   }
 
   type Appointment {
@@ -277,21 +258,15 @@ const typeDefs = `
     forgotPassword(input: ForgotPasswordInput): SuccessResponse!
     resetPassword(input: ResetPasswordInput): SuccessResponse!
 
+    createUser(input: UserInput): SuccessResponse!
+    updateUser(id: Int!, input: UserInput): SuccessResponse!
     updatePassword(id: Int!, input: UpdatePasswordInput): SuccessResponse!
     deactivateAccount(id: Int!): SuccessResponse!
     activateAccount(id: Int!): SuccessResponse!
 
-    createAdmin(input: UserInput): SuccessResponse!
-    updateAdmin(id: Int!, input: UserInput): SuccessResponse!
-
-    createDoctor(input: DoctorInput): SuccessResponse!
-    updateDoctor(id: Int!, input: DoctorInput): SuccessResponse!
     createDoctorSchedule(input: [DoctorScheduleInput]): SuccessResponse!
     updateDoctorSchedule(id: Int!, input: [DoctorScheduleInput]): SuccessResponse!
     deleteDoctorScheduleById(id: Int!): SuccessResponse!
-
-    createPatient(input: PatientInput): SuccessResponse!
-    updatePatient(id: Int!, input: PatientInput): SuccessResponse!
   }
 `
 
@@ -420,17 +395,28 @@ const resolvers = {
     },
     getAvailableDoctors: async (
       parent: unknown,
-      args: GQLGetParams<{ department_id: number; start_date: Date }>
+      args: GQLGetParams<{ department_id: number; start_date: Date; end_date: Date }>
     ): Promise<Doctor[]> => {
       const doctors = await prisma.doctor.findMany({
         where: {
           department_id: args.params.department_id,
           DoctorSchedule: { some: { weekday: { equals: new Date(args.params.start_date).getDay() } } },
+          Appointment: { none: { start_date: args.params.start_date, end_date: args.params.end_date } },
         },
         include: {
           User: true,
           DoctorDepartment: true,
           DoctorSchedule: true,
+          Appointment: {
+            where: {
+              NOT: {
+                AND: {
+                  start_date: { gte: args.params.start_date },
+                  end_date: { lt: args.params.end_date },
+                },
+              },
+            },
+          },
         },
       })
 
@@ -494,7 +480,7 @@ const resolvers = {
           first_name: args.input.first_name,
           last_name: args.input.last_name,
           gender: args.input.gender,
-          birth_date: TextFormatUtil.utcToZonedTime(args.input.birth_date),
+          birth_date: args.input.birth_date,
           email: args.input.email,
           username: args.input.username,
           password: await hash(args.input.password, 12),
@@ -502,14 +488,14 @@ const resolvers = {
           language: args.input.language,
           Contact: {
             create: {
-              address: args.input.address,
-              address_line2: args.input.address_line2,
+              address_line_1: args.input.address_line_1,
+              address_line_2: args.input.address_line_2,
               city: args.input.city,
               region: args.input.region,
               country: args.input.country,
               postal_code: args.input.postal_code,
               phone_number: args.input.phone_number,
-              phone_ext: args.input.phone_ext,
+              phone_number_ext: args.input.phone_number_ext,
             },
           },
           Patient: {
@@ -581,7 +567,7 @@ const resolvers = {
             RESET_PASSWORD: {
               EMAIL: {
                 SUBJECT: 'Reset Password',
-                BODY: `Hi ${firstName},<br/><br/>You have requested to reset your password. Please <a href="${link}">click here</a> or copy/paste the following link in your browser: ${link} to reset.<br/><br/>If you didn't request to change your password, please ignore this email.`,
+                BODY: `Hi ${firstName},<br/><br/>You have requested to reset your password. To reset, please <a href="${link}">click here</a> or copy/paste the following link in your browser: ${link}.<br/><br/>If you didn't request to change your password, please ignore this email.`,
               },
             },
           },
@@ -589,7 +575,7 @@ const resolvers = {
             RESET_PASSWORD: {
               EMAIL: {
                 SUBJECT: 'Réinitialisation de votre mot de passe',
-                BODY: `Bonjour ${firstName},<br/><br/>Vous avez demandé la réinitialisation de votre mot de passe. Veuillez <a href="${link}">cliquez ici</a> ou copier/coller le lien suivant dans votre navigateur : ${link} pour réinitialiser.<br/><br/>Si vous n'avez pas demandé à changer votre mot de passe, veuillez ignorer ce courriel.`,
+                BODY: `Bonjour ${firstName},<br/><br/>Vous avez demandé la réinitialisation de votre mot de passe. Pour réinitialiser veuillez <a href="${link}">cliquez ici</a> ou copier/coller le lien suivant dans votre navigateur : ${link}.<br/><br/>Si vous n'avez pas demandé à changer votre mot de passe, veuillez ignorer ce courriel.`,
               },
             },
           },
@@ -634,6 +620,169 @@ const resolvers = {
     /******************************
      *  User
      ******************************/
+    createUser: async (
+      parent: unknown,
+      args: GQLPostInput<User & Contact & Doctor & Patient>
+    ): Promise<ISuccessResponse> => {
+      const findEmail = await prisma.user.findUnique({ where: { email: args.input.email } })
+      if (findEmail) throw CustomApiErrorDuplicateEmail()
+
+      if (args.input.username) {
+        const findUsername = await prisma.user.findUnique({ where: { username: args.input.username } })
+        if (findUsername) throw CustomApiErrorDuplicateUsername()
+      }
+
+      if (args.input.role_id == UserRole.PATIENT) {
+        const findMedicalId = await prisma.patient.findUnique({ where: { medical_id: args.input.medical_id } })
+        if (findMedicalId) throw CustomApiErrorDuplicateMedicalId()
+      }
+
+      let userData = {
+        first_name: args.input.first_name,
+        last_name: args.input.last_name,
+        gender: args.input.gender,
+        birth_date: args.input.birth_date,
+        email: args.input.email,
+        username: args.input.username,
+        // TODO: Generate temporary password and send it by email
+        password: await hash('T3mpPw', 12),
+        role_id: args.input.role_id,
+        language: args.input.language,
+        Contact: {
+          create: {
+            address_line_1: args.input.address_line_1,
+            address_line_2: args.input.address_line_2,
+            city: args.input.city,
+            region: args.input.region,
+            country: args.input.country,
+            postal_code: args.input.postal_code,
+            phone_number: args.input.phone_number,
+            phone_number_ext: args.input.phone_number_ext,
+          },
+        },
+      }
+
+      switch (args.input.role_id) {
+        case UserRole.DOCTOR:
+          userData = Object.assign(userData, {
+            Doctor: {
+              create: {
+                department_id: args.input.department_id,
+                image_name: args.input.image_name,
+                start_date: args.input.start_date,
+                end_date: args.input.end_date,
+              },
+            },
+          })
+          break
+        case UserRole.PATIENT:
+          userData = Object.assign(userData, {
+            Patient: {
+              create: {
+                medical_id: args.input.medical_id,
+                height: args.input.height,
+                weight: args.input.weight,
+              },
+            },
+          })
+          break
+        default:
+          break
+      }
+
+      const user = await prisma.user.create({ data: userData })
+      if (!user) throw CustomApiBadRequest()
+
+      return { message: 'ACCOUNT_CREATED' }
+    },
+    updateUser: async (
+      parent: unknown,
+      args: GQLPutInput<User & Contact & Doctor & Patient>
+    ): Promise<ISuccessResponse> => {
+      const user = await prisma.user.findUnique({
+        where: { id: args.id },
+        include: { Contact: true, Patient: true },
+      })
+      if (!user) throw CustomApiErrorUserNotFound()
+
+      // Find if the email exists from another user
+      const findManyEmail = await prisma.user.findMany({
+        where: { NOT: { id: user.id }, email: args.input.email },
+      })
+      if (findManyEmail?.length > 0) throw CustomApiErrorDuplicateEmail()
+
+      // Find if the username exists from another user
+      if (args.input.username) {
+        const findManyUsername = await prisma.user.findMany({
+          where: { NOT: { id: user.id }, username: args.input.username },
+        })
+        if (findManyUsername?.length > 0) throw CustomApiErrorDuplicateUsername()
+      }
+
+      if (args.input.role_id == UserRole.PATIENT) {
+        // Find if the medical ID exists from another user
+        const findManyMedicalId = await prisma.patient.findMany({
+          where: { NOT: { user_id: user.id }, medical_id: args.input.medical_id },
+        })
+        if (findManyMedicalId?.length > 0) throw CustomApiErrorDuplicateMedicalId()
+      }
+
+      let userData = {
+        first_name: args.input.first_name,
+        last_name: args.input.last_name,
+        gender: args.input.gender,
+        birth_date: args.input.birth_date,
+        email: args.input.email,
+        username: args.input.username,
+        role_id: args.input.role_id,
+        language: args.input.language,
+        Contact: {
+          update: {
+            address_line_1: args.input.address_line_1,
+            address_line_2: args.input.address_line_2,
+            city: args.input.city,
+            region: args.input.region,
+            country: args.input.country,
+            postal_code: args.input.postal_code,
+            phone_number: args.input.phone_number,
+            phone_number_ext: args.input.phone_number_ext,
+          },
+        },
+      }
+
+      switch (args.input.role_id) {
+        case UserRole.DOCTOR:
+          userData = Object.assign(userData, {
+            Doctor: {
+              update: {
+                department_id: args.input.department_id,
+                image_name: args.input.image_name,
+                start_date: args.input.start_date,
+                end_date: args.input.end_date,
+              },
+            },
+          })
+          break
+        case UserRole.PATIENT:
+          userData = Object.assign(userData, {
+            Patient: {
+              update: {
+                medical_id: args.input.medical_id,
+                height: args.input.height,
+                weight: args.input.weight,
+              },
+            },
+          })
+          break
+        default:
+          break
+      }
+
+      const admin = await prisma.user.update({ where: { id: user.id }, data: userData })
+      if (!admin) throw CustomApiBadRequest()
+
+      return { message: 'ACCOUNT_UPDATED' }
+    },
     updatePassword: async (
       parent: unknown,
       args: GQLPutInput<User & { new_password: string }>
@@ -686,219 +835,8 @@ const resolvers = {
     },
 
     /******************************
-     *  Admin
+     *  Doctor Schedule
      ******************************/
-    createAdmin: async (parent: unknown, args: GQLPostInput<User & Contact>): Promise<ISuccessResponse> => {
-      const findEmail = await prisma.user.findUnique({ where: { email: args.input.email } })
-      if (findEmail) throw CustomApiErrorDuplicateEmail()
-
-      if (args.input.username) {
-        const findUsername = await prisma.user.findUnique({ where: { username: args.input.username } })
-        if (findUsername) throw CustomApiErrorDuplicateUsername()
-      }
-
-      const user = await prisma.user.create({
-        data: {
-          first_name: args.input.first_name,
-          last_name: args.input.last_name,
-          gender: args.input.gender,
-          birth_date: TextFormatUtil.utcToZonedTime(args.input.birth_date),
-          email: args.input.email,
-          username: args.input.username,
-          password: await hash(args.input.password, 12),
-          role_id: UserRole.ADMIN,
-          language: args.input.language,
-          Contact: {
-            create: {
-              address: args.input.address,
-              address_line2: args.input.address_line2,
-              city: args.input.city,
-              region: args.input.region,
-              country: args.input.country,
-              postal_code: args.input.postal_code,
-              phone_number: args.input.phone_number,
-              phone_ext: args.input.phone_ext,
-            },
-          },
-        },
-      })
-
-      if (!user) throw CustomApiBadRequest()
-
-      return { message: 'ACCOUNT_CREATED' }
-    },
-    updateAdmin: async (parent: unknown, args: GQLPutInput<User & Contact>): Promise<ISuccessResponse> => {
-      // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
-
-      const user = await prisma.user.findUnique({
-        where: { id: args.id },
-        include: { Contact: true },
-      })
-      if (!user) throw CustomApiErrorUserNotFound()
-
-      // Find if the email exists from another user
-      const findManyEmail = await prisma.user.findMany({
-        where: { NOT: { id: user.id }, email: args.input.email },
-      })
-      if (findManyEmail?.length > 0) throw CustomApiErrorDuplicateEmail()
-
-      // Find if the username exists from another user
-      if (args.input.username) {
-        const findManyUsername = await prisma.user.findMany({
-          where: { NOT: { id: user.id }, username: args.input.username },
-        })
-        if (findManyUsername?.length > 0) throw CustomApiErrorDuplicateUsername()
-      }
-
-      const admin = await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          first_name: args.input.first_name,
-          last_name: args.input.last_name,
-          gender: args.input.gender,
-          birth_date: TextFormatUtil.utcToZonedTime(args.input.birth_date),
-          email: args.input.email,
-          username: args.input.username,
-          role_id: args.input.role_id,
-          language: args.input.language,
-          Contact: {
-            update: {
-              address: args.input.address,
-              address_line2: args.input.address_line2,
-              city: args.input.city,
-              region: args.input.region,
-              country: args.input.country,
-              postal_code: args.input.postal_code,
-              phone_number: args.input.phone_number,
-              phone_ext: args.input.phone_ext,
-            },
-          },
-        },
-        include: {
-          Contact: true,
-        },
-      })
-
-      if (!admin) throw CustomApiBadRequest()
-
-      return { message: 'ACCOUNT_UPDATED' }
-    },
-
-    /******************************
-     *  Doctor
-     ******************************/
-    createDoctor: async (parent: unknown, args: GQLPostInput<User & Contact & Doctor>): Promise<ISuccessResponse> => {
-      const findEmail = await prisma.user.findUnique({ where: { email: args.input.email } })
-      if (findEmail) throw CustomApiErrorDuplicateEmail()
-
-      if (args.input.username) {
-        const findUsername = await prisma.user.findUnique({ where: { username: args.input.username } })
-        if (findUsername) throw CustomApiErrorDuplicateUsername()
-      }
-
-      const user = await prisma.user.create({
-        data: {
-          first_name: args.input.first_name,
-          last_name: args.input.last_name,
-          gender: args.input.gender,
-          birth_date: TextFormatUtil.utcToZonedTime(args.input.birth_date),
-          email: args.input.email,
-          username: args.input.username,
-          password: await hash(args.input.password, 12),
-          role_id: UserRole.DOCTOR,
-          language: args.input.language,
-          Contact: {
-            create: {
-              address: args.input.address,
-              address_line2: args.input.address_line2,
-              city: args.input.city,
-              region: args.input.region,
-              country: args.input.country,
-              postal_code: args.input.postal_code,
-              phone_number: args.input.phone_number,
-              phone_ext: args.input.phone_ext,
-            },
-          },
-          Doctor: {
-            create: {
-              department_id: args.input.department_id,
-              image_name: args.input.image_name,
-              start_date: args.input.start_date,
-              end_date: args.input.end_date,
-            },
-          },
-        },
-      })
-
-      if (!user) throw CustomApiBadRequest()
-
-      return { message: 'ACCOUNT_CREATED' }
-    },
-    updateDoctor: async (parent: unknown, args: GQLPutInput<User & Contact & Doctor>): Promise<ISuccessResponse> => {
-      // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
-
-      const user = await prisma.user.findUnique({
-        where: { id: args.id },
-        include: { Contact: true, Doctor: true },
-      })
-      if (!user) throw CustomApiErrorUserNotFound()
-
-      // Find if the email exists from another user
-      const findManyEmail = await prisma.user.findMany({
-        where: { NOT: { id: user.id }, email: args.input.email },
-      })
-      if (findManyEmail?.length > 0) throw CustomApiErrorDuplicateEmail()
-
-      // Find if the username exists from another user
-      if (args.input.username) {
-        const findManyUsername = await prisma.user.findMany({
-          where: { NOT: { id: user.id }, username: args.input.username },
-        })
-        if (findManyUsername?.length > 0) throw CustomApiErrorDuplicateUsername()
-      }
-
-      const doctor = await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          first_name: args.input.first_name,
-          last_name: args.input.last_name,
-          gender: args.input.gender,
-          birth_date: TextFormatUtil.utcToZonedTime(args.input.birth_date),
-          email: args.input.email,
-          username: args.input.username,
-          role_id: args.input.role_id,
-          language: args.input.language,
-          Contact: {
-            update: {
-              address: args.input.address,
-              address_line2: args.input.address_line2,
-              city: args.input.city,
-              region: args.input.region,
-              country: args.input.country,
-              postal_code: args.input.postal_code,
-              phone_number: args.input.phone_number,
-              phone_ext: args.input.phone_ext,
-            },
-          },
-          Doctor: {
-            update: {
-              department_id: args.input.department_id,
-              image_name: args.input.image_name,
-              start_date: TextFormatUtil.utcToZonedTime(args.input.start_date),
-              end_date: args.input.end_date && TextFormatUtil.utcToZonedTime(args.input.end_date),
-            },
-          },
-        },
-        include: {
-          Contact: true,
-          Doctor: true,
-        },
-      })
-
-      if (!doctor) throw CustomApiBadRequest()
-
-      return { message: 'ACCOUNT_UPDATED' }
-    },
     createDoctorSchedule: async (parent: unknown, args: GQLPostInput<DoctorSchedule[]>): Promise<ISuccessResponse> => {
       const doctorSchedule = await prisma.$transaction(
         args.input.map((schedule: DoctorSchedule) =>
@@ -938,128 +876,6 @@ const resolvers = {
       })
 
       return { message: 'DOCTOR_SCHEDULE_DELETED' }
-    },
-
-    /******************************
-     *  Patient
-     ******************************/
-    createPatient: async (parent: unknown, args: GQLPostInput<User & Contact & Patient>): Promise<ISuccessResponse> => {
-      const findEmail = await prisma.user.findUnique({ where: { email: args.input.email } })
-      if (findEmail) throw CustomApiErrorDuplicateEmail()
-
-      if (args.input.username) {
-        const findUsername = await prisma.user.findUnique({ where: { username: args.input.username } })
-        if (findUsername) throw CustomApiErrorDuplicateUsername()
-      }
-
-      const findMedicalId = await prisma.patient.findUnique({ where: { medical_id: args.input.medical_id } })
-      if (findMedicalId) throw CustomApiErrorDuplicateMedicalId()
-
-      const user = await prisma.user.create({
-        data: {
-          first_name: args.input.first_name,
-          last_name: args.input.last_name,
-          gender: args.input.gender,
-          birth_date: TextFormatUtil.utcToZonedTime(args.input.birth_date),
-          email: args.input.email,
-          username: args.input.username,
-          password: await hash(args.input.password, 12),
-          role_id: args.input.role_id,
-          language: args.input.language,
-          Contact: {
-            create: {
-              address: args.input.address,
-              address_line2: args.input.address_line2,
-              city: args.input.city,
-              region: args.input.region,
-              country: args.input.country,
-              postal_code: args.input.postal_code,
-              phone_number: args.input.phone_number,
-              phone_ext: args.input.phone_ext,
-            },
-          },
-          Patient: {
-            create: {
-              medical_id: args.input.medical_id,
-              height: args.input.height,
-              weight: args.input.weight,
-            },
-          },
-        },
-      })
-
-      if (!user) throw CustomApiBadRequest()
-
-      return { message: 'ACCOUNT_CREATED' }
-    },
-    updatePatient: async (parent: unknown, args: GQLPutInput<User & Contact & Patient>): Promise<ISuccessResponse> => {
-      // FIXME: if (!getAuthCookie(context.req)) throw CustomApiErrorUnauthorized()
-
-      const user = await prisma.user.findUnique({
-        where: { id: args.id },
-        include: { Contact: true, Patient: true },
-      })
-      if (!user) throw CustomApiErrorUserNotFound()
-
-      // Find if the email exists from another user
-      const findManyEmail = await prisma.user.findMany({
-        where: { NOT: { id: user.id }, email: args.input.email },
-      })
-      if (findManyEmail?.length > 0) throw CustomApiErrorDuplicateEmail()
-
-      // Find if the username exists from another user
-      if (args.input.username) {
-        const findManyUsername = await prisma.user.findMany({
-          where: { NOT: { id: user.id }, username: args.input.username },
-        })
-        if (findManyUsername?.length > 0) throw CustomApiErrorDuplicateUsername()
-      }
-
-      // Find if the medical ID exists from another user
-      const findManyMedicalId = await prisma.patient.findMany({
-        where: { NOT: { user_id: user.id }, medical_id: args.input.medical_id },
-      })
-      if (findManyMedicalId?.length > 0) throw CustomApiErrorDuplicateMedicalId()
-
-      const patient = await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          first_name: args.input.first_name,
-          last_name: args.input.last_name,
-          gender: args.input.gender,
-          birth_date: TextFormatUtil.utcToZonedTime(args.input.birth_date),
-          email: args.input.email,
-          username: args.input.username,
-          language: args.input.language,
-          Contact: {
-            update: {
-              address: args.input.address,
-              address_line2: args.input.address_line2,
-              city: args.input.city,
-              region: args.input.region,
-              country: args.input.country,
-              postal_code: args.input.postal_code,
-              phone_number: args.input.phone_number,
-              phone_ext: args.input.phone_ext,
-            },
-          },
-          Patient: {
-            update: {
-              medical_id: args.input.medical_id,
-              height: args.input.height,
-              weight: args.input.weight,
-            },
-          },
-        },
-        include: {
-          Contact: true,
-          Patient: true,
-        },
-      })
-
-      if (!patient) throw CustomApiBadRequest()
-
-      return { message: 'ACCOUNT_UPDATED' }
     },
 
     /******************************

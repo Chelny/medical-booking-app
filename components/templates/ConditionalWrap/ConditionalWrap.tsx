@@ -2,10 +2,9 @@ import { ReactElement } from 'react'
 
 type ConditionalWrapProps = {
   condition: boolean
-  wrap: (child: ReactElement) => ReactElement
-  children: ReactElement
+  wrap: (child: ReactElement) => JSX.Element
+  children: JSX.Element
 }
 
-const ConditionalWrap = ({ condition, wrap, children }: ConditionalWrapProps) => (condition ? wrap(children) : children)
-
-export default ConditionalWrap
+export const ConditionalWrap = (props: ConditionalWrapProps) =>
+  props.condition ? props.wrap(props.children) : props.children

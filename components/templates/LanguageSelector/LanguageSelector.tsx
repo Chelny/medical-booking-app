@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router'
-import { LanguagesMap, Locales } from 'configs/locales'
+import { LanguagesMap, Locales } from 'configs'
 import styles from './LanguageSelector.module.css'
 
-const LanguageSelector = (): JSX.Element => {
+export const LanguageSelector = (): JSX.Element => {
   const router = useRouter()
 
   const handleLocaleChange = (event: IHTMLElementEvent) => {
@@ -20,5 +20,3 @@ const LanguageSelector = (): JSX.Element => {
     </select>
   )
 }
-
-export default LanguageSelector

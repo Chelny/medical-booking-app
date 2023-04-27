@@ -1,28 +1,26 @@
-import { MouseEventHandler, ReactElement } from 'react'
+import { MouseEventHandler, ReactNode } from 'react'
 import classNames from 'classnames'
 import styles from './Button.module.css'
 
 type ButtonType = 'button' | 'submit' | 'reset' | undefined
 
 type ButtonProps = {
-  children: ReactElement | ReactElement[] | string
+  children: ReactNode
   type?: ButtonType
   className?: string
   disabled?: boolean
-  handleClick?: MouseEventHandler<HTMLButtonElement>
+  onClick?: MouseEventHandler<HTMLButtonElement>
 }
 
-const Button = ({ children, type, className, disabled, handleClick }: ButtonProps): JSX.Element => {
+export const Button = (props: ButtonProps): JSX.Element => {
   return (
     <button
-      type={type}
-      className={`${styles.button} ${classNames(className)}`}
-      disabled={disabled}
-      onClick={handleClick}
+      type={props.type}
+      className={`${styles.button} ${classNames(props.className)}`}
+      disabled={props.disabled}
+      onClick={props.onClick}
     >
-      {children}
+      {props.children}
     </button>
   )
 }
-
-export default Button
